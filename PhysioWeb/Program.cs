@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using PhysioWeb.Data;
 using PhysioWeb.Repository;
 
@@ -9,6 +10,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<DbHelper>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Home/Login";
+        options.AccessDeniedPath = "/Home/AccessDenied"; // optional
+    });
+
+builder.Services.AddAuthorization(); // required for [Authorize(Roles = "...")]
 
 var app = builder.Build();
 
@@ -25,6 +34,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

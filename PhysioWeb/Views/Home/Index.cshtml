@@ -1,8 +1,8 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@* visible to All *@
+
+@{
+	ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>Nikita Added.</p>
-</div>
+<h1>This is My Home Page</h1>
+<a class="nav-link text-light btn btn-primary btn-sm" asp-controller="PropertyDetails" asp-action="Property">Go to Some Property</a>
