@@ -4,16 +4,20 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using PhysioWeb.Models;
+using PhysioWeb.Repository;
 
 namespace PhysioWeb.Controllers
 {
     public class HomeController : Controller
     {
+
+        private readonly IUserRepository _userRepository;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUserRepository userRepository)
         {
             _logger = logger;
+            _userRepository = userRepository;
         }
 
         public IActionResult Index()
@@ -42,16 +46,16 @@ namespace PhysioWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string username, string password, string returnUrl)
+        public async Task<IActionResult> Login(string Username, string Password, string Email, string returnUrl)
         {
-            //  Replace this with ADO.NET DB check
-            if (username == "admin" && password == "admin") // dummy check
+            var User = await _userRepository.Login(Username, Password, Email);
+            if (User != null) // dummy check
             {
                 var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, "Admin") // Optional, for role-based later
-            };
+                new Claim(ClaimTypes.Name, User.UserName),
+                new Claim(ClaimTypes.Role, User.UserRole), // Optional, for role-based later
+                           };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
