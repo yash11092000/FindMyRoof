@@ -21,5 +21,15 @@ namespace PhysioWeb.Repository
             int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
             return RecordAffected > 0;
         }
+        public async Task<bool> SavePropType(PropertyTypeMaster PropertyTypeMaster)
+        {
+            string[] parametersName = { "UniquId", "PropertyType", "Description", "IsActive" };
+            object[] Values = { PropertyTypeMaster.UniquId,PropertyTypeMaster.PropertyType, PropertyTypeMaster.Description,
+                PropertyTypeMaster.IsActive };
+
+            string Sp = "FMR_SavePropertyType";
+            int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+            return RecordAffected > 0;
+        }
     }
 }

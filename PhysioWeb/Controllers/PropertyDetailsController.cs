@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PhysioWeb.Models;
 
 namespace PhysioWeb.Controllers
 {
@@ -8,5 +9,6 @@ namespace PhysioWeb.Controllers
         {
             return View();
         }
+
     }
 }
