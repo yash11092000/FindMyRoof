@@ -8,48 +8,90 @@
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/PhysioWeb.styles.css" asp-append-version="true" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+	<link href="~/css/aos.min.css" rel="stylesheet" asp-append-version="true" />
+	<link href="~/css/choices.min.css" rel="stylesheet" asp-append-version="true" />
+
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<style>
+		html {
+			scroll-behavior: smooth;
+		}
+
+		.bg-dark-green {
+			background-color: #14532d !important;
+		}
+
+		.navbar-dark .navbar-nav .nav-link {
+			color: white !important;
+		}
+
+		.navbar-dark .navbar-brand {
+			color: white !important;
+		}
+
+		.navbar-nav .nav-link {
+			color: #ffffffcc; /* semi-white base */
+			transition: all 0.3s ease-in-out;
+			position: relative;
+			font-weight: 500;
+		}
+
+			.navbar-nav .nav-link:hover {
+				color: #ffffff; /* pure white on hover */
+			}
+
+			.navbar-nav .nav-link::after {
+				content: "";
+				position: absolute;
+				width: 0%;
+				height: 2px;
+				background-color: #ffffff; /* white underline */
+				left: 0;
+				bottom: 0;
+				transition: 0.3s;
+			}
+
+			.navbar-nav .nav-link:hover::after {
+				width: 100%;
+			}
+
+		.footer a:hover {
+			color: #198754; /* Bootstrap success green */
+		}
+	</style>
 </head>
 <body>
-	<header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-			<div class="container-fluid">
-				<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
-					<i class="fa-solid fa-bars"></i>
-				</button>
+	<header class="sticky-top">
 
-				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Find My Roof</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-						aria-expanded="false" aria-label="Toggle navigation">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark-green">
+			<div class="container">
+				<a class="navbar-brand d-flex align-items-center" href="/">
+					<i class="bi bi-house-door-fill me-2 text-success"></i>
+					<strong class="text-light">Find My Roof</strong>
+				</a>
+				<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-					<ul class="navbar-nav ms-auto">
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-						</li>
+				<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+					<ul class="navbar-nav">
+						<li class="nav-item"><a class="nav-link text-dark" href="#">Home</a></li>
+						<li class="nav-item"><a class="nav-link text-dark" href="#">Buy</a></li>
+						<li class="nav-item"><a class="nav-link text-dark" href="#">Sell</a></li>
+						<li class="nav-item"><a class="nav-link text-dark" href="#">Rent</a></li>
 						@if (!User.Identity.IsAuthenticated)
 						{
-							<li class="nav-item mx-1">
-								<a class="nav-link text-light btn btn-primary btn-sm" asp-controller="Home" asp-action="Register">Sign Up</a>
-							</li>
-							<li class="nav-item mx-1">
-								<a class="nav-link text-light btn btn-primary btn-sm" asp-controller="Home" asp-action="Login">Login</a>
-							</li>
+							<li class="nav-item"><a class="nav-link text-dark" href="/Home/Register">Sign Up</a></li>
+							<li class="nav-item"><a class="nav-link text-dark" href="/Home/Login">Login</a></li>
 						}
 						else
 						{
-							<li class="nav-item mx-1">
-								<a class="nav-link text-light btn btn-primary btn-sm" asp-controller="Home" asp-action="Logout">Logout</a>
-							</li>
+							<li class="nav-item"><a class="nav-link text-dark" href="/Home/Logout">Logout</a></li>
 						}
 					</ul>
 				</div>
 			</div>
 		</nav>
+
 	</header>
 	<div class="container">
 		<main role="main" class="pb-3">
@@ -69,20 +111,36 @@
 		</main>
 	</div>
 
-	<footer class="border-top footer text-muted">
-		<div class="container">
-			&copy; 2025 - Find My Roof - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+	<!-- Footer -->
+	<footer class="footer bg-white text-muted border-top py-3">
+		<div class="container d-flex flex-column flex-md-row justify-content-between align-items-center small">
+			<span>&copy; 2025 RealEstateCo</span>
+			<div>
+				<a href="#" class="text-muted text-decoration-none me-3">Privacy</a>
+				<a href="#" class="text-muted text-decoration-none">Terms</a>
+			</div>
 		</div>
 	</footer>
+
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/lib/aos/aos.min.js" asp-append-version="true"></script>
 	<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="~/lib/choices/choices.min.js"></script>
 
+	<script src="~/js/site.js" asp-append-version="true"></script>
 	<script>
 			  const notyf = new Notyf({
 			duration: 3000,
 			position: { x: 'right', y: 'top' }
+		});
+
+			document.addEventListener('DOMContentLoaded', function () {
+			AOS.init({
+				duration: 800, // animation duration in ms
+				once: true     // only animate once per scroll
+			});
 		});
 	</script>
 	@await RenderSectionAsync("Scripts", required: false)
