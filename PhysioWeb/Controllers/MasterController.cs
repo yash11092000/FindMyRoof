@@ -43,6 +43,16 @@ namespace PhysioWeb.Controllers
             var result = await _masterRepository.SavePropType(propertyTypeMaster);
             return Json(result);
         }
+
+
+        [HttpGet]
+        public async Task<ActionResult> BrandList(DataTablePara dataTablePara)
+        {
+            var modelRequest = mappingService.Map<Model.DataTablePara>(dataTablePara);
+            modelRequest.CompanyId = UserDetails.CompanyId;
+            return Json(await productUnitOfWork.BrandRepository.BrandList(modelRequest), JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
 
     }

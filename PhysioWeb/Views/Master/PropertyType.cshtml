@@ -2,36 +2,157 @@
 @{
     ViewBag.Title = "Property Type";
 }
-<h3>Property Type</h3>
+@* <h3>Property Type</h3> *@
+<style>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css" / >
+</style>
 
-<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
-    <div class="card shadow p-4" style="width: 400px;">
-        <h4 class="mb-4 text-center">Category Master</h4>
+<ul class="nav responsive-tab nav-material nav-material-white" id="v-pills-tab">
+    <li>
+        <a class="nav-link active" id="NewEntryTab" data-toggle="pill" href="#NewEntry"><i class="icon icon-plus-circle mb-3"></i>Add New Property Type</a>
+    </li>
+    <li>
+        <a class="nav-link" id="ListDetailsTab" data-toggle="pill" href="#ListDetails">
+            <i class="icon icon-list"></i>All Property Types
+        </a>
+    </li>
+</ul>
 
-        <form method="post">
-            <div class="mb-3">
-                <label for="propertyType" class="form-label">Property Type</label>
-                @Html.TextBoxFor(m => m.PropertyType, new { @class = "form-control", placeholder = "Enter property type" })
+<div class="container-fluid relative animatedParent animateOnce">
+    <div class="tab-content pb-3" id="v-pills-tabContent">
+
+        <!-- Add New Property Type Tab -->
+        <div class="tab-pane animated fadeInUpShort show active" id="NewEntry">
+            <form method="post">
+                <div class="row my-3">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group mb-3">
+                                    <label for="propertyType" class="form-label">Property Type</label>
+                                    @Html.TextBoxFor(m => m.PropertyType, new { @class = "form-control", placeholder = "Enter property type" })
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 4, placeholder = "Enter description" })
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input", id = "isActive" })
+                                    <label class="form-check-label" for="isActive">Is Active</label>
+                                </div>
+
+                                <button type="button" class="btn btn-primary" id="btnSave">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div id="resultMsg" class="mt-3 text-center"></div>
+        </div>
+
+        <div class="tab-pane animated fadeInUpShort" id="ListDetails">
+            <div class="row my-3">
+                <div class="col-md-12">
+                    <div class="card no-b">
+                        <div class="card-header white d-flex justify-content-between">
+                            <h4>All Property Types</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="TableList" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Property Type</th>
+                                            <th>Description</th>
+                                            <th>InActive</th>
+                                            <th width="3%"><span style="font-size: 20px" class="icon icon-history" title="History"></span></th>
+                                            <th width="3%"><span style="font-size: 20px;" class="icon icon-pencil" title="Edit"></span></th>
+                                            <th width="3%"><span style="font-size: 20px;" class="icon icon-trash" title="Delete"></span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 4, placeholder = "Enter description" })
-            </div>
-
-            <div class="form-check mb-3">
-                @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input", id = "isActive" })
-                <label class="form-check-label" for="isActive">Is Active</label>
-            </div>
-
-            <button type="button" class="btn btn-primary" id="btnSave">Submit</button>
-        </form>
-        <div id="resultMsg" class="mt-3 text-center"></div>
     </div>
 </div>
 
 @section Scripts {
+    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
     <script>
+                $(document).ready(function () {
+
+            $('#TableList thead tr').clone(true).appendTo('#TableList thead');
+            $('#TableList thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                if (title != "" && title != "History" && title != "Edit" && title != "Delete") {
+                    $(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+                }
+                else {
+                    $(this).html("");
+                }
+
+            });
+
+            TableList = $("#TableList").DataTable({
+                orderCellsTop: true,
+                search: true,
+                order: [[0, "asc"]],
+                columns: [
+                    { 'data': 'PropertyType' },
+                    { 'data': 'Description' },
+                    { 'data': 'InActiveText' },
+                    {
+                        'data': '', "render": function (data, type, full, meta) {
+                            var para = full.UniquId + ',' + '"Master"' + ',' + '"PropertyType"';
+                            return "<a href='javascript:void(0)' onclick='ViewHistory(" + para + ")'><span class='icon-history' title='History' style='font-size: 24px'><span></a>";
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        'data': '', "render": function (data, type, full, meta) {
+                            var para = full.UniquId + ',' + '"Master"' + ',' + '"EditPropertyType"';
+                            return "<a href='javascript:void(0)' onclick='EditData(" + para + ")'><span class='icon-pencil' style='font-size:24px'></span></a>";
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        'data': '', "render": function (data, type, full, meta) {
+                            var para = full.UniquId + ',' + '"PropertyType"' + ',' + '"PropertyTypeID"';
+                            return "<a href='javascript:void(0)' onclick='delEntryCheck(" + para + ")'><span class='icon-trash-o' style='font-size:24px'></span></a>";
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                bServerSide: true,
+                bProcessing: true,
+                sAjaxSource: '/Master/ListPropertyType',
+                initComplete: function (i) {
+                    $('input', this).on('input', function () {
+
+                        var tableCnt = $("#TableList");
+                        TableList.column(0).search(tableCnt.find('input[placeholder^="Property Type"]').val());
+                        TableList.column(1).search(tableCnt.find('input[placeholder^="Description"]').val());
+                        TableList.column(2).search(tableCnt.find('input[placeholder^="InActive"]').val());
+
+                        TableList.draw();
+                    });
+                }
+            });
+
+        });
 
         $("#btnSave").on("click",function(){
             var PropertyType = $("#PropertyType")
@@ -41,7 +162,7 @@
             }
             else{
             $.ajax({
-                url: '/Master/SavePropertyType', 
+                url: '/Master/SavePropertyType',
                 method: 'POST',
                 data: $("form").serialize(),
                 success: function (response) {
