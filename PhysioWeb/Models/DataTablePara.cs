@@ -1,8 +1,8 @@
 ﻿namespace PhysioWeb.Models
 {
-    public class DataTablePara
+    public class DataTablePara :CommanProp
     {
-        public int iDisplayLength { get; set; }
+        public int iDisplayLength { get; set; } = 10;
         public int iDisplayStart { get; set; }
         public int iSortCol_0 { get; set; }
         public string sSortDir_0 { get; set; }

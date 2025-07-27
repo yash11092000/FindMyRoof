@@ -6,5 +6,6 @@ namespace PhysioWeb.Repository
     {
         Task<bool> SavePropCategory(PropertyCategoryMaster propertyCategoryMaster);
         Task<bool> SavePropType(PropertyTypeMaster PropertyTypeMaster);
+        Task<DataTableResult> ListPropertyType(DataTablePara dataTablePara);
     }
 }

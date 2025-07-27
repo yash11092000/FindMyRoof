@@ -44,13 +44,19 @@ namespace PhysioWeb.Controllers
             return Json(result);
         }
 
-
-        [HttpGet]
-        public async Task<ActionResult> BrandList(DataTablePara dataTablePara)
+        [HttpPost]
+        
+        public async Task<ActionResult> ListPropertyType(DataTablePara dataTablePara)
         {
-            var modelRequest = mappingService.Map<Model.DataTablePara>(dataTablePara);
-            modelRequest.CompanyId = UserDetails.CompanyId;
-            return Json(await productUnitOfWork.BrandRepository.BrandList(modelRequest), JsonRequestBehavior.AllowGet);
+            var result = await _masterRepository.ListPropertyType(dataTablePara);
+
+            //return Json(result);
+            return Json(new
+            {
+                data = result.daaa, // 👈 make sure this matches what DataTables expects
+                recordsTotal = result.totalCount,
+                recordsFiltered = result.totalCount
+            });
         }
 
         #endregion
