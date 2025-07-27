@@ -29,6 +29,7 @@ namespace PhysioWeb.Controllers
         }
 
         #endregion
+
         #region Property Type Master
         [HttpGet]
         public async Task<ActionResult> PropertyType()
@@ -50,11 +51,26 @@ namespace PhysioWeb.Controllers
         {
             var result = await _masterRepository.ListPropertyType(dataTablePara);
 
-            return Json(result);
+            return Json(result.aaData);
            
         }
 
         #endregion
 
+        #region Rental Type Master
+
+        [HttpGet]
+        public async Task<ActionResult> RentalType()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> SaveRentalType(RentalTypeMaster RentalTypeMaster)
+        {
+            var result = await _masterRepository.SaveRentalType(RentalTypeMaster);
+            return Json(result);
+        }
+
+        #endregion
     }
 }

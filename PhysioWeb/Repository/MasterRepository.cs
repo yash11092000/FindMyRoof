@@ -83,5 +83,15 @@ namespace PhysioWeb.Repository
                 throw;
             }
         }
+
+        public async Task<bool> SaveRentalType(RentalTypeMaster RentalTypeMaster)
+        {
+            string[] parametersName = { "UniquId", "RentalType","Description", "IsActive" , "AgencyId" };
+            object[] Values = { RentalTypeMaster.UniquId, RentalTypeMaster.RentalType, RentalTypeMaster.Description,RentalTypeMaster.IsActive,RentalTypeMaster.AgencyId };
+
+            string Sp = "FMR_SaveRentalType";
+            int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+            return RecordAffected > 0;
+        }
     }
 }
