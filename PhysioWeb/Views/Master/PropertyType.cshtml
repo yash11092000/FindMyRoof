@@ -3,82 +3,23 @@
 	ViewBag.Title = "Property Type";
 }
 <style>
-	/* ✅ Emerald Tabs */
-	.emerald-tabs .nav-link {
-		border-radius: 30px;
-		padding: 8px 20px;
-		background: #f9f9f9;
-		color: #2ecc71;
-		border: 1px solid #2ecc71;
-		margin-right: 5px;
-		transition: all 0.3s ease;
-	}
 
-		.emerald-tabs .nav-link.active {
-			background: #2ecc71;
-			color: #fff;
-		}
-
-		.emerald-tabs .nav-link:hover {
-			background: #27ae60;
-			color: #fff;
-		}
-
-	/* ✅ Emerald Card */
-	.emerald-card {
-		border-radius: 12px;
-		border: none;
-		background: #fff;
-	}
-
-	.emerald-header {
-		background: #2ecc71;
-		color: #fff;
-		font-weight: 500;
-	}
-
-	/* ✅ Emerald Buttons */
-	.emerald-btn {
-		background: #2ecc71;
-		border: none;
-		color: #fff;
-	}
-
-		.emerald-btn:hover {
-			background: #27ae60;
-		}
-
-	/* ✅ Table Icons */
-	.emerald-icon {
-		font-size: 20px;
-		color: #2ecc71;
-	}
-
-		.emerald-icon:hover {
-			color: #27ae60;
-		}
-
-	.emerald-icon-delete {
-		font-size: 20px;
-		color: #e74c3c;
-	}
-
-		.emerald-icon-delete:hover {
-			color: #c0392b;
-		}
 
 </style>
 <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css" />
 <div class="container mt-4">
 	<div class="d-flex justify-content-between align-items-center mb-3">
 		<h4 class="mb-0">Property Types</h4>
-		<button class="btn emerald-btn" data-bs-toggle="modal" data-bs-target="#addPropertyModal">
-			➕ Add Property Type
+		<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPropertyModal">
+			<i class="bi bi-plus-circle"></i> Add Property Type
 		</button>
 	</div>
 
-	<!-- ✅ Table -->
-	<div class="card emerald-card shadow-sm">
+	<!-- ✅ Property Types Table -->
+	<div class="card shadow-sm border-0">
+		<div class="card-header bg-success text-white">
+			<h5 class="mb-0"><i class="bi bi-building"></i>All Property Types</h5>
+		</div>
 		<div class="card-body">
 			<div class="table-responsive">
 				<table id="TableList" class="table table-hover align-middle">
@@ -88,9 +29,9 @@
 							<th>Description</th>
 							<th>InActive</th>
 							<th>Created By</th>
-							<th><i class="bi bi-clock-history emerald-icon" title="History"></i></th>
-							<th><i class="bi bi-pencil-square emerald-icon" title="Edit"></i></th>
-							<th><i class="bi bi-trash emerald-icon-delete" title="Delete"></i></th>
+							<th><i class="bi bi-clock-history text-success fs-5" title="History"></i></th>
+							<th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
+							<th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
 						</tr>
 					</thead>
 					<tbody></tbody>
@@ -100,37 +41,44 @@
 	</div>
 </div>
 
-<!-- ✅ Modal -->
+<!-- ✅ Add Property Type Modal -->
 <div class="modal fade" id="addPropertyModal" tabindex="-1">
 	<div class="modal-dialog">
-		<div class="modal-content emerald-card">
-			<div class="modal-header emerald-header">
+		<div class="modal-content">
+			<div class="modal-header bg-success text-white">
 				<h5 class="modal-title">Add New Property Type</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
 			<div class="modal-body">
 				<form id="propertyForm">
 					<div class="mb-3">
-						<label class="form-label">Property Type</label>
-						<input type="text" class="form-control" id="PropertyType" name="PropertyType" placeholder="Enter property type" />
+						<label class="form-label fw-bold">Property Type<span class="impMark">*</span></label>
+						<input type="text" class="form-control" id="propertyType" name="PropertyType" placeholder="Enter property type" />
 					</div>
 					<div class="mb-3">
-						<label class="form-label">Description</label>
-						<textarea class="form-control" id="Description" name="Description" rows="3" placeholder="Enter description"></textarea>
+						<label class="form-label fw-bold">Description<span class="impMark">*</span></label>
+						<textarea class="form-control" id="description" name="Description" rows="3" placeholder="Enter description"></textarea>
 					</div>
 					<div class="form-check mb-3">
-						<input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" />
-						<label class="form-check-label" for="isActive">Is Active</label>
+						<input class="form-check-input" type="checkbox" id="isActive" name="IsActive" checked/>
+						<label class="form-check-label fw-bold" for="isActive">Is Active<span class="impMark">*</span></label>
 					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-				<button type="button" class="btn emerald-btn" id="btnSave">💾 Save</button>
+				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+					<i class="bi bi-x-circle"></i> Cancel
+				</button>
+				<button type="button" class="btn btn-success" id="btnSave">
+					<i class="bi bi-save"></i> Save
+				</button>
 			</div>
 		</div>
 	</div>
 </div>
+
+
+
 @section Scripts {
 	<script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
 	<script>
@@ -161,40 +109,36 @@
 					{ data: 'description' },
 					{ data: 'inActiveText' },
 					{ data: 'createdBy' },
-								{
-						data: null,
-						render: function (data, type, full, meta) {
-							var para = full.uniquId + ',' + '"Master"' + ',' + '"PropertyType"';
-							return `<a href="javascript:void(0)" onclick="ViewHistory(${para})">
-										<i class="bi bi-clock-history" title="History" style="font-size:24px;color:#2ecc71;"></i>
-									</a>`;
-						},
-						orderable: false,
-						searchable: false
-					},
 					{
-						data: null,
-						render: function (data, type, full, meta) {
-							var para = full.uniquId + ',' + '"Master"' + ',' + '"EditPropertyType"';
-							return `<a href="javascript:void(0)" onclick="EditData(${para})">
-										<i class="bi bi-pencil-square" title="Edit" style="font-size:24px;color:#27ae60;"></i>
-									</a>`;
-						},
-						orderable: false,
-						searchable: false
+					data: null,
+					render: function (data, type, row) {
+						let para = row.uniquId + ',' + '"Master"' + ',' + '"PropertyType"';
+						return `<a href="javascript:void(0)" onclick="ViewHistory(${para})">
+									<i class="bi bi-clock-history text-success fs-5" title="View History"></i>
+								</a>`;
 					},
-					{
-						data: null,
-						render: function (data, type, full, meta) {
-							var para = full.uniquId + ',' + '"PropertyType"' + ',' + '"PropertyTypeID"';
-							return `<a href="javascript:void(0)" onclick="delEntryCheck(${para})">
-										<i class="bi bi-trash" title="Delete" style="font-size:24px;color:#e74c3c;"></i>
-									</a>`;
-						},
-						orderable: false,
-						searchable: false
-					}
-
+					orderable: false, searchable: false
+				},
+				{
+					data: null,
+					render: function (data, type, row) {
+						let para = row.uniquId + ',' + '"Master"' + ',' + '"EditPropertyType"';
+						return `<a href="javascript:void(0)" onclick="EditData(${para})">
+									<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
+								</a>`;
+					},
+					orderable: false, searchable: false
+				},
+						{
+					data: null,
+					render: function (data, type, row) {
+						let para = row.uniquId + ',' + '"PropertyType"' + ',' + '"PropertyTypeID"';
+						return `<a href="javascript:void(0)" onclick="delEntryCheck(${para})">
+									<i class="bi bi-trash text-danger fs-5" title="Delete"></i>
+								</a>`;
+					},
+					orderable: false, searchable: false
+				}
 				],
 				initComplete: function () {
 						 var table = this.api();
@@ -250,4 +194,4 @@
 		});
 
 	</script>
-}
+	}
