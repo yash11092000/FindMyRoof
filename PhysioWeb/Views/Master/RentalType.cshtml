@@ -1,0 +1,100 @@
+﻿@model PhysioWeb.Models.RentalTypeMaster
+@{
+    ViewBag.Title = "Rental Type";
+}
+<h3>Rental Type</h3>
+
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Add New Rental Type</button>
+        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">All Rental Types</button>
+    </div>
+</nav>
+<div class="container-fluid relative animatedParent animateOnce">
+    <div class="tab-content pb-3" id="v-pills-tabContent">
+
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <form id="RentalTypeForm">
+                <div class="mb-4">
+                    <label for="rentalType" class="form-label">Rental Type</label>
+                    <input type="text" id="RentalType" name="RentalType" class="form-control" required />
+                </div>
+                <div class="form-group mb-4">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" id="Description" name="Description" class="form-control" required />
+                </div>
+
+                <div class="mb-4 form-check">
+                    <input type="checkbox" id="IsActive" name="IsActive" class="form-check-input" />
+                    <label for="IsActive" class="form-check-label">Is Active</label>
+                </div>
+
+                <button type="button" class="btn btn-primary w-100" id="btnSave">Save</button>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+            <div class="row my-3">
+                <div class="col-md-12">
+                    <div class="card no-b">
+                        <div class="card-header white d-flex justify-content-between">
+                            <h4>All Property Types</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="TableList" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Rental Type</th>
+                                            <th>Description</th>
+                                            <th>InActive</th>
+                                            <th>Created By</th>
+                                            @* <th width="3%"><span style="font-size: 20px" class="icon icon-history" title="History"></span></th>
+                                            <th width="3%"><span style="font-size: 20px;" class="icon icon-pencil" title="Edit"></span></th>
+                                            <th width="3%"><span style="font-size: 20px;" class="icon icon-trash" title="Delete"></span></th> *@
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        $("#btnSave").on("click",function(){
+            var RentalType = $("#RentalType")
+            if(RentalType.val() == ""){
+                RentalType.focus();
+                notyf.error("Please Enter Rental Type");
+            }
+            else{
+            $.ajax({
+                url: '/Master/SaveRentalType', // make sure URL matches your controller
+                method: 'POST',
+                data: $("#RentalTypeForm").serialize(),
+                success: function (response) {
+                    if (response) {
+                        notyf.success("Rental Type Added Successfully");
+                    } else {
+                        notyf.error(response.message || "Failed to save.");
+                    }
+                },
+                error: function () {
+                    notyf.error("Some Error Occurred While Saving");
+                }
+            });
+
+            }
+
+        })
+
+    </script>
+}
