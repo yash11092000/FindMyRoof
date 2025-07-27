@@ -43,6 +43,17 @@ namespace PhysioWeb.Controllers
             var result = await _masterRepository.SavePropType(propertyTypeMaster);
             return Json(result);
         }
+
+        [HttpPost]
+        
+        public async Task<ActionResult> ListPropertyType(DataTablePara dataTablePara)
+        {
+            var result = await _masterRepository.ListPropertyType(dataTablePara);
+
+            return Json(result);
+           
+        }
+
         #endregion
 
     }
