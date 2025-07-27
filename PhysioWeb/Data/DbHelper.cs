@@ -1,4 +1,6 @@
 ﻿using System.Data;
+using System.Net;
+using System.Net.NetworkInformation;
 using Microsoft.Data.SqlClient;
 
 namespace PhysioWeb.Data
@@ -100,6 +102,45 @@ namespace PhysioWeb.Data
 
                 cmd.Parameters.Add(param);
             }
+            cmd.Parameters.AddWithValue("DeviceId", GetMacAddress());
+            cmd.Parameters.AddWithValue("IPAddress", GetIPAddress());
+            cmd.Parameters.AddWithValue("DeviceName", GetDeviceName());
+        }
+        public static string GetIPAddress()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    string html = client.DownloadString("http://checkip.dyndns.org/");
+                    int first = html.IndexOf("Address: ") + 9;
+                    int last = html.LastIndexOf("</body>");
+                    return html.Substring(first, last - first);
+                }
+            }
+            catch { return "0.0.0.0"; }
+        }
+
+        public static string GetMacAddress()
+        {
+            const int MIN_MAC_ADDR_LENGTH = 12;
+            string macAddress = string.Empty;
+            long maxSpeed = -1;
+
+            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                string tempMac = nic.GetPhysicalAddress().ToString();
+                if (nic.Speed > maxSpeed && !string.IsNullOrEmpty(tempMac) && tempMac.Length >= MIN_MAC_ADDR_LENGTH)
+                {
+                    maxSpeed = nic.Speed;
+                    macAddress = tempMac;
+                }
+            }
+            return macAddress;
+        }
+        public static string GetDeviceName()
+        {
+            return $"{Environment.UserName}[{Environment.MachineName}]";
         }
     }
 }

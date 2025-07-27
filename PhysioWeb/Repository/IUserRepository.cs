@@ -4,6 +4,7 @@ namespace PhysioWeb.Repository
 {
     public interface IUserRepository
     {
-        Task<Users> Login(string username, string password, string email);
+        Task<Users> Login(string Email, string Mobile, string Password);
+        Task<bool> RegisterUser(Register register);
     }
 }

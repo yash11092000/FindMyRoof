@@ -13,6 +13,10 @@ namespace PhysioWeb.Models
         public string UserRole { get; set; }
         public bool IsActive { get; set; }
 
+        public int UserRoleId { get; set; }
+
+        public string EmailId { get; set; }
+
 
         public Users(IDataReader data)
         {
@@ -25,6 +29,10 @@ namespace PhysioWeb.Models
             {
                 obj.UserId = rdr.GetInt32(rdr.GetOrdinal("UserId"));
             }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("UserRoleId")))
+            {
+                obj.UserRoleId = rdr.GetInt32(rdr.GetOrdinal("UserRoleId"));
+            }
             if (!rdr.IsDBNull(rdr.GetOrdinal("UserSerialNo")))
             {
                 obj.UserSerialNo = rdr.GetString(rdr.GetOrdinal("UserSerialNo"));
@@ -32,6 +40,10 @@ namespace PhysioWeb.Models
             if (!rdr.IsDBNull(rdr.GetOrdinal("UserName")))
             {
                 obj.UserName = rdr.GetString(rdr.GetOrdinal("UserName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("EmailId")))
+            {
+                obj.EmailId = rdr.GetString(rdr.GetOrdinal("EmailId"));
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("Password")))
             {
@@ -41,10 +53,10 @@ namespace PhysioWeb.Models
             {
                 obj.UserRole = rdr.GetString(rdr.GetOrdinal("UserRole"));
             }
-            if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
-            {
-                obj.IsActive = rdr.GetBoolean(rdr.GetOrdinal("IsActive"));
-            }
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
+            //{
+            //    obj.IsActive = rdr.GetBoolean(rdr.GetOrdinal("IsActive"));
+            //}
 
         }
     }
