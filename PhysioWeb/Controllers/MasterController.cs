@@ -50,13 +50,8 @@ namespace PhysioWeb.Controllers
         {
             var result = await _masterRepository.ListPropertyType(dataTablePara);
 
-            //return Json(result);
-            return Json(new
-            {
-                data = result.daaa, // 👈 make sure this matches what DataTables expects
-                recordsTotal = result.totalCount,
-                recordsFiltered = result.totalCount
-            });
+            return Json(result);
+           
         }
 
         #endregion
