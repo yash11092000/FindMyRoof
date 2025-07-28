@@ -84,6 +84,23 @@ namespace PhysioWeb.Controllers
 
         }
 
+        [HttpPost]
+        public JsonResult EditPropertyType(int UniqueID)
+        {
+            try
+            {
+                int UserID = 0;
+                var data = _masterRepository.EditPropertyType(UniqueID, UserID);
+
+                return Json(data);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
         #endregion
 
         #region Rental Type Master

@@ -93,5 +93,22 @@ namespace PhysioWeb.Repository
             int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
             return RecordAffected > 0;
         }
+        public async Task<PropertyTypeMaster> EditPropertyType(int UniqueID,int UserID)
+        {
+            string[] parameterNames = { "UniqueID" , "UserID" };
+            object[] parameterValues = { UniqueID , UserID };
+
+            
+            string Sp = "FMR_EditPropertyType";
+            var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+            while (data.Read())
+            {
+                PropertyTypeMaster PropertyTypeMaster = new PropertyTypeMaster(data);
+                return PropertyTypeMaster;
+            }
+            return null;
+        }
+
+
     }
 }

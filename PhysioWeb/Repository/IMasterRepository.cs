@@ -8,5 +8,6 @@ namespace PhysioWeb.Repository
         Task<bool> SavePropType(PropertyTypeMaster PropertyTypeMaster);
         Task<DataTableResult> ListPropertyType(DataTablePara dataTablePara);
         Task<bool> SaveRentalType(RentalTypeMaster RentalTypeMaster);
+        Task<PropertyTypeMaster> EditPropertyType(int UniqueID, int UserID);
     }
 }
