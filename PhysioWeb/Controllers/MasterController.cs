@@ -118,5 +118,18 @@ namespace PhysioWeb.Controllers
         }
 
         #endregion
+
+        #region Property Master
+        public async Task<ActionResult> PropertyMaster()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> SaveProperty(PropertyMaster model, List<IFormFile> Images, List<IFormFile> Videos)
+        {
+            return Json(new { success = false, message = "Invalid property data" });
+
+        }
+        #endregion
     }
 }

@@ -1,0 +1,528 @@
+﻿@{
+	ViewData["Title"] = "Property Master";
+}
+<style>
+	.stepper {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		position: relative;
+	}
+
+		.stepper .step {
+			flex: 1;
+			text-align: center;
+			font-weight: 500;
+			color: #777;
+			position: relative;
+		}
+
+			.stepper .step span {
+				display: inline-block;
+				width: 35px;
+				height: 35px;
+				line-height: 35px;
+				border-radius: 50%;
+				background: #dcdcdc;
+				color: #fff;
+				margin-bottom: 5px;
+				transition: all 0.3s ease;
+			}
+
+			.stepper .step.active span {
+				background: #28a745;
+				transform: scale(1.1);
+			}
+
+			.stepper .step.completed span {
+				background: #2ecc71;
+			}
+
+			.stepper .step::after {
+				content: '';
+				position: absolute;
+				top: 17px;
+				left: 50%;
+				width: 100%;
+				height: 3px;
+				background: #dcdcdc;
+				z-index: -1;
+			}
+
+			.stepper .step:last-child::after {
+				display: none;
+			}
+
+			.stepper .step.completed::after {
+				background: #2ecc71;
+			}
+
+	.gallery-container {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+		gap: 15px;
+		justify-items: center;
+		margin-top: 15px;
+	}
+
+	.preview-card {
+		position: relative;
+		width: 180px;
+		height: 140px;
+		border-radius: 8px;
+		overflow: hidden;
+		background: #ffffff;
+		border: 1px solid #e0e0e0;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+		transition: transform 0.2s ease-in-out;
+	}
+
+		.preview-card:hover {
+			transform: scale(1.05);
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+		}
+
+		.preview-card img,
+		.preview-card video {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+	.delete-btn {
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		background: rgba(220, 53, 69, 0.9);
+		border: none;
+		color: #fff;
+		font-size: 16px;
+		border-radius: 50%;
+		width: 24px;
+		height: 24px;
+		cursor: pointer;
+		line-height: 20px;
+		text-align: center;
+		padding: 0;
+		z-index: 10;
+		transition: background 0.2s;
+	}
+
+		.delete-btn:hover {
+			background: #ff1a1a;
+		}
+</style>
+
+<div class="container my-4 p-3 shadow rounded bg-white">
+	<h3 class="text-success fw-bold mb-3">Add New Property</h3>
+
+	<div class="progress mb-4" style="height: 8px;">
+		<div class="progress-bar bg-success" role="progressbar" style="width: 25%;"></div>
+	</div>
+
+	<!-- Custom Stepper -->
+	<ul class="stepper d-flex justify-content-between mb-4">
+		<li class="step active" data-target="#step1"><span>1</span> Basic</li>
+		<li class="step" data-target="#step2"><span>2</span> Location</li>
+		<li class="step" data-target="#step3"><span>3</span> Amenities</li>
+		<li class="step" data-target="#step4"><span>4</span> Review</li>
+	</ul>
+
+
+	<!-- Form -->
+	<form id="propertyForm" enctype="multipart/form-data">
+		<div class="tab-content">
+
+			<!-- Step 1 -->
+			<div class="tab-pane fade show active" id="step1">
+				<div class="mb-3">
+					<label class="form-label fw-bold">Property Title</label>
+					<input type="text" class="form-control" name="Title" id="Title" placeholder="Enter property title">
+				</div>
+
+				<div class="row">
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Property Type</label>
+						<select class="form-select" name="PropertyType">
+							<option value="">Select Property Type</option>
+							<option>Apartment</option>
+							<option>Villa</option>
+							<option>Plot</option>
+							<option>Office Space</option>
+						</select>
+					</div>
+
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Availability</label>
+						<select class="form-select" name="Availability">
+							<option value="">Select</option>
+							<option>For Sale</option>
+							<option>For Rent</option>
+						</select>
+					</div>
+
+					<div class="col-md-2 mb-3">
+						<label class="form-label fw-bold">Bedrooms</label>
+						<select class="form-select" name="Bedrooms">
+							<option value="">Select</option>
+							<option>1 BHK</option>
+							<option>2 BHK</option>
+							<option>3 BHK</option>
+							<option>4+ BHK</option>
+						</select>
+					</div>
+
+					<div class="col-md-2 mb-3">
+						<label class="form-label fw-bold">Bathrooms</label>
+						<select class="form-select" name="Bathrooms">
+							<option value="">Select</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4+</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Property Size (sq. ft.)</label>
+						<input type="number" class="form-control" name="Size" placeholder="Enter area">
+					</div>
+
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Furnishing Status</label>
+						<select class="form-select" name="Furnishing">
+							<option value="">Select</option>
+							<option>Furnished</option>
+							<option>Semi-Furnished</option>
+							<option>Unfurnished</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label fw-bold">Description</label>
+					<textarea class="form-control" name="Description" id="Description" rows="3" placeholder="Enter property description"></textarea>
+				</div>
+
+				<button type="button" class="btn btn-success next-step">Next</button>
+			</div>
+
+
+			<!-- Step 2 -->
+			<div class="tab-pane fade" id="step2">
+				<div class="row">
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">City</label>
+						<input type="text" class="form-control" name="City" id="City" placeholder="Enter city">
+					</div>
+
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">State</label>
+						<input type="text" class="form-control" name="State" id="State" placeholder="Enter state">
+					</div>
+
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Pin Code</label>
+						<input type="text" class="form-control" name="PinCode" id="PinCode" placeholder="Enter pin code">
+					</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label fw-bold">Address</label>
+					<input type="text" class="form-control" name="Address" id="Address" placeholder="Enter full address">
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label fw-bold">Landmark</label>
+					<input type="text" class="form-control" name="Landmark" id="LandMark" placeholder="Nearby landmark">
+				</div>
+
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label class="form-label fw-bold">Price Range (₹)</label>
+						<div class="row g-1">
+							<div class="col-6">
+								<div class="input-group">
+									<span class="input-group-text">₹</span>
+									<input type="number" class="form-control" name="PriceMin" placeholder="Min">
+								</div>
+							</div>
+							<div class="col-6">
+								<div class="input-group">
+									<span class="input-group-text">₹</span>
+									<input type="number" class="form-control" name="PriceMax" placeholder="Max">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<button type="button" class="btn btn-light prev-step">Back</button>
+				<button type="button" class="btn btn-success next-step">Next</button>
+			</div>
+
+
+			<!-- Step 3 -->
+			<div class="tab-pane fade" id="step3">
+				<div class="mb-3">
+					<label class="form-label fw-bold">Amenities</label>
+					<select class="form-select" name="Amenities" id="Amenities" multiple>
+						<option>Parking</option>
+						<option>Gym</option>
+						<option>Swimming Pool</option>
+						<option>Garden</option>
+						<option>Lift</option>
+						<option>Clubhouse</option>
+					</select>
+					<small class="text-muted">Hold CTRL to select multiple amenities</small>
+				</div>
+
+				<!-- Image Upload -->
+				<div class="mb-3">
+					<label class="form-label fw-bold">Upload Images</label>
+					<div id="imageInputs">
+						<input type="file" name="Images" class="form-control mb-2 imageInput" accept="image/*">
+					</div>
+					<button type="button" id="addImageInput" class="btn btn-outline-success btn-sm">+ Add More Images</button>
+				</div>
+
+				<div id="imageGallery" class="gallery-container"></div>
+
+				<hr>
+
+				<!-- Video Upload -->
+				<div class="mb-3">
+					<label class="form-label fw-bold">Upload Videos</label>
+					<div id="videoInputs">
+						<input type="file" name="Videos" class="form-control mb-2 videoInput" accept="video/*">
+					</div>
+					<button type="button" id="addVideoInput" class="btn btn-outline-success btn-sm">+ Add More Videos</button>
+				</div>
+
+				<div id="videoGallery" class="gallery-container"></div>
+
+
+				<button type="button" class="btn btn-light prev-step">Back</button>
+				<button type="button" class="btn btn-success next-step">Next</button>
+			</div>
+
+
+			<!-- Step 4 -->
+			<div class="tab-pane fade" id="step4">
+				<h5 class="text-success">Review Your Property Details</h5>
+				<p class="text-muted">You can review all information before submitting.</p>
+				<button type="button" class="btn btn-light prev-step">Back</button>
+				<button type="button" id="submitProperty" class="btn btn-success">Submit Property</button>
+			</div>
+
+		</div>
+	</form>
+</div>
+
+@section Scripts {
+	<script>
+		new Choices('#Amenities', {
+									removeItemButton: true,
+									placeholder: true,
+									placeholderValue: 'Select Amenities',
+									searchEnabled: true
+								});
+
+										function isValidFile(file, allowedTypes) {
+									return file.size > 0 && allowedTypes.some(type => file.type.startsWith(type));
+								}
+
+								$(document).ready(function () {
+									function updateProgress(stepIndex) {
+										let totalSteps = $(".step").length;
+										let percent = ((stepIndex + 1) / totalSteps) * 100;
+										$(".progress-bar").css("width", percent + "%");
+									}
+
+									function goToStep(stepIndex) {
+										$(".tab-pane").removeClass("show active").eq(stepIndex).addClass("show active");
+										$(".step").removeClass("active completed");
+										$(".step").each(function (index) {
+											if (index < stepIndex) $(this).addClass("completed");
+											if (index === stepIndex) $(this).addClass("active");
+										});
+										updateProgress(stepIndex);
+									}
+
+									$(document).on("click", ".step", function () {
+										goToStep($(this).index());
+									});
+
+									$(document).on("click", ".next-step", function () {
+										let currentIndex = $(".step.active").index();
+										if (currentIndex < $(".step").length - 1) goToStep(currentIndex + 1);
+									});
+
+									$(document).on("click", ".prev-step", function () {
+										let currentIndex = $(".step.active").index();
+										if (currentIndex > 0) goToStep(currentIndex - 1);
+									});
+								});
+
+											function createPreview(input, file, type) {
+					const gallery = type === "image" ? document.getElementById("imageGallery") : document.getElementById("videoGallery");
+
+					// Remove old preview for this input
+					const oldPreview = gallery.querySelector(`[data-input-id="${input.dataset.id}"]`);
+					if (oldPreview) oldPreview.remove();
+
+					const fileURL = URL.createObjectURL(file);
+					const card = document.createElement("div");
+					card.classList.add("preview-card");
+					card.dataset.inputId = input.dataset.id;
+
+					card.innerHTML = `
+						<button type="button" class="delete-btn">&times;</button>
+						${type === "image"
+							? `<img src="${fileURL}" alt="Preview">`
+							: `<video controls><source src="${fileURL}" type="${file.type}"></video>`}
+					`;
+
+					gallery.appendChild(card);
+
+					// Delete functionality
+					card.querySelector(".delete-btn").addEventListener("click", () => {
+						URL.revokeObjectURL(fileURL);
+						card.remove();
+						input.remove();
+					});
+				}
+
+				function isValid(file, prefix) {
+					return file && file.type.startsWith(prefix);
+				}
+
+				function handlePreview(e, type) {
+					const input = e.target;
+					const file = input.files[0];
+					if (!file) return;
+
+					if (!isValid(file, type + "/")) {
+						alert(`Invalid ${type} file: ${file.name}`);
+						input.value = "";
+						return;
+					}
+
+					createPreview(input, file, type);
+				}
+
+				let inputCounter = 0;
+				function assignInputId(input) {
+					input.dataset.id = "input-" + (++inputCounter);
+				}
+
+				document.addEventListener("change", function (e) {
+					if (e.target.classList.contains("imageInput")) handlePreview(e, "image");
+					if (e.target.classList.contains("videoInput")) handlePreview(e, "video");
+				});
+
+				// Add Image Input
+				document.getElementById("addImageInput").addEventListener("click", () => {
+					const newInput = document.createElement("input");
+					newInput.type = "file";
+					newInput.name = "Images";
+					newInput.accept = "image/*";
+					newInput.classList.add("form-control", "mb-2", "imageInput");
+					assignInputId(newInput);
+					document.getElementById("imageInputs").appendChild(newInput);
+				});
+
+				// Add Video Input
+				document.getElementById("addVideoInput").addEventListener("click", () => {
+					const newInput = document.createElement("input");
+					newInput.type = "file";
+					newInput.name = "Videos";
+					newInput.accept = "video/*";
+					newInput.classList.add("form-control", "mb-2", "videoInput");
+					assignInputId(newInput);
+					document.getElementById("videoInputs").appendChild(newInput);
+				});
+
+				// Assign IDs to initial inputs
+				document.querySelectorAll(".imageInput, .videoInput").forEach(assignInputId);
+
+
+			$("#submitProperty").on("click", function (e) {
+						 e.preventDefault();
+
+				// ✅ Collect required fields
+				let title = $("#Title").val();
+				let description = $("#Description").val();
+				let city = $("#City").val();
+				let state = $("#State").val();
+				let pin = $("#PinCode").val();
+				// let price = $("Price").val().trim();
+				let amenities = $("#Amenities").val();
+
+				// ✅ Validate text fields
+				if (!title) { notyf.error("Please enter Property Title");$("#Title").focus(); return; }
+				if (!description) { notyf.error("Please enter Description"); return; }
+				if (!city) { notyf.error("Please enter City"); return; }
+				if (!state) { notyf.error("Please enter State"); return; }
+				if (!pin) { notyf.error("Please enter PinCode"); return; }
+				//if (!price || price <= 0) { notyf.error("Please enter a valid Price"); return; }
+				if (!amenities || amenities.length === 0) { notyf.error("Please select at least one Amenity"); return; }
+
+				// ✅ Validate at least one image
+				let hasImage = false;
+				document.querySelectorAll("#imageInputs input[type='file']").forEach(input => {
+					if (input.files.length > 0) hasImage = true;
+				});
+				if (!hasImage) { notyf.error("Please upload at least one Image"); return; }
+
+				// ✅ Validate at least one video
+				let hasVideo = false;
+				document.querySelectorAll("#videoInputs input[type='file']").forEach(input => {
+					if (input.files.length > 0) hasVideo = true;
+				});
+				if (!hasVideo) { notyf.error("Please upload at least one Video"); return; }
+
+				// ✅ If validation passes, send data
+				let form = document.getElementById("propertyForm");
+				let formData = new FormData(form);
+
+				// Append Images
+				document.querySelectorAll("#imageInputs input[type='file']").forEach(input => {
+					if (input.files[0]) formData.append("Images", input.files[0]);
+				});
+
+				// Append Videos
+				document.querySelectorAll("#videoInputs input[type='file']").forEach(input => {
+					if (input.files[0]) formData.append("Videos", input.files[0]);
+				});
+
+
+				console.log(formData);
+				// ✅ AJAX call
+				$.ajax({
+					url: '/Master/SaveProperty',
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function (res) {
+						if (res.success) {
+							notyf.success("Property saved successfully!");
+							form.reset();
+							$("#imageGallery, #videoGallery").empty();
+						} else {
+							notyf.error(res.message || "Failed to save property");
+						}
+					},
+					error: function () {
+						notyf.error("An error occurred while saving the property.");
+					}
+				});
+		});
+
+	</script>
+
+}
