@@ -44,6 +44,21 @@ namespace PhysioWeb.Controllers
             var result = await _masterRepository.SavePropType(propertyTypeMaster);
             return Json(result);
         }
+        
+
+        [HttpPost]
+        public async Task<ActionResult> DeletePropertyType(int UniqueID)
+        {
+            // propertyTypeMaster.AgencyId = 0;
+            var propertyTypeMaster = new PropertyTypeMaster
+            {
+                UniquId = UniqueID
+            };
+
+            var result = await _masterRepository.DeletePropertyType(propertyTypeMaster);
+            return Json(new { success = result });
+        }
+
 
         [HttpPost]
 
@@ -85,12 +100,12 @@ namespace PhysioWeb.Controllers
         }
 
         [HttpPost]
-        public JsonResult EditPropertyType(int UniqueID)
+        public async Task<ActionResult> EditPropertyType(int UniqueID)
         {
             try
             {
                 int UserID = 0;
-                var data = _masterRepository.EditPropertyType(UniqueID, UserID);
+                var data = await _masterRepository.EditPropertyType(UniqueID, UserID);
 
                 return Json(data);
 

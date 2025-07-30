@@ -8,7 +8,11 @@ namespace PhysioWeb.Models
         public string Description { get; set; }
         public bool IsActive { get; set; }
         public string InActiveText { get; set; }
-       
+
+        public PropertyTypeMaster()
+        {
+            
+        }
         public PropertyTypeMaster(IDataReader reader , int flag = 0)
         {
             if (flag == 0)

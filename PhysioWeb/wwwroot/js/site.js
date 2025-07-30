@@ -7,16 +7,11 @@ function EditData(ID, Controller, Action) {
         success: function (data) {
             console.log(data);
 
-            if (data.length > 0) {
+            if (data != "") {
                 OnSuccessOfEdit(data);
-                // Assuming response contains data like: response.data.PropertyName
-                //$('#txtName').val(response.data.Name);
-                //$('#txtDescription').val(response.data.Description);
-                //// Populate other fields as needed
-                //$('#hdnId').val(ID); // Store ID for update
-                //$('#modalEdit').modal('show'); // Show modal if editing in a modal
+                
             } else {
-                //alert("Error: " + response.message);
+                
             }
         },
         error: function (xhr, status, error) {
@@ -27,6 +22,24 @@ function EditData(ID, Controller, Action) {
     });
 }
 
-function DeleteData() {
-
+function DeleteData(ID, Controller, Action) {
+    
+    $.ajax({
+        type: "POST",
+        url: "/" + Controller + "/" + Action,
+        data: { UniqueID: ID },
+        success: function (response) {
+            if (response) {
+                notyf.success("Property Type Deleted");
+                
+                $("#TableList").DataTable().ajax.reload(null, false);
+            } else {
+                notyf.error(response.message || "Failed to delete.");
+            }
+        },
+        error: function (xhr) {
+            console.error(xhr);
+            notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
+        }
+    });
 }
