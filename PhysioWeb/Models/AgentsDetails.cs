@@ -1,6 +1,6 @@
 ﻿namespace PhysioWeb.Models
 {
-    public class AgentsDetails
+    public class AgentsDetails : CommanProp
     {
         public string AgentType { get; set; }
         public string FirmName { get; set; }
@@ -39,5 +39,7 @@
         public string PreferredLocations { get; set; }
 
         public bool IsActive { get; set; } = true;
+
+       
     }
 }
