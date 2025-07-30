@@ -110,9 +110,9 @@ namespace PhysioWeb.Controllers
         [HttpGet]
         public async Task<ActionResult> Register()
         {
-
             return View();
         }
+
         [HttpPost]
         public async Task<ActionResult> Register(Register register)
         {
