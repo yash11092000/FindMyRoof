@@ -3,6 +3,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using PhysioWeb.Models;
 using PhysioWeb.Repository;
+using Newtonsoft.Json;
 
 namespace PhysioWeb.Controllers
 {
@@ -208,11 +209,15 @@ namespace PhysioWeb.Controllers
             return View();
         }
 
-        public async Task<IActionResult> SaveProperty(PropertyMaster model, List<IFormFile> Images, List<IFormFile> Videos)
+        public async Task<IActionResult> SaveProperty(string PropertyMaster, List<IFormFile> Images, List<IFormFile> Videos)
         {
+            var property = JsonConvert.DeserializeObject<PropertyMaster>(PropertyMaster);
+
             return Json(new { success = false, message = "Invalid property data" });
 
         }
         #endregion
+
+     
     }
 }

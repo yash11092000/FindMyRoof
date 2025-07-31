@@ -1,0 +1,463 @@
+﻿@{
+	ViewData["Title"] = "Agency Details";
+}
+
+<style>
+	.stepper {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		position: relative;
+	}
+
+		.stepper .step {
+			flex: 1;
+			text-align: center;
+			font-weight: 500;
+			color: #777;
+			position: relative;
+		}
+
+			.stepper .step span {
+				display: inline-block;
+				width: 35px;
+				height: 35px;
+				line-height: 35px;
+				border-radius: 50%;
+				background: #dcdcdc;
+				color: #fff;
+				margin-bottom: 5px;
+				transition: all 0.3s ease;
+			}
+
+			.stepper .step.active span {
+				background: #28a745;
+				transform: scale(1.1);
+			}
+
+			.stepper .step.completed span {
+				background: #2ecc71;
+			}
+
+			.stepper .step::after {
+				content: '';
+				position: absolute;
+				top: 17px;
+				left: 50%;
+				width: 100%;
+				height: 3px;
+				background: #dcdcdc;
+				z-index: -1;
+			}
+
+			.stepper .step:last-child::after {
+				display: none;
+			}
+
+			.stepper .step.completed::after {
+				background: #2ecc71;
+			}
+
+	.gallery-container {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+		gap: 15px;
+		justify-items: center;
+		margin-top: 15px;
+	}
+
+	.preview-card {
+		position: relative;
+		width: 180px;
+		height: 140px;
+		border-radius: 8px;
+		overflow: hidden;
+		background: #ffffff;
+		border: 1px solid #e0e0e0;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+		transition: transform 0.2s ease-in-out;
+	}
+
+		.preview-card:hover {
+			transform: scale(1.05);
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+		}
+
+		.preview-card img,
+		.preview-card video {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+	.delete-btn {
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		background: rgba(220, 53, 69, 0.9);
+		border: none;
+		color: #fff;
+		font-size: 16px;
+		border-radius: 50%;
+		width: 24px;
+		height: 24px;
+		cursor: pointer;
+		line-height: 20px;
+		text-align: center;
+		padding: 0;
+		z-index: 10;
+		transition: background 0.2s;
+	}
+
+		.delete-btn:hover {
+			background: #ff1a1a;
+		}
+</style>
+
+<div class="container my-4 p-3 shadow rounded bg-white">
+	<h3 class="text-success fw-bold mb-3">Register New Agency</h3>
+
+	<div class="progress mb-4" style="height: 8px;">
+		<div class="progress-bar bg-success" role="progressbar" style="width: 25%;"></div>
+	</div>
+
+
+	<!-- Stepper -->
+	<ul class="stepper d-flex justify-content-between mb-4">
+		<li class="step active" data-target="#agencyStep1"><span>1</span> Agency Info</li>
+		<li class="step" data-target="#agencyStep2"><span>2</span> Contact & Address</li>
+		<li class="step" data-target="#agencyStep3"><span>3</span> Registration</li>
+		<li class="step" data-target="#agencyStep4"><span>4</span> Documents</li>
+		<li class="step" data-target="#agencyStep5"><span>5</span> Review</li>
+	</ul>
+
+	<!-- Form -->
+	<form id="agencyForm">
+		<div class="tab-content">
+
+			<!-- Step 1 -->
+			<div class="tab-pane fade show active" id="agencyStep1">
+				<div class="mb-3">
+					<label class="form-label fw-bold">Agency Name</label>
+					<input type="text" class="form-control" id="AgencyName" required>
+				</div>
+				<div class="form-check mb-3">
+					<input class="form-check-input" type="checkbox" id="IsAgencyRegistered">
+					<label class="form-check-label">Is Agency Registered?</label>
+				</div>
+				<div class="mb-3">
+					<label class="form-label fw-bold">Agency Logo</label>
+					<input type="file" class="form-control file-input" id="AgencyLogo" accept="image/*">
+					<div id="previewAgencyLogo" class="gallery row g-2 text-center"></div>
+				</div>
+				<button type="button" class="btn btn-success next-step">Next</button>
+			</div>
+
+			<!-- Step 2 -->
+			<div class="tab-pane fade" id="agencyStep2">
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label class="form-label fw-bold">Contact Person Name</label>
+						<input type="text" class="form-control" id="ContactPersonName" name="ContactPersonName">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label fw-bold">Email Address</label>
+						<input type="email" class="form-control" id="EmailAddress" name="EmailAddress">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label fw-bold">Mobile No</label>
+						<input type="text" class="form-control" id="MobileNo" name="MobileNo">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label fw-bold">Alternate Mobile No</label>
+						<input type="text" class="form-control" id="AlternateMobileNo" name="AlternateMobileNo">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label fw-bold">Website URL</label>
+						<input type="text" class="form-control" id="WebsiteUrl" name="WebsiteUrl">
+					</div>
+					<div class="col-md-12 mb-3">
+						<label class="form-label fw-bold">Street Address</label>
+						<input type="text" class="form-control" id="StreetAddress" name="StreetAddress">
+					</div>
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">City</label>
+						<input type="text" class="form-control" id="CityName" name="CityName">
+					</div>
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">State</label>
+						<input type="text" class="form-control" id="StateName" name="StateName">
+					</div>
+					<div class="col-md-2 mb-3">
+						<label class="form-label fw-bold">Pincode</label>
+						<input type="text" class="form-control" id="Pincode" name="Pincode">
+					</div>
+					<div class="col-md-2 mb-3">
+						<label class="form-label fw-bold">Country</label>
+						<input type="text" class="form-control" id="Country" name="Country">
+					</div>
+				</div>
+				<button type="button" class="btn btn-light prev-step">Back</button>
+				<button type="button" class="btn btn-success next-step">Next</button>
+			</div>
+
+			<!-- Step 3 -->
+			<div class="tab-pane fade" id="agencyStep3">
+				<div class="mb-3">
+					<label class="form-label fw-bold">RERA Registration No</label>
+					<input type="text" class="form-control" id="ReraRegNo" name="ReraRegNo">
+				</div>
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label class="form-label fw-bold">License Issue Date</label>
+						<input type="date" class="form-control" id="LicenseIssueDate" name="LicenseIssueDate">
+					</div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label fw-bold">License Expiry Date</label>
+						<input type="date" class="form-control" id="LicenseExpiryDate" name="LicenseExpiryDate">
+					</div>
+				</div>
+				<div class="mb-3">
+					<label class="form-label fw-bold">PAN</label>
+					<input type="text" class="form-control" id="PAN" name="PAN">
+				</div>
+				<div class="mb-3">
+					<label class="form-label fw-bold">GST</label>
+					<input type="text" class="form-control" id="GST" name="GST">
+				</div>
+				<div class="form-check mb-3">
+					<input class="form-check-input" type="checkbox" id="IsActive" checked>
+					<label class="form-check-label" for="IsActive">Is Active?</label>
+				</div>
+				<button type="button" class="btn btn-light prev-step">Back</button>
+				<button type="button" class="btn btn-success next-step">Next</button>
+			</div>
+
+			<!-- Step 4 -->
+			<div class="tab-pane fade" id="agencyStep4">
+				<div class="mb-3">
+					<label class="form-label fw-bold">Upload RERA Certificate</label>
+					<input type="file" class="form-control file-input" id="ReraCertificate" accept="application/pdf,image/*">
+					<div id="previewReraCertificate" class="gallery row g-2 text-center"></div>
+				</div>
+				<div class="mb-3">
+					<label class="form-label fw-bold">Upload Agency License</label>
+					<input type="file" class="form-control file-input" id="AgencyLicense" accept="application/pdf,image/*">
+					<div id="previewAgencyLicense" class="gallery row g-2 text-center"></div>
+				</div>
+				<div class="mb-3">
+					<label class="form-label fw-bold">Upload Address Proof</label>
+					<input type="file" class="form-control file-input" id="AddressProof" accept="application/pdf,image/*">
+					<div id="previewAddressProof" class="gallery row g-2 text-center"></div>
+				</div>
+				<button type="button" class="btn btn-light prev-step">Back</button>
+				<button type="button" class="btn btn-success next-step">Next</button>
+			</div>
+
+			<!-- Step 5 -->
+			<div class="tab-pane fade" id="agencyStep5">
+				<h5 class="text-success">Review Your Agency Details</h5>
+				<p class="text-muted">Check all the details before submitting.</p>
+				<button type="button" class="btn btn-light prev-step">Back</button>
+				<button type="button" id="submitAgency" class="btn btn-success">Submit Agency</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+@section Scripts {
+	<script>
+
+									function updateProgress(stepIndex) {
+										let totalSteps = $(".step").length;
+										let percent = ((stepIndex + 1) / totalSteps) * 100;
+										$(".progress-bar").css("width", percent + "%");
+									}
+
+									function goToStep(stepIndex) {
+										$(".tab-pane").removeClass("show active").eq(stepIndex).addClass("show active");
+										$(".step").removeClass("active completed");
+										$(".step").each(function (index) {
+											if (index < stepIndex) $(this).addClass("completed");
+											if (index === stepIndex) $(this).addClass("active");
+										});
+										updateProgress(stepIndex);
+									}
+
+									$(document).on("click", ".step", function () {
+										goToStep($(this).index());
+									});
+
+									$(document).on("click", ".next-step", function () {
+										let currentIndex = $(".step.active").index();
+										if (currentIndex < $(".step").length - 1) goToStep(currentIndex + 1);
+									});
+
+									$(document).on("click", ".prev-step", function () {
+										let currentIndex = $(".step.active").index();
+										if (currentIndex > 0) goToStep(currentIndex - 1);
+									});
+
+		// ✅ File preview (single file per input)
+			$(document).on("change", ".file-input", function () {
+			let inputId = $(this).attr("id");
+			let previewArea = "#preview" + inputId; // ✅ Dynamically pick corresponding preview div
+
+			let file = this.files[0];
+			if (!file) return;
+
+			let card = document.createElement("div");
+			card.classList.add("col-4");
+
+			let url = URL.createObjectURL(file);
+
+			card.innerHTML = `
+				<div class="card p-1 shadow-sm position-relative">
+					<button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 delete-file">×</button>
+					${file.type.includes("image")
+						? `<img src="${url}" class="img-fluid rounded" style="height:150px;object-fit:cover;">`
+						: `<embed src="${url}" type="${file.type}" style="width:100%;height:150px;">`}
+				</div>`;
+
+			// ✅ Replace only this field’s preview
+			$(previewArea).html(card);
+
+			// ✅ Delete functionality
+			card.querySelector(".delete-file").addEventListener("click", () => {
+				this.value = "";      // clear file input
+				card.remove();        // remove preview
+			});
+		});
+
+
+				$("#submitAgency").on("click", function () {
+		 if (!validateAgencyForm()) return; // stop if validation fails
+
+			let fd = new FormData();
+
+
+		// ✅ Basic Info
+		fd.append("AgencyName", $("#AgencyName").val());
+		fd.append("IsAgencyRegistered", $("#IsAgencyRegistered").is(":checked"));
+		fd.append("ContactPersonName", $("#ContactPersonName").val());
+		fd.append("EmailAddress", $("#EmailAddress").val());
+		fd.append("MobileNo", $("#MobileNo").val());
+		fd.append("AlternateMobileNo", $("#AlternateMobileNo").val());
+		fd.append("WebsiteUrl", $("#WebsiteUrl").val());
+
+		// ✅ Address
+		fd.append("StreetAddress", $("#StreetAddress").val());
+		fd.append("CityName", $("#CityName").val());
+		fd.append("StateName", $("#StateName").val());
+		fd.append("Pincode", $("#Pincode").val());
+		fd.append("Country", $("#Country").val());
+
+		// ✅ Registration Info
+		fd.append("ReraRegNo", $("#ReraRegNo").val());
+		fd.append("LicenseIssueDate", $("#LicenseIssueDate").val());
+		fd.append("LicenseExpiryDate", $("#LicenseExpiryDate").val());
+		fd.append("PAN", $("#PAN").val());
+		fd.append("GST", $("#GST").val());
+		fd.append("IsActive", $("#IsActive").is(":checked"));
+
+		// ✅ Files
+		if ($("#AgencyLogo")[0].files.length > 0)
+			fd.append("AgencyLogo", $("#AgencyLogo")[0].files[0]);
+
+		if ($("#ReraCertificate")[0].files.length > 0)
+			fd.append("ReraCertificate", $("#ReraCertificate")[0].files[0]);
+
+		if ($("#AgencyLicense")[0].files.length > 0)
+			fd.append("AgencyLicense", $("#AgencyLicense")[0].files[0]);
+
+		if ($("#AddressProof")[0].files.length > 0)
+			fd.append("AddressProof", $("#AddressProof")[0].files[0]);
+
+			// ✅ Send to Controller
+			$.ajax({
+				url: '/SuperAdmin/SaveAgency',
+				type: 'POST',
+				data: fd,
+				processData: false,
+				contentType: false,
+				success: function (res) {
+					res.success ? notyf.success("Agency saved!") : notyf.error(res.message);
+				},
+				error: function () {
+					notyf.error("Error while saving agency");
+				}
+			});
+		});
+
+				// ✅ Validation Helper
+		// function isEmpty(id, msg) {
+		// 	let val = $("#" + id).val().trim();
+		// 	if (!val) {
+		// 		notyf.error(msg);
+		// 		$("#" + id).focus();
+		// 		return true;
+		// 	}
+		// 	return false;
+		// }
+
+		// function isFileEmpty(id, msg) {
+		// 	if (!$("#" + id)[0].files.length) {
+		// 		notyf.error(msg);
+		// 		return true;
+		// 	}
+		// 	return false;
+		// }
+
+						function validateAgencyForm() {
+			const requiredFields = [
+				{ id: "#AgencyName", msg: "Please enter Agency Name", step: 0 },
+				{ id: "#ContactPersonName", msg: "Please enter Contact Person Name", step: 1 },
+				{ id: "#EmailAddress", msg: "Please enter Email Address", step:1 },
+				{ id: "#MobileNo", msg: "Please enter Mobile Number", step: 1 },
+
+				{ id: "#StreetAddress", msg: "Please enter Street Address", step: 1 },
+				{ id: "#CityName", msg: "Please enter City", step: 1 },
+				{ id: "#StateName", msg: "Please enter State", step: 1 },
+				{ id: "#Pincode", msg: "Please enter Pincode", step: 1 },
+				{ id: "#Country", msg: "Please enter Country", step: 1 },
+
+				{ id: "#ReraRegNo", msg: "Please enter RERA Registration Number", step: 2 },
+				{ id: "#LicenseIssueDate", msg: "Please select License Issue Date", step: 2 },
+				{ id: "#LicenseExpiryDate", msg: "Please select License Expiry Date", step: 2 },
+				{ id: "#PAN", msg: "Please enter PAN", step: 2 },
+				{ id: "#GST", msg: "Please enter GST Number", step: 2 }
+			];
+
+			// ✅ Validate text fields
+			for (let field of requiredFields) {
+				if (!$(field.id).val()) {
+					notyf.error(field.msg);
+					goToStep(field.step);   // ✅ jump to the correct step
+					$(field.id).focus();    // ✅ focus on field
+					return false;
+				}
+			}
+
+			// ✅ Validate file inputs
+			const fileFields = [
+				{ id: "#AgencyLogo", msg: "Please upload Agency Logo", step: 1 },
+				{ id: "#ReraCertificate", msg: "Please upload RERA Certificate", step: 3 },
+				{ id: "#AgencyLicense", msg: "Please upload Agency License", step: 3 },
+				{ id: "#AddressProof", msg: "Please upload Address Proof", step: 3 }
+			];
+
+			for (let field of fileFields) {
+				if ($(field.id)[0].files.length === 0) {
+					notyf.error(field.msg);
+					goToStep(field.step);
+					$(field.id).focus();
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+	</script>
+}

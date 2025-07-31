@@ -144,7 +144,7 @@
 				<div class="row">
 					<div class="col-md-4 mb-3">
 						<label class="form-label fw-bold">Property Type</label>
-						<select class="form-select" name="PropertyType">
+						<select class="form-select" name="PropertyType" id="PropertyType">
 							<option value="">Select Property Type</option>
 							<option>Apartment</option>
 							<option>Villa</option>
@@ -155,7 +155,7 @@
 
 					<div class="col-md-4 mb-3">
 						<label class="form-label fw-bold">Availability</label>
-						<select class="form-select" name="Availability">
+						<select class="form-select" name="Availability" id="Availability">
 							<option value="">Select</option>
 							<option>For Sale</option>
 							<option>For Rent</option>
@@ -164,7 +164,7 @@
 
 					<div class="col-md-2 mb-3">
 						<label class="form-label fw-bold">Bedrooms</label>
-						<select class="form-select" name="Bedrooms">
+						<select class="form-select" name="Bedrooms" id="Bedrooms">
 							<option value="">Select</option>
 							<option>1 BHK</option>
 							<option>2 BHK</option>
@@ -175,7 +175,7 @@
 
 					<div class="col-md-2 mb-3">
 						<label class="form-label fw-bold">Bathrooms</label>
-						<select class="form-select" name="Bathrooms">
+						<select class="form-select" name="Bathrooms" id="Bathrooms">
 							<option value="">Select</option>
 							<option>1</option>
 							<option>2</option>
@@ -188,12 +188,12 @@
 				<div class="row">
 					<div class="col-md-4 mb-3">
 						<label class="form-label fw-bold">Property Size (sq. ft.)</label>
-						<input type="number" class="form-control" name="Size" placeholder="Enter area">
+						<input type="number" class="form-control" id="CarpetArea" name="CarpetArea" placeholder="Enter area">
 					</div>
 
 					<div class="col-md-4 mb-3">
 						<label class="form-label fw-bold">Furnishing Status</label>
-						<select class="form-select" name="Furnishing">
+						<select class="form-select" name="Furnishing" id="FurnishingStatus">
 							<option value="">Select</option>
 							<option>Furnished</option>
 							<option>Semi-Furnished</option>
@@ -284,7 +284,7 @@
 				<div class="mb-3">
 					<label class="form-label fw-bold">Upload Images</label>
 					<div id="imageInputs">
-						<input type="file" name="Images" class="form-control mb-2 imageInput" accept="image/*">
+						<input type="file" name="Images" id="Images" class="form-control mb-2 imageInput" accept="image/*">
 					</div>
 					<button type="button" id="addImageInput" class="btn btn-outline-success btn-sm">+ Add More Images</button>
 				</div>
@@ -297,7 +297,7 @@
 				<div class="mb-3">
 					<label class="form-label fw-bold">Upload Videos</label>
 					<div id="videoInputs">
-						<input type="file" name="Videos" class="form-control mb-2 videoInput" accept="video/*">
+						<input type="file" name="Videos" id="Videos" class="form-control mb-2 videoInput" accept="video/*">
 					</div>
 					<button type="button" id="addVideoInput" class="btn btn-outline-success btn-sm">+ Add More Videos</button>
 				</div>
@@ -451,7 +451,7 @@
 
 
 			$("#submitProperty").on("click", function (e) {
-						 e.preventDefault();
+
 
 				// ✅ Collect required fields
 				let title = $("#Title").val();
@@ -485,22 +485,71 @@
 				});
 				if (!hasVideo) { notyf.error("Please upload at least one Video"); return; }
 
-				// ✅ If validation passes, send data
-				let form = document.getElementById("propertyForm");
-				let formData = new FormData(form);
+		// 			var propertyMaster = {
+		// 			Title: $("#Title").val(),
+		// 			Description: $("#Description").val(),
+		// 			City: $("#City").val(),
+		// 			State: $("#State").val(),
+		// 			PinCode: $("#PinCode").val(),
+		// 			Amenities: $("#Amenities").val()  // if multiple, this will be array
+		// };
 
-				// Append Images
-				document.querySelectorAll("#imageInputs input[type='file']").forEach(input => {
-					if (input.files[0]) formData.append("Images", input.files[0]);
-				});
+				var propertyMaster = {
+			// Basic details
+			Title: "Luxury Apartment in Mumbai",
+			Description: "A spacious 3BHK apartment with sea view.",
+			PropertyType: "Apartment",
+			Bedrooms: 3,
+			Bathrooms: 2,
+			CarpetArea: 1200.50,     // in sq.ft
+			BuiltUpArea: 1400.75,    // in sq.ft
 
-				// Append Videos
-				document.querySelectorAll("#videoInputs input[type='file']").forEach(input => {
-					if (input.files[0]) formData.append("Videos", input.files[0]);
-				});
+			// Location
+			Address: "123, Marine Drive",
+			City: "Mumbai",
+			State: "Maharashtra",
+			PinCode: "400001",
+			Latitude: 18.9388,
+			Longitude: 72.8354,
 
+			// Pricing
+			Price: 25000000,         // ₹ 2.5 Cr
+			BudgetMin: 20000000,     // ₹ 2 Cr
+			BudgetMax: 30000000,     // ₹ 3 Cr
 
-				console.log(formData);
+			// Features
+			Amenities: ["Parking", "Swimming Pool", "Gym"],
+			FurnishingStatus: "Fully Furnished",
+			PossessionDate: "2025-12-31", // ISO Date format
+
+			// Status
+			IsActive: true
+		};
+
+		// ✅ Create FormData
+		let formData = new FormData();
+		formData.append("PropertyMaster", JSON.stringify(propertyMaster)); // send as JSON string
+
+		// ✅ Append Images
+		document.querySelectorAll("#imageInputs input[type='file']").forEach(input => {
+			if (input.files.length > 0) formData.append("Images", input.files[0]);
+		});
+
+		// ✅ Append Videos
+				// ✅ Append Videos with indexed keys
+		// let videoIndex = 0;
+		// document.querySelectorAll("#videoInputs input[type='file']").forEach(input => {
+		// 	if (input.files.length > 0) {
+		// 		formData.append(`Videos[${videoIndex}]`, input.files[0]);
+		// 		videoIndex++;
+		// 	}
+		// });
+
+		// 		console.log(formData);
+		// 				for (var pair of formData.entries()) {
+		// 	console.log(pair[0] + ": " + pair[1]);
+		// }
+
 				// ✅ AJAX call
 				$.ajax({
 					url: '/Master/SaveProperty',
