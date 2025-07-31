@@ -62,6 +62,54 @@
 		.impMark {
 			color: #f75d5d;
 		}
+
+		#TableList {
+			width: 100% !important;
+			border-collapse: collapse;
+		}
+
+			#TableList thead th {
+				background-color: #e9f5e9;
+				color: #198754;
+				font-weight: 600;
+				text-align: center;
+				vertical-align: middle;
+			}
+
+			#TableList tbody tr:hover {
+				background-color: #f1fdf4;
+			}
+
+			#TableList tbody td {
+				vertical-align: middle;
+				text-align: center;
+			}
+
+			#TableList thead input {
+				width: 100%;
+				padding: 5px;
+				box-sizing: border-box;
+				font-size: 0.9rem;
+			}
+
+		.dataTables_wrapper .dataTables_paginate .paginate_button {
+			padding: 0.3rem 0.75rem;
+			margin: 2px;
+			border-radius: 0.3rem;
+		}
+
+			.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+				background-color: #198754 !important;
+				color: white !important;
+				border: 1px solid #198754;
+			}
+
+		.dataTables_wrapper .dataTables_filter input,
+		.dataTables_wrapper .dataTables_length select {
+			border-radius: 5px;
+			padding: 5px;
+			border: 1px solid #ced4da;
+		}
 	</style>
 </head>
 <body>
