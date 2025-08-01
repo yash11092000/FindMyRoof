@@ -12,6 +12,7 @@ builder.Services.AddScoped<DbHelper>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IMasterRepository, MasterRepository>();
+builder.Services.AddScoped<ISuperAdminRepository, SuperAdminRepository>();
 
 
 

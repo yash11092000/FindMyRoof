@@ -7,8 +7,8 @@
 
         // ✅ Logo
         public IFormFile AgencyLogo { get; set; }
+        public string AgencyLogoFilePath { get; set; }
         public string AgencyLogoFileName { get; set; }
-        public string AgencyLogoContentType { get; set; }
 
         // ✅ Contact Info
         public string ContactPersonName { get; set; }
@@ -35,16 +35,16 @@
 
         // ✅ Documents
         public IFormFile ReraCertificate { get; set; }
+        public string ReraCertificateFilePath { get; set; }
         public string ReraCertificateFileName { get; set; }
-        public string ReraCertificateContentType { get; set; }
 
         public IFormFile AgencyLicense { get; set; }
+        public string AgencyLicenseFilePath { get; set; }
         public string AgencyLicenseFileName { get; set; }
-        public string AgencyLicenseContentType { get; set; }
 
         public IFormFile AddressProof { get; set; }
+        public string AddressProofFilePath { get; set; }
         public string AddressProofFileName { get; set; }
-        public string AddressProofContentType { get; set; }
 
         // ✅ For Handling Uploads in Forms
         //public IFormFile AgencyLogoFile { get; set; }
