@@ -306,7 +306,6 @@ namespace PhysioWeb.Repository
                 string[] parameterNames = { "UniqueID", "UserID" };
                 object[] parameterValues = { UniqueID, UserID };
 
-
                 string Sp = "FMR_EditRentalType";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
                 while (data.Read())
@@ -450,5 +449,113 @@ namespace PhysioWeb.Repository
             }
         }
 
+
+        public async Task<bool> SaveAmenityMaster(AmenityMaster AmenityMaster)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "AmenityName", "IconImage", "IsActive", "UserID" };
+                object[] Values = { AmenityMaster.UniquId,AmenityMaster.AmenityName,AmenityMaster.IconImage,
+                AmenityMaster.IsActive ,0 };
+
+                string Sp = "FMR_SaveAmenityMaster";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+        public async Task<bool> DeleteAmenityMaster(AmenityMaster AmenityMaster)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { AmenityMaster.UniquId, AmenityMaster.AgencyId };
+
+                string Sp = "FMR_DeleteAmenityMaster";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<DataTableResult> ListAmenityMaster(DataTablePara dataTablePara)
+        {
+            try
+            {
+                string[] parameterName = new string[]
+                {
+                    "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
+                    "AmenityName", "IsActive", "CreatedBy", "AgencyId"
+                };
+
+                object[] parameterValue = new object[]
+                {
+                    dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
+                    dataTablePara.sSortDir_0,dataTablePara.sSearch,dataTablePara.sSearch_0,
+                    dataTablePara.sSearch_1,dataTablePara.sSearch_2,dataTablePara.AgencyId
+                };
+
+                var reader = await _dbHelper.GetDataReaderAsync("[FMR_DataListAmenityMaster]", parameterName, parameterValue);
+
+                var result = new DataTableResult();
+                var list = new List<AmenityMaster>();
+
+                while (reader.Read())
+                {
+                    list.Add(new AmenityMaster(reader));
+                }
+
+                if (reader.NextResult())
+                {
+                    while (reader.Read())
+                    {
+                        result.iTotalRecords = Convert.ToInt32(reader[0]);
+                    }
+                }
+
+                result.iTotalDisplayRecords = result.iTotalRecords;
+                result.aaData = list;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+        public async Task<AmenityMaster> EditAmenityMaster(int UniqueID, int UserID)
+        {
+
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { UniqueID, UserID };
+
+
+                string Sp = "FMR_EditAmenityMaster";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    AmenityMaster AmenityMaster = new AmenityMaster(data, 1);
+                    return AmenityMaster;
+                }
+                return null;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }
