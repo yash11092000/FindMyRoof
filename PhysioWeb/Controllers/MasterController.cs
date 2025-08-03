@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using PhysioWeb.Models;
 using PhysioWeb.Repository;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PhysioWeb.Controllers
 {
+    [Authorize(Roles = "Agency")]
     public class MasterController : Controller
     {
         private readonly IMasterRepository _masterRepository;

@@ -81,39 +81,45 @@
 			let mobile = $("#floatingMobile").val().trim();
 			let password = $("#floatingPassword").val();
 
-				const mobileRegex = new RegExp("^[6-9][0-9]{9}$");
+			const mobileRegex = new RegExp("^[6-9][0-9]{9}$");
 			const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
 
-			// ✅ Basic Validations
+
 			if (!emailRegex.test(email)) {
 				notyf.error("Enter a valid Email address.");
 				return;
 			}
-			if (mobile && !mobileRegex.test(mobile)) {
+			else if (mobile && !mobileRegex.test(mobile)) {
 				notyf.error("Enter a valid 10-digit Mobile Number.");
 				return;
 			}
-			if (password.length < 6) {
+			else if (password.length < 6) {
 				notyf.error("Password must be at least 6 characters.");
 				return;
 			}
-			// ✅ AJAX Request
-			$.ajax({
-				url: "/Home/Login",   // ✅ Your login action endpoint
-				type: "POST",
-				data: {Email:email,Mobile: mobile,Password: password},
-				success: function (response) {
-					if (response) {
+			else{
+				showLoader();
+				$.ajax({
+					url: "/Home/Login",
+					type: "POST",
+					data: {Email:email,Mobile: mobile,Password: password},
+					success: function (response) {
+
+						  if (response.success) {
 						notyf.success("Login successful! Redirecting...");
-						setTimeout(() => window.location.href = "/Home/Index", 1500); // redirect to homepage
+
+						setTimeout(() => window.location.href = response.redirect, 1500);
 					} else {
 						notyf.error(response.message || "Invalid credentials!");
 					}
-				},
-				error: function () {
-					notyf.error("An error occurred. Try again.");
-				}
-			});
+					},
+					error: function () {
+						hideLoader();
+						notyf.error("An error occurred. Try again.");
+					}
+				});
+				hideLoader();
+			}
 		});
 
 	</script>
