@@ -1,178 +1,236 @@
 ﻿@model PhysioWeb.Models.RentalTypeMaster
 @{
-	ViewBag.Title = "Rental Type";
+    ViewBag.Title = "Rental Type";
 }
 
-<div class="container mt-4">
-	<div class="d-flex justify-content-between align-items-center mb-3">
-		<h4 class="mb-0">Rental Types</h4>
-		<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addRentalModal">
-			<i class="bi bi-plus-circle"></i> Add Rental Type
-		</button>
-	</div>
+<style>
+    #TableList {
+        width: 100% !important;
+        border-collapse: collapse;
+    }
 
-	<div class="card shadow-sm border-0">
-		<div class="card-header bg-success text-white">
-			<h5 class="mb-0"><i class="bi bi-building"></i> All Rental Types</h5>
-		</div>
-		<div class="card-body">
-			<div class="table-responsive">
-				<table id="TableList" class="table table-hover align-middle">
-					<thead class="table-light">
-						<tr>
-							<th>Rental Type</th>
-							<th>Description</th>
-							<th>InActive</th>
-							<th>Created By</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
-			</div>
-		</div>
-	</div>
+        #TableList thead th {
+            background-color: #e9f5e9;
+            color: #198754;
+            font-weight: 600;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #TableList tbody tr:hover {
+            background-color: #f1fdf4;
+        }
+
+        #TableList tbody td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        #TableList thead input {
+            width: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+            font-size: 0.9rem;
+        }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 0.3rem 0.75rem;
+        margin: 2px;
+        border-radius: 0.3rem;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background-color: #198754 !important;
+            color: white !important;
+            border: 1px solid #198754;
+        }
+
+    .dataTables_wrapper .dataTables_filter input,
+    .dataTables_wrapper .dataTables_length select {
+        border-radius: 5px;
+        padding: 5px;
+        border: 1px solid #ced4da;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css" />
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Rental Types</h4>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addRentalModal">
+            <i class="bi bi-plus-circle"></i> Add Rental Type
+        </button>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="bi bi-building"></i> All Rental Types</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="TableList" class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Rental Type</th>
+                            <th>Description</th>
+                            <th>InActive</th>
+                            <th>Created By</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ✅ Add/Edit Rental Modal -->
 <div class="modal fade" id="addRentalModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header bg-success text-white">
-				<h5 class="modal-title">Add New Rental Type</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-			</div>
-			<div class="modal-body">
-				<form id="RentalTypeForm">
-					<input type="hidden" id="UniquId" name="UniquId" />
-					<div class="mb-3">
-						<label class="form-label fw-bold">Rental Type<span class="impMark">*</span></label>
-						<input type="text" class="form-control" id="RentalType" name="RentalType" placeholder="Enter rental type" required />
-					</div>
-					<div class="mb-3">
-						<label class="form-label fw-bold">Description</label>
-						<input type="text" class="form-control" id="Description" name="Description" placeholder="Enter description" required />
-					</div>
-					<div class="form-check mb-3">
-						<input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" />
-						<label class="form-check-label fw-bold" for="IsActive">Is Active</label>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-					<i class="bi bi-x-circle"></i> Cancel
-				</button>
-				<button type="button" class="btn btn-success" id="btnSave">
-					<i class="bi bi-save"></i> Save
-				</button>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Add New Rental Type</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="RentalTypeForm">
+                    <input type="hidden" id="UniquId" name="UniquId" />
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Rental Type<span class="impMark">*</span></label>
+                        <input type="text" class="form-control" id="RentalType" name="RentalType" placeholder="Enter rental type" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Description</label>
+                        <input type="text" class="form-control" id="Description" name="Description" placeholder="Enter description" required />
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" />
+                        <label class="form-check-label fw-bold" for="IsActive">Is Active</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+                <button type="button" class="btn btn-success" id="btnSave">
+                    <i class="bi bi-save"></i> Save
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
- 
+    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
     <script>
         $(document).ready(function () {
 
-			// ✅ Clone header for search inputs
-			$('#AgencyTable thead tr').clone(true).appendTo('#AgencyTable thead');
+                        $('#TableList thead tr').clone(true).appendTo('#TableList thead');
 
-			$('#AgencyTable thead tr:eq(1) th').each(function (i) {
-				if ($(this).find('i').length === 0) { // ✅ only add input if no icon
-					var title = $('#AgencyTable thead tr:eq(0) th').eq(i).text().trim();
-					$(this).html('<input class="form-control form-control-sm" type="text" placeholder="Search ' + title + '" />');
-				} else {
-					$(this).html('');
-				}
-			});
+                        $('#TableList thead tr:eq(1) th').each(function (i) {
+                            if ($(this).find('i').length === 0) { // ✅ only add input if no icon
+                                var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
+                                $(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+                            } else {
+                                $(this).html('');
+                            }
+                        });
+                        var TableList = $("#TableList").DataTable({
+                        orderCellsTop: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [[0, "asc"]],
+                        ajax: {
+                            url: '/Master/ListRentalType',
+                            type: 'POST' , // or 'GET' depending on your controller setup
+                        },
+                        columns: [
+                            { data: 'rentalType' },
+                            { data: 'description' },
+                            { data: 'inActiveText' },
+                            { data: 'createdBy' },
+                        //     {
+                        //     data: null,
+                        //     render: function (data, type, row) {
+                        //         let para = row.uniquId + ',' + '"Master"' + ',' + '"PropertyType"';
+                        //         return `<a href="javascript:void(0)" onclick="ViewHistory(${para})">
+                        //                     <i class="bi bi-clock-history text-success fs-5" title="View History"></i>
+                        //                 </a>`;
+                        //     },
+                        //     orderable: false, searchable: false
+                        // },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                let para = `'${row.uniquId}', 'Master', 'EditRentalType'`;
+                                return `<a href="javascript:void(0)" onclick="EditData(${para})">
+                                            <i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
+                                        </a>`;
+                            },
+                            orderable: false,
+                            searchable: false
+                        },
 
-			// ✅ Initialize DataTable
-			var TableList = $("#AgencyTable").DataTable({
-				orderCellsTop: true,
-				processing: true,
-				serverSide: true,
-				order: [[0, "asc"]],
-				ajax: {
-					url: '/Agency/ListAgencies', // ✅ Controller endpoint
-					type: 'POST'
-				},
-				columns: [
-					{ data: 'agencyName' },
-					{ data: 'cityName' },
-					{ data: 'statusText' },
-					{ data: 'createdBy' },
-					{
-						data: null,
-						render: function (data, type, row) {
-							let para = `'${row.uniquId}', 'Agency', 'EditAgency'`;
-							return `<a href="javascript:void(0)" onclick="EditAgency(${para})">
-										<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
-									</a>`;
-						},
-						orderable: false,
-						searchable: false
-					},
-					{
-						data: null,
-						render: function (data, type, row) {
-							let para = `'${row.uniquId}', 'Agency', 'DeleteAgency'`;
-							return `<a href="javascript:void(0)" onclick="DeleteAgency(${para})">
-										<i class="bi bi-trash text-danger fs-5" title="Delete"></i>
-									</a>`;
-						},
-						orderable: false,
-						searchable: false
-					}
-				],
-				initComplete: function () {
-					var table = this.api();
+                                {
+                            data: null,
+                            render: function (data, type, row) {
+                                 let para = `'${row.uniquId}', 'Master', 'DeleteRentalType'`;
+                                return `<a href="javascript:void(0)" onclick="DeleteData(${para})">
+                                            <i class="bi bi-trash text-danger fs-5" title="Delete"></i>
+                                        </a>`;
+                            },
+                            orderable: false, searchable: false
+                        }
+                        ],
+                        initComplete: function () {
+                                 var table = this.api();
 
-					// ✅ Column search functionality
-					$('#AgencyTable thead tr:eq(1) th').each(function (i) {
-						$('input', this).on('keyup change', function () {
-							if (table.column(i).search() !== this.value) {
-								table
-									.column(i)
-									.search(this.value)
-									.draw();
-							}
-						});
-					});
-				}
-			});
+                // ✅ Attach filter inputs to correct column index
+                $('#TableList thead tr:eq(1) th').each(function (i) {
+                    $('input', this).on('keyup change', function () {
+                        if (table.column(i).search() !== this.value) {
+                            table
+                                .column(i)
+                                .search(this.value) // ✅ per-column search
+                                .draw();
+                        }
+                    });
+                });
+                        }
+                    });
 
-		});
+                });
 
 
-
-		$("#btnSave").on("click", function () {
-			var RentalType = $("#RentalType");
-			if (RentalType.val() === "") {
-				RentalType.focus();
-				notyf.error("Please Enter Rental Type");
-			} else {
-				$.ajax({
-					url: '/Master/SaveRentalType',
-					method: 'POST',
-					data: $("#RentalTypeForm").serialize(),
-					success: function (response) {
-						if (response) {
-							notyf.success("Rental Type Added Successfully");
-							$("#addRentalModal").modal('hide');
-							$("#RentalTypeForm")[0].reset();
-							ClearData();
-							$("#TableList").DataTable().ajax.reload(null, false);
-						} else {
-							notyf.error(response.message || "Failed to save.");
-						}
-					},
-					error: function () {
-						notyf.error("Some Error Occurred While Saving");
-					}
-				});
-			}
-		});
+        $("#btnSave").on("click", function () {
+            var RentalType = $("#RentalType");
+            if (RentalType.val() === "") {
+                RentalType.focus();
+                notyf.error("Please Enter Rental Type");
+            } else {
+                $.ajax({
+                    url: '/Master/SaveRentalType',
+                    method: 'POST',
+                    data: $("#RentalTypeForm").serialize(),
+                    success: function (response) {
+                        if (response) {
+                            notyf.success("Rental Type Added Successfully");
+                            $("#addRentalModal").modal('hide');
+                            $("#RentalTypeForm")[0].reset();
+                            ClearData();
+                            $("#TableList").DataTable().ajax.reload(null, false);
+                        } else {
+                            notyf.error(response.message || "Failed to save.");
+                        }
+                    },
+                    error: function () {
+                        notyf.error("Some Error Occurred While Saving");
+                    }
+                });
+            }
+        });
 
            function OnSuccessOfEdit(data){
                     $("#addRentalModal").modal('show');
@@ -180,22 +238,19 @@
                     $("#RentalType").val(data.rentalType);
                     $("#Description").val(data.description);
                     $("#IsActive").val(data.isActive);
-           }
+                }
 
-		  $('.btn-cancel').on('click', function () {
-		  $("#RentalTypeForm")[0].reset();
-		  ClearData();
-		});
+          $('.btn-cancel').on('click', function () {
+          $("#RentalTypeForm")[0].reset();
+          ClearData();
+        });
 
-		function ClearData(){
-			 $("#UniquId").val("");
-			 $("#RentalType").val("");
-			 $("#Description").val("");
-			 $("#IsActive").val("");
-		}
-
-         function OnSuccessOfDelete(){
-            notyf.success("Rental Type Deleted");
+        function ClearData(){
+             $("#UniquId").val("");
+             $("#RentalType").val("");
+             $("#Description").val("");
+             $("#IsActive").val("");
         }
+
     </script>
 }
