@@ -341,5 +341,114 @@ namespace PhysioWeb.Repository
                 throw;
             }
         }
+
+        public async Task<bool> SaveFurnishingType(FurnishingTypeMaster FurnishingTypeMaster)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "FurnishingType",  "IsActive", "UserID" };
+                object[] Values = { FurnishingTypeMaster.UniquId,FurnishingTypeMaster.FurnishingType,
+                FurnishingTypeMaster.IsActive ,0 };
+
+                string Sp = "FMR_SaveFurnishingType";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+        public async Task<bool> DeleteFurnishingType(FurnishingTypeMaster FurnishingTypeMaster)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { FurnishingTypeMaster.UniquId, FurnishingTypeMaster.AgencyId };
+
+                string Sp = "FMR_DeleteFurnishingType";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<DataTableResult> ListFurnishingType(DataTablePara dataTablePara)
+        {
+            try
+            {
+                string[] parameterName = new string[]
+                {
+                    "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
+                    "FurnishingType", "IsActive", "CreatedBy", "AgencyId"
+                };
+
+                object[] parameterValue = new object[]
+                {
+                    dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
+                    dataTablePara.sSortDir_0,dataTablePara.sSearch,dataTablePara.sSearch_0,
+                    dataTablePara.sSearch_1,dataTablePara.sSearch_2,dataTablePara.AgencyId
+                };
+
+                var reader = await _dbHelper.GetDataReaderAsync("[FMR_DataListFurnishingType]", parameterName, parameterValue);
+
+                var result = new DataTableResult();
+                var list = new List<FurnishingTypeMaster>();
+
+                while (reader.Read())
+                {
+                    list.Add(new FurnishingTypeMaster(reader));
+                }
+
+                if (reader.NextResult())
+                {
+                    while (reader.Read())
+                    {
+                        result.iTotalRecords = Convert.ToInt32(reader[0]);
+                    }
+                }
+
+                result.iTotalDisplayRecords = result.iTotalRecords;
+                result.aaData = list;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+        public async Task<FurnishingTypeMaster> EditFurnishingType(int UniqueID, int UserID)
+        {
+
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { UniqueID, UserID };
+
+
+                string Sp = "FMR_EditFurnishingType";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    FurnishingTypeMaster FurnishingTypeMaster = new FurnishingTypeMaster(data, 1);
+                    return FurnishingTypeMaster;
+                }
+                return null;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }

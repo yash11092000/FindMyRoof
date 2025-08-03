@@ -283,6 +283,95 @@ namespace PhysioWeb.Controllers
         }
         #endregion
 
-     
+
+
+        #region Furnishing Type Master
+        [HttpGet]
+        public async Task<ActionResult> FurnishingType()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> SaveFurnishingType(FurnishingTypeMaster FurnishingTypeMaster)
+        {
+            var result = await _masterRepository.SaveFurnishingType(FurnishingTypeMaster);
+            return Json(result);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteFurnishingType(int UniqueID)
+        {
+            // propertyTypeMaster.AgencyId = 0;
+            var FurnishingTypeMaster = new FurnishingTypeMaster
+            {
+                UniquId = UniqueID
+            };
+
+            var result = await _masterRepository.DeleteFurnishingType(FurnishingTypeMaster);
+            return Json(new { success = result });
+        }
+
+
+        [HttpPost]
+
+        public async Task<ActionResult> ListFurnishingType()
+        {
+            var form = Request.Form;
+
+            // ✅ Map DataTables default parameters
+            var dataTablePara = new DataTablePara
+            {
+                iDisplayStart = Convert.ToInt32(form["start"]),
+                iDisplayLength = Convert.ToInt32(form["length"]),
+                iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
+                sSortDir_0 = form["order[0][dir]"],
+                sSearch = form["search[value]"]
+            };
+
+            // ✅ Map column filters dynamically (for first 10 columns)
+            for (int i = 0; i < 30; i++)
+            {
+                string key = $"columns[{i}][search][value]";
+                if (Request.Form.ContainsKey(key))
+                {
+                    typeof(DataTablePara)
+                        .GetProperty($"sSearch_{i}")
+                        ?.SetValue(dataTablePara, Request.Form[key].ToString());
+                }
+            }
+            var result = await _masterRepository.ListFurnishingType(dataTablePara);
+            var requestForm = Request.Form;
+            return Json(new
+            {
+                draw = requestForm["draw"],                     // Echo back the draw count
+                recordsTotal = result.iTotalRecords,            // Total records in DB
+                recordsFiltered = result.iTotalDisplayRecords,  // Total records after filtering
+                data = result.aaData                            // Actual paged data
+            });
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditFurnishingType(int UniqueID)
+        {
+            try
+            {
+                int UserID = 0;
+                var data = await _masterRepository.EditFurnishingType(UniqueID, UserID);
+
+                return Json(data);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        #endregion
+
     }
 }

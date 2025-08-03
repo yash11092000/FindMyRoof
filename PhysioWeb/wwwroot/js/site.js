@@ -30,8 +30,8 @@ function DeleteData(ID, Controller, Action) {
         data: { UniqueID: ID },
         success: function (response) {
             if (response) {
-                notyf.success("Property Type Deleted");
-                
+               // notyf.success("Property Type Deleted");
+                OnSuccessOfDelete();
                 $("#TableList").DataTable().ajax.reload(null, false);
             } else {
                 notyf.error(response.message || "Failed to delete.");

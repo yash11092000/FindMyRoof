@@ -2,64 +2,10 @@
 @{
     ViewBag.Title = "Property Category";
 }
-<style>
-    #TableList {
-        width: 100% !important;
-        border-collapse: collapse;
-    }
 
-        #TableList thead th {
-            background-color: #e9f5e9;
-            color: #198754;
-            font-weight: 600;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        #TableList tbody tr:hover {
-            background-color: #f1fdf4;
-        }
-
-        #TableList tbody td {
-            vertical-align: middle;
-            text-align: center;
-        }
-
-        /* Style for inline search inputs */
-        #TableList thead input {
-            width: 100%;
-            padding: 5px;
-            box-sizing: border-box;
-            font-size: 0.9rem;
-        }
-
-    /* Style for pagination & info */
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-        padding: 0.3rem 0.75rem;
-        margin: 2px;
-        border-radius: 0.3rem;
-    }
-
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-            background-color: #198754 !important;
-            color: white !important;
-            border: 1px solid #198754;
-        }
-
-    .dataTables_wrapper .dataTables_filter input {
-        border-radius: 5px;
-        border: 1px solid #ced4da;
-        padding: 5px 10px;
-    }
-
-    .dataTables_wrapper .dataTables_length select {
-        border-radius: 5px;
-        padding: 5px;
-    }
-</style>
 
 <!-- ✅ Trigger Button -->
-<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css" />
+@* <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css" /> *@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="mb-0">Property Categories</h4>
@@ -125,7 +71,7 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+    @* <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script> *@
     <script>
         $(document).ready(function () {
 
@@ -252,5 +198,9 @@
                 $("#CategoryName").val(data.categoryName);
                 $("#IsActive").prop("checked", data.isActive);
             }
+
+             function OnSuccessOfDelete(){
+            notyf.success("Property Category Deleted");
+        }
     </script>
 }

@@ -16,5 +16,9 @@ namespace PhysioWeb.Repository
         Task<DataTableResult> ListRentalType(DataTablePara dataTablePara);
         Task<RentalTypeMaster> EditRentalType(int UniqueID, int UserID);
         Task<bool> DeleteRentalType(RentalTypeMaster RentalTypeMaster);
+        Task<bool> SaveFurnishingType(FurnishingTypeMaster FurnishingTypeMaster);
+        Task<bool> DeleteFurnishingType(FurnishingTypeMaster FurnishingTypeMaster);
+        Task<DataTableResult> ListFurnishingType(DataTablePara dataTablePara);
+        Task<FurnishingTypeMaster> EditFurnishingType(int UniqueID, int UserID);
     }
 }
