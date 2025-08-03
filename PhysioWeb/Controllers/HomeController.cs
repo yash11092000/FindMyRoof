@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
@@ -24,6 +24,11 @@ namespace PhysioWeb.Controllers
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult AccessDenied()
         {
             return View();
         }
@@ -60,6 +65,7 @@ namespace PhysioWeb.Controllers
                 {
                     new Claim(ClaimTypes.Name, User.UserName),
                     new Claim(ClaimTypes.Role, User.UserRole),
+                    new Claim(ClaimTypes.PrimarySid, Convert.ToString(User.UserId)),
                 };
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties
@@ -70,28 +76,29 @@ namespace PhysioWeb.Controllers
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
 
+                var role = User.UserRole?.Trim().ToUpper();
 
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                // ✅ If it's AJAX, return JSON instead of Redirect
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 {
-                    return Redirect(returnUrl);
-                }
-                else if (User.UserRole.ToUpper() == "SUPERADMIN")
-                {
-                    return RedirectToAction("SuperAdminDashboard", "SuperAdmin");
-                }
-                else if (User.UserRole.ToUpper() == "AGENCY")
-                {
-                    return RedirectToAction("AgencyDashboard", "Agent");
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
+                    string redirectUrl = role switch
+                    {
+                        "SUPERADMIN" => "/SuperAdmin/AdminDashboard",
+                        "AGENCY" => "/Agent/AgencyDashboard",
+                        _ => "/Home/Index"
+                    };
+                    return Json(new { success = true, redirect = redirectUrl });
                 }
 
+                // ✅ Normal form login
+                if (role == "SUPERADMIN") return Redirect("/SuperAdmin/AdminDashboard");
+                if (role == "AGENCY") return RedirectToAction("AgencyDashboard", "Agent");
+                return RedirectToAction("Index", "Home");
             }
-            else
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                ViewBag.Message = "Credentials Wont Match";
+                return Json(new { success = false, message = "Invalid credentials." });
             }
 
             ViewBag.Message = "Invalid credentials.";

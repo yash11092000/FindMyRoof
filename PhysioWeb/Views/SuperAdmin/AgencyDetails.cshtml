@@ -1,4 +1,5 @@
-﻿@{
+﻿@model PhysioWeb.Models.AgencyDetails
+@{
 	ViewData["Title"] = "Agency Details";
 }
 
@@ -113,191 +114,407 @@
 		.delete-btn:hover {
 			background: #ff1a1a;
 		}
+
+	#TableList {
+		width: 100% !important;
+		border-collapse: collapse;
+	}
+
+		#TableList thead th {
+			background-color: #e9f5e9;
+			color: #198754;
+			font-weight: 600;
+			text-align: center;
+			vertical-align: middle;
+		}
+
+		#TableList tbody tr:hover {
+			background-color: #f1fdf4;
+		}
+
+		#TableList tbody td {
+			vertical-align: middle;
+			text-align: center;
+		}
+
+		#TableList thead input {
+			width: 100%;
+			padding: 5px;
+			box-sizing: border-box;
+			font-size: 0.9rem;
+		}
+
+	.dataTables_wrapper .dataTables_paginate .paginate_button {
+		padding: 0.3rem 0.75rem;
+		margin: 2px;
+		border-radius: 0.3rem;
+	}
+
+		.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+			background-color: #198754 !important;
+			color: white !important;
+			border: 1px solid #198754;
+		}
+
+	.dataTables_wrapper .dataTables_filter input,
+	.dataTables_wrapper .dataTables_length select {
+		border-radius: 5px;
+		padding: 5px;
+		border: 1px solid #ced4da;
+	}
+	/* ✅ Match Tabs with Green Theme */
+	.nav-tabs .nav-link {
+		color: #198754; /* Bootstrap success green */
+		font-weight: 600;
+		border: 2px solid transparent;
+		border-radius: 0.5rem 0.5rem 0 0;
+		transition: all 0.3s ease-in-out;
+	}
+
+		.nav-tabs .nav-link:hover {
+			background: #e6f4ea; /* light green hover */
+			border-color: #198754;
+			color: #198754;
+		}
+
+		.nav-tabs .nav-link.active {
+			background: #198754;
+			color: white !important;
+			border-color: #198754;
+		}
+
+	/* ✅ Card & Table Theme Consistency */
+	#listSection .card {
+		border: 1px solid #198754;
+	}
+
+	#AgencyTable th {
+		background: #198754;
+		color: white;
+		text-align: center;
+	}
+
+	#AgencyTable td {
+		vertical-align: middle;
+	}
+
 </style>
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css" />
 
-<div class="container my-4 p-3 shadow rounded bg-white">
-	<h3 class="text-success fw-bold mb-3">Register New Agency</h3>
 
-	<div class="progress mb-4" style="height: 8px;">
-		<div class="progress-bar bg-success" role="progressbar" style="width: 25%;"></div>
+<ul class="nav nav-tabs mb-3 mt-1" id="agencyMainTabs" role="tablist">
+	<li class="nav-item" role="presentation">
+		<button class="nav-link active" id="form-tab" data-bs-toggle="tab" data-bs-target="#formSection" type="button" role="tab">
+			📝 Add/Edit Agency
+		</button>
+	</li>
+	<li class="nav-item" role="presentation">
+		<button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#listSection" type="button" role="tab">
+			📋 Agency List
+		</button>
+	</li>
+</ul>
+<div class="tab-content">
+	<!-- ✅ Form Tab -->
+	<div class="tab-pane fade show active" id="formSection" role="tabpanel">
+		<div class="containe my-4 p-3 shadow rounded bg-white">
+			<h3 class="text-success fw-bold mb-3">Register New Agency</h3>
+
+			<div class="progress mb-4" style="height: 8px;">
+				<div class="progress-bar bg-success" role="progressbar" style="width: 25%;"></div>
+			</div>
+
+
+			<!-- Stepper -->
+			<ul class="stepper d-flex justify-content-between mb-4">
+				<li class="step active" data-target="#agencyStep1"><span>1</span> Agency Info</li>
+				<li class="step" data-target="#agencyStep2"><span>2</span> Contact & Address</li>
+				<li class="step" data-target="#agencyStep3"><span>3</span> Registration</li>
+				<li class="step" data-target="#agencyStep4"><span>4</span> Documents</li>
+				<li class="step" data-target="#agencyStep5"><span>5</span> Review</li>
+			</ul>
+
+			<!-- Form -->
+			<form id="agencyForm">
+				<div class="tab-content">
+					<input type="text" id="IsActiveText" hidden />
+					<!-- Step 1 -->
+					<div class="tab-pane fade show active" id="agencyStep1">
+						<div class="mb-3">
+							<label class="form-label fw-bold">Agency Name</label>
+							<input type="text" class="form-control" id="AgencyName" required>
+						</div>
+						<div class="form-check mb-3">
+							<input class="form-check-input" type="checkbox" id="IsAgencyRegistered">
+							<label class="form-check-label">Is Agency Registered?</label>
+						</div>
+						<div class="mb-3">
+							<label class="form-label fw-bold">Agency Logo</label>
+							<input type="file" class="form-control file-input" id="AgencyLogo" accept="image/*">
+							<div id="previewAgencyLogo" class="gallery row g-2 text-center"></div>
+						</div>
+						<button type="button" class="btn btn-success next-step">Next</button>
+					</div>
+
+					<!-- Step 2 -->
+					<div class="tab-pane fade" id="agencyStep2">
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">Contact Person Name</label>
+								<input type="text" class="form-control" id="ContactPersonName" name="ContactPersonName">
+							</div>
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">Email Address</label>
+								<input type="email" class="form-control" id="EmailAddress" name="EmailAddress">
+							</div>
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">Mobile No</label>
+								<input type="text" class="form-control" id="MobileNo" name="MobileNo">
+							</div>
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">Alternate Mobile No</label>
+								<input type="text" class="form-control" id="AlternateMobileNo" name="AlternateMobileNo">
+							</div>
+							<div class="col-md-6 mb-3">
+								<label class="form-label fw-bold">Website URL</label>
+								<input type="text" class="form-control" id="WebsiteUrl" name="WebsiteUrl">
+							</div>
+							<div class="col-md-12 mb-3">
+								<label class="form-label fw-bold">Street Address</label>
+								<input type="text" class="form-control" id="StreetAddress" name="StreetAddress">
+							</div>
+							<div class="col-md-4 mb-3">
+								<label class="form-label fw-bold">City</label>
+								<input type="text" class="form-control" id="CityName" name="CityName">
+							</div>
+							<div class="col-md-4 mb-3">
+								<label class="form-label fw-bold">State</label>
+								<input type="text" class="form-control" id="StateName" name="StateName">
+							</div>
+							<div class="col-md-2 mb-3">
+								<label class="form-label fw-bold">Pincode</label>
+								<input type="text" class="form-control" id="Pincode" name="Pincode">
+							</div>
+							<div class="col-md-2 mb-3">
+								<label class="form-label fw-bold">Country</label>
+								<input type="text" class="form-control" id="Country" name="Country">
+							</div>
+						</div>
+						<button type="button" class="btn btn-light prev-step">Back</button>
+						<button type="button" class="btn btn-success next-step">Next</button>
+					</div>
+
+					<!-- Step 3 -->
+					<div class="tab-pane fade" id="agencyStep3">
+						<div class="mb-3">
+							<label class="form-label fw-bold">RERA Registration No</label>
+							<input type="text" class="form-control" id="ReraRegNo" name="ReraRegNo">
+						</div>
+						<div class="row">
+							<div class="col-md-3 mb-3">
+								<label class="form-label fw-bold">License Issue Date</label>
+								<input type="date" class="form-control" id="LicenseIssueDate" name="LicenseIssueDate">
+							</div>
+							<div class="col-md-3 mb-3">
+								<label class="form-label fw-bold">License Expiry Date</label>
+								<input type="date" class="form-control" id="LicenseExpiryDate" name="LicenseExpiryDate">
+							</div>
+							<div class="col-md-3 mb-3">
+								<label class="form-label fw-bold">PAN</label>
+								<input type="text" class="form-control" id="PAN" name="PAN">
+							</div>
+							<div class="col-md-3 mb-3">
+								<label class="form-label fw-bold">GST</label>
+								<input type="text" class="form-control" id="GST" name="GST">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-3 mb-3">
+								<label class="form-label fw-bold">Username</label>
+								<input type="text" id="Username" class="form-control" placeholder="Enter Username">
+							</div>
+
+							<div class="col-md-3 mb-3">
+								<label class="form-label fw-bold">Password</label>
+								<input type="password" id="Password" class="form-control" placeholder="Enter Password">
+							</div>
+
+							<div class="col-md-3 d-flex" style="align-items:center">
+								<input class="form-check-input mx-1" type="checkbox" id="IsActive" checked>
+								<label class="form-check-label" for="IsActive">Is Active?</label>
+							</div>
+						</div>
+
+						<button type="button" class="btn btn-light prev-step">Back</button>
+						<button type="button" class="btn btn-success next-step">Next</button>
+					</div>
+
+					<!-- Step 4 -->
+					<div class="tab-pane fade" id="agencyStep4">
+						<div class="mb-3">
+							<label class="form-label fw-bold">Upload RERA Certificate</label>
+							<input type="file" class="form-control file-input" id="ReraCertificate" accept="application/pdf,image/*">
+							<div id="previewReraCertificate" class="gallery row g-2 text-center"></div>
+						</div>
+						<div class="mb-3">
+							<label class="form-label fw-bold">Upload Agency License</label>
+							<input type="file" class="form-control file-input" id="AgencyLicense" accept="application/pdf,image/*">
+							<div id="previewAgencyLicense" class="gallery row g-2 text-center"></div>
+						</div>
+						<div class="mb-3">
+							<label class="form-label fw-bold">Upload Address Proof</label>
+							<input type="file" class="form-control file-input" id="AddressProof" accept="application/pdf,image/*">
+							<div id="previewAddressProof" class="gallery row g-2 text-center"></div>
+						</div>
+						<button type="button" class="btn btn-light prev-step">Back</button>
+						<button type="button" class="btn btn-success next-step">Next</button>
+					</div>
+
+					<!-- Step 5 -->
+					<div class="tab-pane fade" id="agencyStep5">
+						<h5 class="text-success">Review Your Agency Details</h5>
+						<p class="text-muted">Check all the details before submitting.</p>
+						<button type="button" class="btn btn-light prev-step">Back</button>
+						<button type="button" id="submitAgency" class="btn btn-success">Submit Agency</button>
+					</div>
+				</div>
+			</form>
+		</div>
 	</div>
 
 
-	<!-- Stepper -->
-	<ul class="stepper d-flex justify-content-between mb-4">
-		<li class="step active" data-target="#agencyStep1"><span>1</span> Agency Info</li>
-		<li class="step" data-target="#agencyStep2"><span>2</span> Contact & Address</li>
-		<li class="step" data-target="#agencyStep3"><span>3</span> Registration</li>
-		<li class="step" data-target="#agencyStep4"><span>4</span> Documents</li>
-		<li class="step" data-target="#agencyStep5"><span>5</span> Review</li>
-	</ul>
 
-	<!-- Form -->
-	<form id="agencyForm">
-		<div class="tab-content">
-
-			<!-- Step 1 -->
-			<div class="tab-pane fade show active" id="agencyStep1">
-				<div class="mb-3">
-					<label class="form-label fw-bold">Agency Name</label>
-					<input type="text" class="form-control" id="AgencyName" required>
-				</div>
-				<div class="form-check mb-3">
-					<input class="form-check-input" type="checkbox" id="IsAgencyRegistered">
-					<label class="form-check-label">Is Agency Registered?</label>
-				</div>
-				<div class="mb-3">
-					<label class="form-label fw-bold">Agency Logo</label>
-					<input type="file" class="form-control file-input" id="AgencyLogo" accept="image/*">
-					<div id="previewAgencyLogo" class="gallery row g-2 text-center"></div>
-				</div>
-				<button type="button" class="btn btn-success next-step">Next</button>
-			</div>
-
-			<!-- Step 2 -->
-			<div class="tab-pane fade" id="agencyStep2">
-				<div class="row">
-					<div class="col-md-6 mb-3">
-						<label class="form-label fw-bold">Contact Person Name</label>
-						<input type="text" class="form-control" id="ContactPersonName" name="ContactPersonName">
-					</div>
-					<div class="col-md-6 mb-3">
-						<label class="form-label fw-bold">Email Address</label>
-						<input type="email" class="form-control" id="EmailAddress" name="EmailAddress">
-					</div>
-					<div class="col-md-6 mb-3">
-						<label class="form-label fw-bold">Mobile No</label>
-						<input type="text" class="form-control" id="MobileNo" name="MobileNo">
-					</div>
-					<div class="col-md-6 mb-3">
-						<label class="form-label fw-bold">Alternate Mobile No</label>
-						<input type="text" class="form-control" id="AlternateMobileNo" name="AlternateMobileNo">
-					</div>
-					<div class="col-md-6 mb-3">
-						<label class="form-label fw-bold">Website URL</label>
-						<input type="text" class="form-control" id="WebsiteUrl" name="WebsiteUrl">
-					</div>
-					<div class="col-md-12 mb-3">
-						<label class="form-label fw-bold">Street Address</label>
-						<input type="text" class="form-control" id="StreetAddress" name="StreetAddress">
-					</div>
-					<div class="col-md-4 mb-3">
-						<label class="form-label fw-bold">City</label>
-						<input type="text" class="form-control" id="CityName" name="CityName">
-					</div>
-					<div class="col-md-4 mb-3">
-						<label class="form-label fw-bold">State</label>
-						<input type="text" class="form-control" id="StateName" name="StateName">
-					</div>
-					<div class="col-md-2 mb-3">
-						<label class="form-label fw-bold">Pincode</label>
-						<input type="text" class="form-control" id="Pincode" name="Pincode">
-					</div>
-					<div class="col-md-2 mb-3">
-						<label class="form-label fw-bold">Country</label>
-						<input type="text" class="form-control" id="Country" name="Country">
-					</div>
-				</div>
-				<button type="button" class="btn btn-light prev-step">Back</button>
-				<button type="button" class="btn btn-success next-step">Next</button>
-			</div>
-
-			<!-- Step 3 -->
-			<div class="tab-pane fade" id="agencyStep3">
-				<div class="mb-3">
-					<label class="form-label fw-bold">RERA Registration No</label>
-					<input type="text" class="form-control" id="ReraRegNo" name="ReraRegNo">
-				</div>
-				<div class="row">
-					<div class="col-md-6 mb-3">
-						<label class="form-label fw-bold">License Issue Date</label>
-						<input type="date" class="form-control" id="LicenseIssueDate" name="LicenseIssueDate">
-					</div>
-					<div class="col-md-6 mb-3">
-						<label class="form-label fw-bold">License Expiry Date</label>
-						<input type="date" class="form-control" id="LicenseExpiryDate" name="LicenseExpiryDate">
-					</div>
-				</div>
-				<div class="mb-3">
-					<label class="form-label fw-bold">PAN</label>
-					<input type="text" class="form-control" id="PAN" name="PAN">
-				</div>
-				<div class="mb-3">
-					<label class="form-label fw-bold">GST</label>
-					<input type="text" class="form-control" id="GST" name="GST">
-				</div>
-				<div class="form-check mb-3">
-					<input class="form-check-input" type="checkbox" id="IsActive" checked>
-					<label class="form-check-label" for="IsActive">Is Active?</label>
-				</div>
-				<button type="button" class="btn btn-light prev-step">Back</button>
-				<button type="button" class="btn btn-success next-step">Next</button>
-			</div>
-
-			<!-- Step 4 -->
-			<div class="tab-pane fade" id="agencyStep4">
-				<div class="mb-3">
-					<label class="form-label fw-bold">Upload RERA Certificate</label>
-					<input type="file" class="form-control file-input" id="ReraCertificate" accept="application/pdf,image/*">
-					<div id="previewReraCertificate" class="gallery row g-2 text-center"></div>
-				</div>
-				<div class="mb-3">
-					<label class="form-label fw-bold">Upload Agency License</label>
-					<input type="file" class="form-control file-input" id="AgencyLicense" accept="application/pdf,image/*">
-					<div id="previewAgencyLicense" class="gallery row g-2 text-center"></div>
-				</div>
-				<div class="mb-3">
-					<label class="form-label fw-bold">Upload Address Proof</label>
-					<input type="file" class="form-control file-input" id="AddressProof" accept="application/pdf,image/*">
-					<div id="previewAddressProof" class="gallery row g-2 text-center"></div>
-				</div>
-				<button type="button" class="btn btn-light prev-step">Back</button>
-				<button type="button" class="btn btn-success next-step">Next</button>
-			</div>
-
-			<!-- Step 5 -->
-			<div class="tab-pane fade" id="agencyStep5">
-				<h5 class="text-success">Review Your Agency Details</h5>
-				<p class="text-muted">Check all the details before submitting.</p>
-				<button type="button" class="btn btn-light prev-step">Back</button>
-				<button type="button" id="submitAgency" class="btn btn-success">Submit Agency</button>
-			</div>
+	<!-- ✅ List Tab -->
+	<div class="tab-pane fade" id="listSection" role="tabpanel">
+		<div class="card shadow-sm p-3">
+			<h5>All Agencies</h5>
+			<table id="AgencyTable" class="table table-bordered table-striped w-100">
+				<thead>
+					<tr>
+						<th>Agency Name</th>
+						<th>City</th>
+						<th>Status</th>
+						<th>Created By</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+			</table>
 		</div>
-	</form>
+	</div>
 </div>
 
+
 @section Scripts {
+	<script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+
 	<script>
 
-									function updateProgress(stepIndex) {
-										let totalSteps = $(".step").length;
-										let percent = ((stepIndex + 1) / totalSteps) * 100;
-										$(".progress-bar").css("width", percent + "%");
-									}
+		$(document).ready(function () {
 
-									function goToStep(stepIndex) {
-										$(".tab-pane").removeClass("show active").eq(stepIndex).addClass("show active");
-										$(".step").removeClass("active completed");
-										$(".step").each(function (index) {
-											if (index < stepIndex) $(this).addClass("completed");
-											if (index === stepIndex) $(this).addClass("active");
-										});
-										updateProgress(stepIndex);
-									}
+			// ✅ Clone header for search fields
+			$('#AgencyTable thead tr').clone(true).appendTo('#AgencyTable thead');
 
-									$(document).on("click", ".step", function () {
-										goToStep($(this).index());
-									});
+			$('#AgencyTable thead tr:eq(1) th').each(function (i) {
+				if ($(this).find('i').length === 0) {
+					var title = $('#AgencyTable thead tr:eq(0) th').eq(i).text().trim();
+					$(this).html('<input class="form-control form-control-sm" type="text" placeholder="Search ' + title + '" />');
+				} else {
+					$(this).html('');
+				}
+			});
 
-									$(document).on("click", ".next-step", function () {
-										let currentIndex = $(".step.active").index();
-										if (currentIndex < $(".step").length - 1) goToStep(currentIndex + 1);
-									});
+			// ✅ Initialize DataTable
+			var agencyTable = $("#AgencyTable").DataTable({
+				orderCellsTop: true,
+				processing: true,
+				serverSide: true,
+				order: [[0, "asc"]],
+				ajax: {
+					url: '/SuperAdmin/GetAllAgencies',  // ✅ Your controller endpoint
+					type: 'POST'
+				},
+				columns: [
+					{ data: 'agencyName' },
+					{ data: 'cityName' },
+					{ data: 'isActiveText' },
+					{ data: 'createdBy' },
+					{
+						data: null,
+						render: function (data, type, row) {
+							return `
+								<a href="javascript:void(0)" onclick="EditAgency('${row.uniquId}')">
+									<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
+								</a>
+								<a href="javascript:void(0)" onclick="DeleteAgency('${row.uniquId}')">
+									<i class="bi bi-trash text-danger fs-5" title="Delete"></i>
+								</a>`;
+						},
+						orderable: false,
+						searchable: false
+					}
+				],
+				initComplete: function () {
+					var table = this.api();
+					$('#AgencyTable thead tr:eq(1) th').each(function (i) {
+						$('input', this).on('keyup change', function () {
+							if (table.column(i).search() !== this.value) {
+								table.column(i).search(this.value).draw();
+							}
+						});
+					});
+				}
+			});
 
-									$(document).on("click", ".prev-step", function () {
-										let currentIndex = $(".step.active").index();
-										if (currentIndex > 0) goToStep(currentIndex - 1);
-									});
+		});
+
+
+			   flatpickr("#LicenseIssueDate", {
+		  dateFormat: "d/m/Y",  // Matches SQL datetime format
+		  allowInput: true
+		});
+
+		flatpickr("#LicenseExpiryDate", {
+		  dateFormat: "d/m/Y",
+		  allowInput: true
+		});
+
+					function updateProgress(stepIndex) {
+			let totalSteps = $(".step").length;
+			let percent = ((stepIndex + 1) / totalSteps) * 100;
+			$(".progress-bar").css("width", percent + "%");
+		}
+
+		function goToStep(stepIndex) {
+			// ✅ Only target stepper tab-panes inside the form
+			$("#formSection .tab-pane").removeClass("show active")
+				.eq(stepIndex).addClass("show active");
+
+			// ✅ Update step indicators
+			$(".step").removeClass("active completed").each(function (index) {
+				if (index < stepIndex) $(this).addClass("completed");
+				if (index === stepIndex) $(this).addClass("active");
+			});
+
+			updateProgress(stepIndex);
+		}
+
+		// ✅ Click on step indicators
+		$(document).on("click", ".step", function () {
+			goToStep($(this).index());
+		});
+
+		// ✅ Next button
+		$(document).on("click", ".next-step", function () {
+			let currentIndex = $(".step.active").index();
+			if (currentIndex < $(".step").length - 1) goToStep(currentIndex + 1);
+		});
+
+		// ✅ Previous button
+		$(document).on("click", ".prev-step", function () {
+			let currentIndex = $(".step.active").index();
+			if (currentIndex > 0) goToStep(currentIndex - 1);
+		});
+
 
 		// ✅ File preview (single file per input)
 			$(document).on("change", ".file-input", function () {
@@ -360,6 +577,9 @@
 		fd.append("PAN", $("#PAN").val());
 		fd.append("GST", $("#GST").val());
 		fd.append("IsActive", $("#IsActive").is(":checked"));
+		fd.append("UserName", $("#Username").val());
+		fd.append("Password", $("#Password").val());
+		fd.append("IsActiveText", $("#IsActiveText").val());
 
 		// ✅ Files
 		if ($("#AgencyLogo")[0].files.length > 0)
@@ -390,26 +610,9 @@
 			});
 		});
 
-				// ✅ Validation Helper
-		// function isEmpty(id, msg) {
-		// 	let val = $("#" + id).val().trim();
-		// 	if (!val) {
-		// 		notyf.error(msg);
-		// 		$("#" + id).focus();
-		// 		return true;
-		// 	}
-		// 	return false;
-		// }
 
-		// function isFileEmpty(id, msg) {
-		// 	if (!$("#" + id)[0].files.length) {
-		// 		notyf.error(msg);
-		// 		return true;
-		// 	}
-		// 	return false;
-		// }
 
-						function validateAgencyForm() {
+		function validateAgencyForm() {
 			const requiredFields = [
 				{ id: "#AgencyName", msg: "Please enter Agency Name", step: 0 },
 				{ id: "#ContactPersonName", msg: "Please enter Contact Person Name", step: 1 },
