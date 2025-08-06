@@ -367,8 +367,6 @@ namespace PhysioWeb.Controllers
 
         #endregion
 
-
-
         #region Furnishing Type Master
         [HttpGet]
         public async Task<ActionResult> FurnishingType()
@@ -457,5 +455,196 @@ namespace PhysioWeb.Controllers
 
         #endregion
 
+        #region Amenity Master
+        [HttpGet]
+        public async Task<ActionResult> Amenities()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> SaveAmenityMaster(AmenityMaster AmenityMaster)
+        {
+            var result = await _masterRepository.SaveAmenityMaster(AmenityMaster);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteAmenityMaster(int UniqueID)
+        {
+            // propertyTypeMaster.AgencyId = 0;
+            var AmenityMaster = new AmenityMaster
+            {
+                UniquId = UniqueID
+            };
+
+            var result = await _masterRepository.DeleteAmenityMaster(AmenityMaster);
+            return Json(new { success = result });
+        }
+
+
+        [HttpPost]
+
+        public async Task<ActionResult> ListAmenityMaster()
+        {
+            var form = Request.Form;
+
+            // ✅ Map DataTables default parameters
+            var dataTablePara = new DataTablePara
+            {
+                iDisplayStart = Convert.ToInt32(form["start"]),
+                iDisplayLength = Convert.ToInt32(form["length"]),
+                iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
+                sSortDir_0 = form["order[0][dir]"],
+                sSearch = form["search[value]"]
+            };
+
+            // ✅ Map column filters dynamically (for first 10 columns)
+            for (int i = 0; i < 30; i++)
+            {
+                string key = $"columns[{i}][search][value]";
+                if (Request.Form.ContainsKey(key))
+                {
+                    typeof(DataTablePara)
+                        .GetProperty($"sSearch_{i}")
+                        ?.SetValue(dataTablePara, Request.Form[key].ToString());
+                }
+            }
+            var result = await _masterRepository.ListAmenityMaster(dataTablePara);
+            var requestForm = Request.Form;
+            return Json(new
+            {
+                draw = requestForm["draw"],                     // Echo back the draw count
+                recordsTotal = result.iTotalRecords,            // Total records in DB
+                recordsFiltered = result.iTotalDisplayRecords,  // Total records after filtering
+                data = result.aaData                            // Actual paged data
+            });
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditAmenityMaster(int UniqueID)
+        {
+            try
+            {
+                int UserID = 0;
+                var data = await _masterRepository.EditAmenityMaster(UniqueID, UserID);
+
+                return Json(data);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        #endregion
+
+        #region Area Master
+        [HttpGet]
+        public async Task<IActionResult> Area()
+        {
+            var model = new AreaMaster();
+
+            model.CountryList = await _masterRepository.GetCountryList();
+            model.StateList = new List<DropDownSource>(); // ✅ Prevent null error
+            model.CityList = new List<DropDownSource>();
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> SaveAreaMaster(AreaMaster AreaMaster)
+        {
+            var result = await _masterRepository.SaveAreaMaster(AreaMaster);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteAreaMaster(int UniqueID)
+        {
+            // propertyTypeMaster.AgencyId = 0;
+            var AreaMaster = new AreaMaster
+            {
+                UniquId = UniqueID
+            };
+
+            var result = await _masterRepository.DeleteAreaMaster(AreaMaster);
+            return Json(new { success = result });
+        }
+
+
+        [HttpPost]
+
+        public async Task<ActionResult> ListAreaMaster()
+        {
+            var form = Request.Form;
+
+            // ✅ Map DataTables default parameters
+            var dataTablePara = new DataTablePara
+            {
+                iDisplayStart = Convert.ToInt32(form["start"]),
+                iDisplayLength = Convert.ToInt32(form["length"]),
+                iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
+                sSortDir_0 = form["order[0][dir]"],
+                sSearch = form["search[value]"]
+            };
+
+            // ✅ Map column filters dynamically (for first 10 columns)
+            for (int i = 0; i < 30; i++)
+            {
+                string key = $"columns[{i}][search][value]";
+                if (Request.Form.ContainsKey(key))
+                {
+                    typeof(DataTablePara)
+                        .GetProperty($"sSearch_{i}")
+                        ?.SetValue(dataTablePara, Request.Form[key].ToString());
+                }
+            }
+            var result = await _masterRepository.ListAreaMaster(dataTablePara);
+            var requestForm = Request.Form;
+            return Json(new
+            {
+                draw = requestForm["draw"],                     // Echo back the draw count
+                recordsTotal = result.iTotalRecords,            // Total records in DB
+                recordsFiltered = result.iTotalDisplayRecords,  // Total records after filtering
+                data = result.aaData                            // Actual paged data
+            });
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditAreaMaster(int UniqueID)
+        {
+            try
+            {
+                int UserID = 0;
+                var data = await _masterRepository.EditAreaMaster(UniqueID, UserID);
+
+                return Json(data);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        [HttpGet]
+        public async Task<JsonResult> GetStatesByCountry(string countryId)
+        {
+            var states = await _masterRepository.GetStateList(countryId); 
+            return Json(states);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCitiesByState(string stateId)
+        {
+            var cities = await _masterRepository.GetCityList(stateId); 
+            return Json(cities);
+        }
+
+        #endregion
     }
 }

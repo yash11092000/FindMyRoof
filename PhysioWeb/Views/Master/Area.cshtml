@@ -1,0 +1,358 @@
+﻿@model PhysioWeb.Models.AreaMaster
+@{
+    ViewBag.Title = "Area";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Area Master</h4>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAreaModal">
+            <i class="bi bi-plus-circle"></i> Add Area
+        </button>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="bi bi-geo-alt-fill"></i> All Areas</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="TableList" class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Area Name</th>
+                            <th>Sub Area</th>
+                            <th>City</th>
+                            <th>Is Active</th>
+                            <th>Created By</th>
+                            <th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
+                            <th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Modal -->
+<div class="modal fade" id="addAreaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Add Area</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="areaForm">
+                    <input type="hidden" id="UniquId" name="UniquId" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Area Name<span class="impMark">*</span></label>
+                        <input type="text" class="form-control" id="AreaName" name="AreaName" placeholder="Enter area name" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Sub Area Name</label>
+                        <input type="text" class="form-control" id="SubAreaName" name="SubAreaName" placeholder="Enter sub area name" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Country</label>
+                        <select class="form-select" id="CountryID" name="Country">
+                            <option value="">-- Select Country --</option>
+                            @foreach (var item in Model.CountryList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">State</label>
+                        <select class="form-select" id="StateID" name="State">
+                            <option value="">-- Select State --</option>
+                            @foreach (var item in Model.StateList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">City</label>
+                        <select class="form-select" id="CityID" name="City">
+                            <option value="">-- Select City --</option>
+                            @foreach (var item in Model.CityList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                            
+                        </select>
+                    </div>
+
+                   
+
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Pincode</label>
+                        <input type="text" class="form-control" id="Pincode" name="Pincode" placeholder="Enter pincode" />
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" />
+                        <label class="form-check-label fw-bold" for="IsActive">Is Active</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+                <button type="button" class="btn btn-success" id="btnSave">
+                    <i class="bi bi-save"></i> Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+                   $(document).ready(function () {
+
+                        $('#TableList thead tr').clone(true).appendTo('#TableList thead');
+
+                        $('#TableList thead tr:eq(1) th').each(function (i) {
+                            if ($(this).find('i').length === 0) { // ✅ only add input if no icon
+                                var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
+                                $(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+                            } else {
+                                $(this).html('');
+                            }
+                        });
+                        var TableList = $("#TableList").DataTable({
+                        orderCellsTop: true,
+                        processing: true,
+                        serverSide: true,
+                        order: [[0, "asc"]],
+                        ajax: {
+                            url: '/Master/ListAreaMaster',
+                            type: 'POST' , // or 'GET' depending on your controller setup
+                        },
+                        columns: [
+                            { data: 'areaName' },
+                            { data: 'subAreaName' },
+                            { data: 'city' },
+                            { data: 'inActiveText' },
+                            { data: 'createdBy' },
+                        //     {
+                        //     data: null,
+                        //     render: function (data, type, row) {
+                        //         let para = row.uniquId + ',' + '"Master"' + ',' + '"PropertyType"';
+                        //         return `<a href="javascript:void(0)" onclick="ViewHistory(${para})">
+                        //                     <i class="bi bi-clock-history text-success fs-5" title="View History"></i>
+                        //                 </a>`;
+                        //     },
+                        //     orderable: false, searchable: false
+                        // },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                let para = `'${row.uniquId}', 'Master', 'EditAreaMaster'`;
+                                return `<a href="javascript:void(0)" onclick="EditData(${para})">
+                                            <i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
+                                        </a>`;
+                            },
+                            orderable: false,
+                            searchable: false
+                        },
+
+                                {
+                            data: null,
+                            render: function (data, type, row) {
+                                 let para = `'${row.uniquId}', 'Master', 'DeleteAreaMaster'`;
+                                return `<a href="javascript:void(0)" onclick="DeleteData(${para})">
+                                            <i class="bi bi-trash text-danger fs-5" title="Delete"></i>
+                                        </a>`;
+                            },
+                            orderable: false, searchable: false
+                        }
+                        ],
+                        initComplete: function () {
+                                 var table = this.api();
+
+               
+                $('#TableList thead tr:eq(1) th').each(function (i) {
+                    $('input', this).on('keyup change', function () {
+                        if (table.column(i).search() !== this.value) {
+                            table
+                                .column(i)
+                                .search(this.value) // ✅ per-column search
+                                .draw();
+                        }
+                    });
+                });
+                        }
+                    });
+
+                });
+
+                            $("#btnSave").on("click", function () {
+            let Area = $("#Area").val();
+
+            if (Area === "") {
+                notyf.error("Please enter Area");
+                $("#Area").focus();
+                return;
+            }
+
+            $.ajax({
+                url: '/Master/SaveAreaMaster',
+                method: 'POST',
+                data: $("#areaForm").serialize(),
+                success: function (response) {
+                    if (response) {
+                        notyf.success("Area added successfully");
+                        $("#addAreaModal").modal('hide');
+                        ClearData();
+                        $("#TableList").DataTable().ajax.reload(null, false);
+                    } else {
+                        notyf.error(response.message || "Failed to save.");
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr);
+                    notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
+                }
+            });
+        });
+
+
+                          function OnSuccessOfEdit(data) {
+            $("#addAreaModal").modal('show');
+
+            $("#UniquId").val(data.uniquId);
+            $("#AreaName").val(data.areaName);
+            $("#SubAreaName").val(data.subAreaName);
+            $("#Pincode").val(data.pincode);
+            $("#IsActive").prop("checked", data.isActive);
+
+            $("#CountryID").val(data.countryID);
+
+            loadStates(data.countryID, data.stateID, function () {
+                loadCities(data.stateID, data.cityID);
+            });
+        }
+
+
+       
+        $('.btn-cancel').on('click', function () {
+            $('#areaForm')[0].reset();
+            ClearData();
+        });
+
+     
+        function ClearData() {
+            $("#UniquId").val("");
+            $("#AreaName").val("");
+            $("#SubAreaName").val("");
+            $("#CityID").val("");
+            $("#StateID").val("");
+            $("#CountryID").val("");
+            $("#Pincode").val("");
+            $("#IsActive").prop("checked", false);
+        }
+
+        function OnSuccessOfDelete() {
+            notyf.success("Area deleted successfully");
+        }
+
+        $("#StateID").on("change", function () {
+            const stateId = $(this).val();
+            if (stateId) {
+                loadCities(stateId); 
+            } else {
+                $("#CityID").empty().append('<option value="">-- Select City --</option>');
+            }
+        });
+
+        $("#CountryID").on("change", function () {
+            const countryId = $(this).val();
+            if (countryId) {
+                loadStates(countryId); 
+            } else {
+                $("#StateID").empty().append('<option value="">-- Select State --</option>');
+                $("#CityID").empty().append('<option value="">-- Select City --</option>');
+            }
+        });
+
+        function loadStates(countryId, selectedStateId, callback) {
+            var $state = $("#StateID");
+            var $city = $("#CityID");
+
+            $state.empty().append('<option value="">-- Select State --</option>');
+            $city.empty().append('<option value="">-- Select City --</option>');
+
+            if (countryId !== "") {
+                $.ajax({
+                    url: '/Master/GetStatesByCountry',
+                    type: 'GET',
+                    data: { countryId: countryId },
+                    success: function (data) {
+                        if (data && data.length > 0) {
+                            $.each(data, function (i, item) {
+                                $state.append('<option value="' + item.value + '">' + item.text + '</option>');
+                            });
+                            if (selectedStateId) {
+                                $state.val(selectedStateId).trigger("change");
+                            }
+                            if (callback) callback();
+                        } else {
+                            notyf.error("No states found.");
+                        }
+                    },
+                    error: function (xhr) {
+                        notyf.error("Failed to load states.");
+                        console.error(xhr);
+                    }
+                });
+            }
+        }
+
+        function loadCities(stateId, selectedCityId, callback) {
+            var $city = $("#CityID");
+            $city.empty().append('<option value="">-- Select City --</option>');
+
+            if (stateId !== "") {
+                $.ajax({
+                    url: '/Master/GetCitiesByState',
+                    type: 'GET',
+                    data: { stateId: stateId },
+                    success: function (data) {
+                        if (data && data.length > 0) {
+                            $.each(data, function (i, item) {
+                                $city.append('<option value="' + item.value + '">' + item.text + '</option>');
+                            });
+                            if (selectedCityId) {
+                                $city.val(selectedCityId);
+                            }
+                            if (callback) callback();
+                        } else {
+                            notyf.error("No cities found.");
+                        }
+                    },
+                    error: function (xhr) {
+                        notyf.error("Failed to load cities.");
+                        console.error(xhr);
+                    }
+                });
+            }
+        }
+
+    </script>
+
+}
