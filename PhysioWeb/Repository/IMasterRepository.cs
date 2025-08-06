@@ -1,4 +1,5 @@
-﻿using PhysioWeb.Models;
+﻿using System.Data;
+using PhysioWeb.Models;
 
 namespace PhysioWeb.Repository
 {
@@ -20,5 +21,8 @@ namespace PhysioWeb.Repository
         Task<bool> DeleteFurnishingType(FurnishingTypeMaster FurnishingTypeMaster);
         Task<DataTableResult> ListFurnishingType(DataTablePara dataTablePara);
         Task<FurnishingTypeMaster> EditFurnishingType(int UniqueID, int UserID);
+        Task<int> SaveProperty(PropertyMaster propertyMaster);
+        Task<bool> SavePropertyMedia(DataTable mediaTable, int propertyId);
+        Task<PropertyMaster> PropertyMasterDropDown();
     }
 }

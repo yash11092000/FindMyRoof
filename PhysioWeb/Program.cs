@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
 using PhysioWeb.Data;
 using PhysioWeb.Repository;
 
@@ -13,6 +14,7 @@ builder.Services.AddScoped<DbHelper>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IMasterRepository, MasterRepository>();
 builder.Services.AddScoped<ISuperAdminRepository, SuperAdminRepository>();
+builder.Services.AddScoped<IAgencyRepository, AgencyRepository>();
 
 
 
@@ -23,6 +25,19 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Home/Login";
         options.AccessDeniedPath = "/Home/AccessDenied"; // optional
     });
+// Configure request size limits (for forms and JSON)
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 500 * 1024 * 1024; // 500 MB
+    options.MultipartHeadersLengthLimit = 500 * 1024 * 1024; // 500 MB
+});
+
+// If using Kestrel (self-hosted), increase max request size
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Limits.MaxRequestBodySize = 500 * 1024 * 1024; // 500 MB
+});
+
 
 builder.Services.AddAuthorization(); // required for [Authorize(Roles = "...")]
 

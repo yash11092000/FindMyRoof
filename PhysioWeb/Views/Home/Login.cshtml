@@ -98,13 +98,13 @@
 				return;
 			}
 			else{
-				showLoader();
+			
 				$.ajax({
 					url: "/Home/Login",
 					type: "POST",
 					data: {Email:email,Mobile: mobile,Password: password},
 					success: function (response) {
-
+							showLoader();
 						  if (response.success) {
 						notyf.success("Login successful! Redirecting...");
 

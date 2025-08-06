@@ -5,6 +5,8 @@ using PhysioWeb.Models;
 using PhysioWeb.Repository;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
+using System.Reflection;
+using System.Data;
 
 namespace PhysioWeb.Controllers
 {
@@ -32,7 +34,7 @@ namespace PhysioWeb.Controllers
         }
 
 
-        [HttpPost]  
+        [HttpPost]
         public async Task<ActionResult> ListPropertyCategory()
         {
             var form = Request.Form;
@@ -114,7 +116,7 @@ namespace PhysioWeb.Controllers
             var result = await _masterRepository.SavePropType(propertyTypeMaster);
             return Json(result);
         }
-        
+
 
         [HttpPost]
         public async Task<ActionResult> DeletePropertyType(int UniqueID)
@@ -273,16 +275,96 @@ namespace PhysioWeb.Controllers
         #region Property Master
         public async Task<ActionResult> PropertyMaster()
         {
-            return View();
+            var PropertyMasterDropDown = await _masterRepository.PropertyMasterDropDown();
+            return View(PropertyMasterDropDown);
         }
 
-        public async Task<IActionResult> SaveProperty(string PropertyMaster, List<IFormFile> Images, List<IFormFile> Videos)
+        [HttpPost]
+        public async Task<IActionResult> SaveProperty([FromBody] PropertyMaster PropertyMaster)
         {
-            var property = JsonConvert.DeserializeObject<PropertyMaster>(PropertyMaster);
+            if (PropertyMaster == null)
+                return Json(new { success = false, message = "Model binding failed!" });
 
-            return Json(new { success = false, message = "Invalid property data" });
+            var result = await _masterRepository.SaveProperty(PropertyMaster);
+            return Json(new { success = true, propertyId = result });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadPropertyMedia()
+        {
+
+            int PropertyId = int.Parse(Request.Form["PropertyId"]);
+            var Images = Request.Form.Files.Where(f => f.Name.StartsWith("Images")).ToList();
+            var Videos = Request.Form.Files.Where(f => f.Name.StartsWith("Videos")).ToList();
+
+            try
+            {
+                DataTable mediaTable = new DataTable();
+                mediaTable.Columns.Add("TempId", typeof(Guid));
+                mediaTable.Columns.Add("FilePath", typeof(string));
+                mediaTable.Columns.Add("FileName", typeof(string));
+                mediaTable.Columns.Add("FileType", typeof(int));
+
+                if (PropertyId <= 0)
+                    return Json(new { success = false, message = "Invalid PropertyId" });
+
+
+                string basePath = Path.Combine(Directory.GetCurrentDirectory(), "Property/" + PropertyId + "/");
+                if (!Directory.Exists(basePath))
+                    Directory.CreateDirectory(basePath);
+
+
+                string ImagesDir = Path.Combine(basePath, "Images");
+                if (!Directory.Exists(ImagesDir)) Directory.CreateDirectory(ImagesDir);
+
+                // ✅ Save Images
+                foreach (var img in Images)
+                {
+                    if (img != null && img.Length > 0)
+                    {
+                        string fileName = Guid.NewGuid() + Path.GetExtension(img.FileName);
+                        string filePath = Path.Combine(ImagesDir, fileName);
+
+                        mediaTable.Rows.Add(Guid.NewGuid(), filePath, fileName, 1);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await img.CopyToAsync(stream);
+                        }
+                    }
+                }
+
+                string VideosDir = Path.Combine(basePath, "Videos");
+                if (!Directory.Exists(VideosDir)) Directory.CreateDirectory(VideosDir);
+
+
+                // ✅ Save Videos
+                foreach (var vid in Videos)
+                {
+                    if (vid != null && vid.Length > 0)
+                    {
+                        string fileName = Guid.NewGuid() + Path.GetExtension(vid.FileName);
+                        string filePath = Path.Combine(VideosDir, fileName);
+
+                        mediaTable.Rows.Add(Guid.NewGuid(), filePath, fileName, 2);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await vid.CopyToAsync(stream);
+                        }
+
+                    }
+                }
+                var result = await _masterRepository.SavePropertyMedia(mediaTable, PropertyId);
+                return Json(new { success = true, message = "Media uploaded successfully" });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
         }
+
         #endregion
 
 

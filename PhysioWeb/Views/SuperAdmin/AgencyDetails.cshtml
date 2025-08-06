@@ -395,7 +395,8 @@
 						<th>City</th>
 						<th>Status</th>
 						<th>Created By</th>
-						<th>Actions</th>
+						<th>Edit</th>
+						<th>Delete</th>
 					</tr>
 				</thead>
 			</table>
@@ -439,19 +440,27 @@
 					{ data: 'isActiveText' },
 					{ data: 'createdBy' },
 					{
-						data: null,
-						render: function (data, type, row) {
-							return `
-								<a href="javascript:void(0)" onclick="EditAgency('${row.uniquId}')">
-									<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
-								</a>
-								<a href="javascript:void(0)" onclick="DeleteAgency('${row.uniquId}')">
-									<i class="bi bi-trash text-danger fs-5" title="Delete"></i>
-								</a>`;
+							data: null,
+							render: function (data, type, row) {
+								let para = `'${row.uniquId}', 'Master', 'EditPropertyCategory'`;
+								return `<a href="javascript:void(0)" onclick="EditData(${para})">
+											<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
+										</a>`;
+							},
+							orderable: false,
+							searchable: false
 						},
-						orderable: false,
-						searchable: false
-					}
+
+								{
+							data: null,
+							render: function (data, type, row) {
+								 let para = `'${row.uniquId}', 'Master', 'DeletePropertyCategory'`;
+								return `<a href="javascript:void(0)" onclick="DeleteData(${para})">
+											<i class="bi bi-trash text-danger fs-5" title="Delete"></i>
+										</a>`;
+							},
+							orderable: false, searchable: false
+						}
 				],
 				initComplete: function () {
 					var table = this.api();

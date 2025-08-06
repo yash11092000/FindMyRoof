@@ -1,5 +1,102 @@
-﻿@{
+﻿@model PhysioWeb.Models.MenuMaster
+
+@{
 	ViewBag.Title = "Agency Dashboard";
 }
+<style>
+	.card.custom-card {
+		position: relative;
+		background: #fff;
+		border: 1px solid #ddd;
+		overflow: hidden;
+		/* 🔹 Bottom-right cut */
+		clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%);
+		transition: box-shadow 0.3s ease;
+	}
 
-<h1>Agency Dashboard</h1>
+		/* Optional shadow lift on hover */
+		.card.custom-card:hover {
+			box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+		}
+
+		/* 🔹 Green triangle in cut corner */
+		.card.custom-card::before {
+			content: "";
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			border-bottom: 25px solid #198754;
+			border-left: 25px solid transparent;
+		}
+
+		/* 🔹 Animated top border */
+		.card.custom-card::after {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 0%;
+			height: 3px;
+			background: #198754; /* Bootstrap green */
+			transition: width 0.3s ease;
+		}
+
+		.card.custom-card:hover::after {
+			width: 100%;
+		}
+</style>
+@if (Model.MenuList != null && Model.MenuList.Any())
+{
+
+	<div class="container mt-4">
+		<h3 class="mb-3">Master Pages</h3>
+		<div class="row g-3">
+			<!-- Bootstrap grid -->
+			@foreach (var menu in Model.MenuList)
+			{
+				<div class="col-md-3">
+					<div class="card custom-card p-3 shadow h-100">
+						<h5 class="card-title">@menu.MenuName</h5>
+						<p class="card-text text-muted">Manage @menu.MenuName here.</p>
+						<a href="@menu.MenuUrl" class="btn btn-success mt-auto">Add</a>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+}
+else
+{
+	<p class="text-muted">No menus available for this role.</p>
+}
+
+
+@section Scripts {
+	<script>
+		// 		document.querySelectorAll('.custom-card').forEach(card => {
+		// 	let timeout;
+
+		// 	card.addEventListener('mousemove', (e) => {
+		// 		clearTimeout(timeout);
+		// 		const rect = card.getBoundingClientRect();
+		// 		const x = e.clientX - rect.left;
+		// 		const y = e.clientY - rect.top;
+		// 		const centerX = rect.width / 2;
+		// 		const centerY = rect.height / 2;
+
+		// 		// smaller rotation values for smoother movement
+		// 		const rotateX = ((y - centerY) / centerY) * 3;
+		// 		const rotateY = ((x - centerX) / centerX) * 3;
+
+		// 		card.style.transform = `rotateX(${-rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+
+		// 		// slight delay to prevent too many updates
+		// 		timeout = setTimeout(() => {}, 16);
+		// 	});
+
+		// 	card.addEventListener('mouseleave', () => {
+		// 		card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+		// 	});
+		// });
+	</script>
+}
