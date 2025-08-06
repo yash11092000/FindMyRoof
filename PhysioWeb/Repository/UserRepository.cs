@@ -1,4 +1,5 @@
-﻿using PhysioWeb.Data;
+﻿using System.Reflection;
+using PhysioWeb.Data;
 using PhysioWeb.Models;
 
 namespace PhysioWeb.Repository
@@ -11,12 +12,13 @@ namespace PhysioWeb.Repository
         {
             _dbHelper = dbHelper;
         }
+
         public async Task<Users> Login(string Email, string Mobile, string Password)
         {
             try
             {
                 string[] parametersName = { "Email", "Password", "Mobile" };
-                object[] Values = { Email, Password, Mobile};
+                object[] Values = { Email, Password, Mobile };
 
                 string Sp = "FMR_CheckUser";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parametersName, Values);
@@ -51,5 +53,29 @@ namespace PhysioWeb.Repository
             }
 
         }
+
+        public async Task<HomeDashboard> GetDashboardData()
+        {
+            try
+            {
+                string[] parametersName = { };
+                object[] Values = { };
+
+                string Sp = "FMR_GetDashboardData";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parametersName, Values);
+                HomeDashboard home = new HomeDashboard();
+                while (data.Read())
+                {
+                    home.PropertyDetails.Add(new PropertyDetails(data));
+
+                }
+                return home;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }

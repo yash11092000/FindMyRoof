@@ -726,7 +726,7 @@ namespace PhysioWeb.Repository
                 });
             }
             return list;
-           
+
         }
         public async Task<List<DropDownSource>> GetCityList(string stateId)
         {
@@ -749,14 +749,14 @@ namespace PhysioWeb.Repository
 
             return list;
         }
-    }
+
         public async Task<int> SaveProperty(PropertyMaster propertyMaster)
         {
             try
             {
 
-                string[] parameterNames = { "UniquID", "PropertyName", "Description", "PropertyType", "Bedrooms", "Bathrooms", "CarpetArea", "BuiltUpArea", "Address", "City", "State", "PinCode", "MinPrice", "MaxPrice", "FurnishingStatus", "PossessionDate", "IsActive" };
-                object[] parameterValues = { propertyMaster.UniquId, propertyMaster.Title, propertyMaster.Description, propertyMaster.PropertyType, propertyMaster.Bedrooms, propertyMaster.Bathrooms, propertyMaster.CarpetArea, propertyMaster.BuiltUpArea, propertyMaster.Address, propertyMaster.City, propertyMaster.State, propertyMaster.PinCode, propertyMaster.BudgetMin, propertyMaster.BudgetMax, propertyMaster.FurnishingStatus, propertyMaster.PossessionDate.HasValue ? propertyMaster.PossessionDate.Value.ToString("yyyy-MM-dd") : (object)DBNull.Value, propertyMaster.IsActive };
+                string[] parameterNames = { "UniquID", "PropertyName", "Description", "PropertyType", "Bedrooms", "Bathrooms", "CarpetArea", "BuiltUpArea", "Address", "City", "State", "PinCode", "MinPrice", "MaxPrice", "FurnishingStatus", "PossessionDate", "IsActive","TransactionType","Floor","ContactPersonName","ContactPersonNo","AlternateNo","Area","SubArea","Country" };
+                object[] parameterValues = { propertyMaster.UniquId, propertyMaster.Title, propertyMaster.Description, propertyMaster.PropertyType, propertyMaster.Bedrooms, propertyMaster.Bathrooms, propertyMaster.CarpetArea, propertyMaster.BuiltUpArea, propertyMaster.Address, propertyMaster.City, propertyMaster.State, propertyMaster.PinCode, propertyMaster.BudgetMin, propertyMaster.BudgetMax, propertyMaster.FurnishingStatus, propertyMaster.PossessionDate.HasValue ? propertyMaster.PossessionDate.Value.ToString("yyyy-MM-dd") : (object)DBNull.Value, propertyMaster.IsActive, propertyMaster.TransactionType, propertyMaster.Floor, propertyMaster.ContactPersonName, propertyMaster.ContactPersonPhone, propertyMaster.ContactPersonAlternatePhone, propertyMaster.Area, propertyMaster.SubArea, propertyMaster.Country };
                 string Sp = "FMR_SavePropertyDetails";
                 var data = await _dbHelper.ExecuteScalarAsync(Sp, parameterNames, parameterValues);
                 return Convert.ToInt32(data);
@@ -801,62 +801,69 @@ namespace PhysioWeb.Repository
                 PropertyMaster propertyMaster = new PropertyMaster();
                 while (data.Read())
                 {
-                    propertyMaster.CountryList.Add(new DropDownSource(data));
+                    propertyMaster.CountryList.Add(new DropDownSource(data, true));
                 }
                 if (data.NextResult())
                 {
                     while (data.Read())
                     {
-                        propertyMaster.StateList.Add(new DropDownSource(data));
+                        propertyMaster.StateList.Add(new DropDownSource(data, true));
                     }
                 }
                 if (data.NextResult())
                 {
                     while (data.Read())
                     {
-                        propertyMaster.CityList.Add(new DropDownSource(data));
+                        propertyMaster.CityList.Add(new DropDownSource(data, true));
                     }
                 }
                 if (data.NextResult())
                 {
                     while (data.Read())
                     {
-                        propertyMaster.PropertyCategoryList.Add(new DropDownSource(data));
+                        propertyMaster.PropertyCategoryList.Add(new DropDownSource(data, true));
                     }
                 }
                 if (data.NextResult())
                 {
                     while (data.Read())
                     {
-                        propertyMaster.AreaList.Add(new DropDownSource(data));
+                        propertyMaster.AreaList.Add(new DropDownSource(data, true));
                     }
                 }
                 if (data.NextResult())
                 {
                     while (data.Read())
                     {
-                        propertyMaster.PropertyTypeList.Add(new DropDownSource(data));
+                        propertyMaster.PropertyTypeList.Add(new DropDownSource(data, true));
                     }
                 }
                 if (data.NextResult())
                 {
                     while (data.Read())
                     {
-                        propertyMaster.FurnishingTypeList.Add(new DropDownSource(data));
+                        propertyMaster.FurnishingTypeList.Add(new DropDownSource(data, true));
                     }
                 }
                 if (data.NextResult())
                 {
                     while (data.Read())
                     {
-                        propertyMaster.RentalTypeList.Add(new DropDownSource(data));
+                        propertyMaster.RentalTypeList.Add(new DropDownSource(data, true));
                     }
                 }
                 if (data.NextResult())
                 {
                     while (data.Read())
                     {
-                        propertyMaster.BedRoomList.Add(new DropDownSource(data));
+                        propertyMaster.BedRoomList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        propertyMaster.AmenityList.Add(new DropDownSource(data, true));
                     }
                 }
                 return propertyMaster;

@@ -17,7 +17,10 @@ namespace PhysioWeb.Models
 
         public string EmailId { get; set; }
 
-
+        public Users()
+        {
+            
+        }
         public Users(IDataReader data)
         {
             populateObject(this, data);

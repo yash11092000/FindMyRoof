@@ -7,6 +7,7 @@ namespace PhysioWeb.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string PropertyType { get; set; }
+        public string TransactionType { get; set; }
         public int Bedrooms { get; set; }
         public int Bathrooms { get; set; }
         public decimal CarpetArea { get; set; }
@@ -31,7 +32,7 @@ namespace PhysioWeb.Models
 
 
         // Features
-        public List<string> Amenities { get; set; }
+        public string Amenities { get; set; }
         public string FurnishingStatus { get; set; }
         public DateTime? PossessionDate { get; set; }
 
@@ -66,6 +67,7 @@ namespace PhysioWeb.Models
         public List<DropDownSource> PropertyTypeList { get; set; }
         public List<DropDownSource> RentalTypeList { get; set; }
         public List<DropDownSource> BedRoomList { get; set; }
+        public List<DropDownSource> AmenityList { get; set; }
 
         public PropertyMaster()
         {
@@ -78,6 +80,7 @@ namespace PhysioWeb.Models
             FurnishingTypeList = new List<DropDownSource>();
             RentalTypeList = new List<DropDownSource>();
             BedRoomList = new List<DropDownSource>();
+            AmenityList = new List<DropDownSource>();
         }
 
 

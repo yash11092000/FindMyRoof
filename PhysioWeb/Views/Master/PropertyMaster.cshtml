@@ -135,7 +135,7 @@
 	<!-- Form -->
 	<form id="propertyForm" enctype="multipart/form-data">
 		<div class="tab-content">
-
+			<input type="text" value="0" id="UniquId" name="UniquId" hidden />
 			<!-- Step 1 -->
 			<div class="tab-pane fade show active" id="step1">
 				<div class="mb-3">
@@ -147,38 +147,42 @@
 					<div class="col-md-4 mb-3">
 						<label class="form-label fw-bold">Property Type</label>
 						<select class="form-select" name="PropertyType" id="PropertyType">
-							<option value="1">Select Property Type</option>
-							<option value="2">Apartment</option>
-							<option value="3">Villa</option>
-							<option value="4">Plot</option>
-							<option value="5">Office Space</option>
+							<option value="">Select Property Type</option>
+
+							@foreach (var item in Model.PropertyTypeList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
+
 						</select>
 					</div>
 
 					<div class="col-md-4 mb-3">
 						<label class="form-label fw-bold">Transaction Type</label>
 						<select class="form-select" name="Availability" id="Availability">
-							<option value="">Select</option>
-							<option value="1">For Sale</option>
-							<option value="2">For Rent</option>
+							<option value="">Select Transaction Type</option>
+							@foreach (var item in Model.RentalTypeList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
 						</select>
 					</div>
 
 					<div class="col-md-2 mb-3">
 						<label class="form-label fw-bold">Bedrooms</label>
 						<select class="form-select" name="Bedrooms" id="Bedrooms">
-							<option value="1">Select</option>
-							<option value="2">1 BHK</option>
-							<option value="3">2 BHK</option>
-							<option value="4">3 BHK</option>
-							<option value="5">4+ BHK</option>
+							<option value="1">Select Bedrooms</option>
+							@foreach (var item in Model.BedRoomList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
 						</select>
 					</div>
 
 					<div class="col-md-2 mb-3">
 						<label class="form-label fw-bold">Bathrooms</label>
 						<select class="form-select" name="Bathrooms" id="Bathrooms">
-							<option value="">Select</option>
+							<option value="">Select Bathrooms</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -196,11 +200,31 @@
 					<div class="col-md-4 mb-3">
 						<label class="form-label fw-bold">Furnishing Type</label>
 						<select class="form-select" name="Furnishing" id="FurnishingStatus">
-							<option value="">Select</option>
-							<option value="1">Furnished</option>
-							<option value="2">Semi-Furnished</option>
-							<option value="3">Unfurnished</option>
+							<option value="">Select Furnishing Type</option>
+							@foreach (var item in Model.FurnishingTypeList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
 						</select>
+					</div>
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Floor</label>
+						<input type="text" class="form-control" id="Floor" name="Floor" placeholder="Enter Floor">
+					</div>
+
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Contact Person Name</label>
+						<input type="text" class="form-control" id="ContactPersonName" name="ContactPersonName" placeholder="Enter Contact Person Name">
+					</div>
+
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Contact No</label>
+						<input type="tel" class="form-control" id="ContactPersonNo" name="ContactPersonNo" placeholder="Enter Contact No">
+					</div>
+
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Alternate No</label>
+						<input type="text" class="form-control" id="ContactPersonAlternatePhone" name="ContactPersonAlternatePhone" placeholder="Enter Alternate No">
 					</div>
 				</div>
 
@@ -217,19 +241,55 @@
 			<div class="tab-pane fade" id="step2">
 				<div class="row">
 					<div class="col-md-4 mb-3">
-						<label class="form-label fw-bold">City</label>
-						<input type="text" class="form-control" name="City" id="City" placeholder="Enter city">
+						<label class="form-label fw-bold">Area</label>
+						<select class="form-select" name="Area" id="Area">
+							<option value="">Select Area</option>
+							@foreach (var item in Model.AreaList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
+						</select>
 					</div>
-
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">SubArea</label>
+						<input type="text" class="form-control" name="SubArea" id="SubArea" placeholder="Enter SubArea">
+					</div>
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Pincode</label>
+						<input type="text" class="form-control" name="PinCode" id="PinCode" placeholder="Enter Pincode">
+					</div>
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Country</label>
+						<select class="form-select" name="Country" id="Country">
+							<option value="">Select Country</option>
+							@foreach (var item in Model.CountryList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
+						</select>
+					</div>
 					<div class="col-md-4 mb-3">
 						<label class="form-label fw-bold">State</label>
-						<input type="text" class="form-control" name="State" id="State" placeholder="Enter state">
+						<select class="form-select" name="State" id="State">
+							<option value="">Select State</option>
+							@foreach (var item in Model.StateList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
+						</select>
+					</div>
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">City</label>
+						<select class="form-select" name="City" id="City">
+							<option value="">Select City</option>
+							@foreach (var item in Model.CityList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
+						</select>
 					</div>
 
-					<div class="col-md-4 mb-3">
-						<label class="form-label fw-bold">Pin Code</label>
-						<input type="text" class="form-control" name="PinCode" id="PinCode" placeholder="Enter pin code">
-					</div>
+
 				</div>
 
 				<div class="mb-3">
@@ -249,13 +309,13 @@
 							<div class="col-6">
 								<div class="input-group">
 									<span class="input-group-text">₹</span>
-									<input type="number" class="form-control" name="PriceMin" placeholder="Min">
+									<input type="number" class="form-control" name="PriceMin" id="BudgetMin" placeholder="Min">
 								</div>
 							</div>
 							<div class="col-6">
 								<div class="input-group">
 									<span class="input-group-text">₹</span>
-									<input type="number" class="form-control" name="PriceMax" placeholder="Max">
+									<input type="number" class="form-control" name="PriceMax" id="BudgetMax" placeholder="Max">
 								</div>
 							</div>
 						</div>
@@ -272,14 +332,12 @@
 				<div class="mb-3">
 					<label class="form-label fw-bold">Amenities</label>
 					<select class="form-select" name="Amenities" id="Amenities" multiple>
-						<option value="1">Parking</option>
-						<option value="2">Gym</option>
-						<option value="3">Swimming Pool</option>
-						<option value="4">Garden</option>
-						<option value="5">Lift</option>
-						<option value="6">Clubhouse</option>
+						<option value="1">Select Amenities</option>
+						@foreach (var item in Model.AmenityList)
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
 					</select>
-					<small class="text-muted">Hold CTRL to select multiple amenities</small>
 				</div>
 
 				<!-- Image Upload -->
@@ -457,23 +515,31 @@
 
 			// ✅ Collect all fields into an object
 			var propertyMaster = {
+				UniquId : $("#UniquId").val(),
 				Title: $("#Title").val(),
-				Description: $("#Description").val(),
 				PropertyType: $("#PropertyType").val(),
+				TransactionType: $("#Availability").val(),
 				Bedrooms: $("#Bedrooms").val(),
 				Bathrooms: $("#Bathrooms").val(),
 				CarpetArea: $("#CarpetArea").val(),
-				BuiltUpArea: $("#BuiltUpArea").val(),
-				Address: $("#Address").val(),
-				City: $("#City").val(),
-				State: $("#State").val(),
+				//BuiltUpArea: $("#BuiltUpArea").val(),
+				FurnishingStatus: $("#FurnishingStatus").val(),
+				Floor: $("#Floor").val(),
+				ContactPersonName: $("#ContactPersonName").val(),
+				ContactPersonNo: $("#ContactPersonNo").val(),
+				ContactPersonAlternatePhone: $("#ContactPersonAlternatePhone").val(),
+				Description: $("#Description").val(),
+				Area: $("#Area").val(),
+				SubArea: $("#SubArea").val(),
 				PinCode: $("#PinCode").val(),
-				Price: $("#Price").val(),
+				Country: $("#Country").val(),
+				State: $("#State").val(),
+				City: $("#City").val(),
+				Address: $("#Address").val(),
 				BudgetMin: $("#BudgetMin").val(),
 				BudgetMax: $("#BudgetMax").val(),
-				Amenities: $("#Amenities").val(),
-				FurnishingStatus: $("#FurnishingStatus").val(),
-				PossessionDate: $("#PossessionDate").val(),
+				Amenities: $("#Amenities").val().toString(),
+				//PossessionDate: $("#PossessionDate").val(),
 				IsActive: true
 			};
 

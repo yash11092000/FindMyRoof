@@ -1,5 +1,5 @@
 ﻿@* visible to All *@
-@model PhysioWeb.Models.Index
+@model PhysioWeb.Models.HomeDashboard
 
 @{
 	ViewData["Title"] = "Home Page";
@@ -335,275 +335,67 @@
 		</div>
 		<div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
 			<div class="carousel-inner">
-				<!-- Slide 1 -->
-				<div class="carousel-item active">
-					<div class="row g-4">
-						<div class="col-md-4">
-							<div class="property-card">
-								<div class="card-image" style="background-image: url('https://picsum.photos/600/400?property=1')">
-									<span class="status-badge">New</span>
-									<button class="favorite-btn">♥</button>
-									<span class="photo-count"><i class="fas fa-camera"></i> 12</span>
-								</div>
-								<div class="card-body">
-									<h3 class="price">$450,000</h3>
-									<p class="address">123 Main Street<br>Springfield, IL 62704</p>
-									<div class="highlights mb-3">
-										<span>3 bd</span> • <span>2 ba</span> • <span>1,250 sqft</span>
-									</div>
-									<div class="details row g-2 mb-3">
-										<div class="col-6 detail-item">
-											<i class="fas fa-bed"></i>
-											<span>3 Beds</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-bath"></i>
-											<span>2 Baths</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-ruler-combined"></i>
-											<span>1,250 sqft</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-car"></i>
-											<span>2 Garage</span>
-										</div>
-									</div>
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="agent-info d-flex align-items-center">
-											<img src="https://picsum.photos/30/30?agent=1" class="rounded-circle me-2">
-											<span class="small">Premier Realty</span>
-										</div>
-										<button class="btn btn-primary btn-sm">Details</button>
-									</div>
-									<p class="listed-date mt-2 mb-0">Listed 3 days ago</p>
-								</div>
-							</div>
-						</div>
+				@{
+					int itemsPerSlide = 3;
+					int totalItems = Model.PropertyDetails.Count;
+					int totalSlides = (int)Math.Ceiling((double)totalItems / itemsPerSlide);
+					int propertyIndex = 0;
+				}
 
-						<!-- Repeat similar cards for the slide -->
-						<div class="col-md-4">
-							<div class="property-card">
-								<div class="card-image" style="background-image: url('https://picsum.photos/600/400?property=2')">
-									<span class="status-badge">Hot Deal</span>
-									<button class="favorite-btn">♥</button>
-									<span class="photo-count"><i class="fas fa-camera"></i> 8</span>
-								</div>
-								<div class="card-body">
-									<h3 class="price">$375,000</h3>
-									<p class="address">456 Oak Avenue<br>Springfield, IL 62704</p>
-									<div class="highlights mb-3">
-										<span>2 bd</span> • <span>2 ba</span> • <span>950 sqft</span>
-									</div>
-									<div class="details row g-2 mb-3">
-										<div class="col-6 detail-item">
-											<i class="fas fa-bed"></i>
-											<span>2 Beds</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-bath"></i>
-											<span>2 Baths</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-ruler-combined"></i>
-											<span>950 sqft</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-car"></i>
-											<span>1 Garage</span>
-										</div>
-									</div>
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="agent-info d-flex align-items-center">
-											<img src="https://picsum.photos/30/30?agent=2" class="rounded-circle me-2">
-											<span class="small">Elite Homes</span>
-										</div>
-										<button class="btn btn-primary btn-sm">Details</button>
-									</div>
-									<p class="listed-date mt-2 mb-0">Listed 1 week ago</p>
-								</div>
-							</div>
-						</div>
+				@for (int slide = 0; slide < totalSlides; slide++)
+				{
+					var isActive = slide == 0 ? "active" : "";
 
-						<div class="col-md-4">
-							<div class="property-card">
-								<div class="card-image" style="background-image: url('https://picsum.photos/600/400?property=3')">
-									<span class="status-badge">Open House</span>
-									<button class="favorite-btn">♥</button>
-									<span class="photo-count"><i class="fas fa-camera"></i> 15</span>
+					<div class="carousel-item @isActive">
+						<div class="row g-4">
+							@for (int j = 0; j < itemsPerSlide && propertyIndex < totalItems; j++, propertyIndex++)
+							{
+								var prop = Model.PropertyDetails[propertyIndex];
+								<div class="col-md-4">
+									<div class="property-card">
+										<div class="card-image" style="background-image: url('@prop.PropertyImg')">
+											<span class="status-badge">New</span>
+											<button class="favorite-btn">♥</button>
+											<span class="photo-count"><i class="fas fa-camera"></i> 12</span>
+										</div>
+										<div class="card-body">
+											<h3 class="price">₹@prop.Price</h3>
+											<p class="address">@prop.Address</p>
+											<div class="highlights mb-3">
+												<span>@prop.BedRooms bd</span> • <span>@prop.BathRooms ba</span> • <span>@prop.Sqrtft sqft</span>
+											</div>
+											<div class="details row g-2 mb-3">
+												<div class="col-6 detail-item">
+													<i class="fas fa-bed"></i>
+													<span>@prop.BedRooms Beds</span>
+												</div>
+												<div class="col-6 detail-item">
+													<i class="fas fa-bath"></i>
+													<span>@prop.BathRooms Baths</span>
+												</div>
+												<div class="col-6 detail-item">
+													<i class="fas fa-ruler-combined"></i>
+													<span>@prop.Sqrtft sqft</span>
+												</div>
+												<div class="col-6 detail-item">
+													<i class="fas fa-car"></i>
+													<span>2 Garage</span>
+												</div>
+											</div>
+											<div class="d-flex justify-content-between align-items-center">
+												<div class="agent-info d-flex align-items-center">
+													<span class="small">@prop.PropertyName</span>
+												</div>
+												<button class="btn btn-primary btn-sm">Details</button>
+											</div>
+											<p class="listed-date mt-2 mb-0">@prop.WhenListed</p>
+										</div>
+									</div>
 								</div>
-								<div class="card-body">
-									<h3 class="price">$525,000</h3>
-									<p class="address">789 Pine Road<br>Springfield, IL 62704</p>
-									<div class="highlights mb-3">
-										<span>4 bd</span> • <span>3 ba</span> • <span>1,800 sqft</span>
-									</div>
-									<div class="details row g-2 mb-3">
-										<div class="col-6 detail-item">
-											<i class="fas fa-bed"></i>
-											<span>4 Beds</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-bath"></i>
-											<span>3 Baths</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-ruler-combined"></i>
-											<span>1,800 sqft</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-car"></i>
-											<span>2 Garage</span>
-										</div>
-									</div>
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="agent-info d-flex align-items-center">
-											<img src="https://picsum.photos/30/30?agent=3" class="rounded-circle me-2">
-											<span class="small">Luxury Estates</span>
-										</div>
-										<button class="btn btn-primary btn-sm">Details</button>
-									</div>
-									<p class="listed-date mt-2 mb-0">Listed today</p>
-								</div>
-							</div>
+							}
 						</div>
 					</div>
-				</div>
-
-				<!-- Slide 2 -->
-				<div class="carousel-item">
-					<div class="row g-4">
-						<div class="col-md-4">
-							<div class="property-card">
-								<div class="card-image" style="background-image: url('https://picsum.photos/600/400?property=4')">
-									<span class="status-badge">Price Reduced</span>
-									<button class="favorite-btn">♥</button>
-									<span class="photo-count"><i class="fas fa-camera"></i> 10</span>
-								</div>
-								<div class="card-body">
-									<h3 class="price">$320,000</h3>
-									<p class="address">101 Elm Street<br>Springfield, IL 62704</p>
-									<div class="highlights mb-3">
-										<span>3 bd</span> • <span>1.5 ba</span> • <span>1,100 sqft</span>
-									</div>
-									<div class="details row g-2 mb-3">
-										<div class="col-6 detail-item">
-											<i class="fas fa-bed"></i>
-											<span>3 Beds</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-bath"></i>
-											<span>1.5 Baths</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-ruler-combined"></i>
-											<span>1,100 sqft</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-car"></i>
-											<span>1 Garage</span>
-										</div>
-									</div>
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="agent-info d-flex align-items-center">
-											<img src="https://picsum.photos/30/30?agent=4" class="rounded-circle me-2">
-											<span class="small">Dream Homes</span>
-										</div>
-										<button class="btn btn-primary btn-sm">Details</button>
-									</div>
-									<p class="listed-date mt-2 mb-0">Listed 2 weeks ago</p>
-								</div>
-							</div>
-						</div>
-
-						<!-- Add more cards for slide 2 -->
-						<div class="col-md-4">
-							<div class="property-card">
-								<div class="card-image" style="background-image: url('https://picsum.photos/600/400?property=5')">
-									<span class="status-badge">New</span>
-									<button class="favorite-btn">♥</button>
-									<span class="photo-count"><i class="fas fa-camera"></i> 14</span>
-								</div>
-								<div class="card-body">
-									<h3 class="price">$410,000</h3>
-									<p class="address">202 Maple Drive<br>Springfield, IL 62704</p>
-									<div class="highlights mb-3">
-										<span>3 bd</span> • <span>2 ba</span> • <span>1,350 sqft</span>
-									</div>
-									<div class="details row g-2 mb-3">
-										<div class="col-6 detail-item">
-											<i class="fas fa-bed"></i>
-											<span>3 Beds</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-bath"></i>
-											<span>2 Baths</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-ruler-combined"></i>
-											<span>1,350 sqft</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-car"></i>
-											<span>2 Garage</span>
-										</div>
-									</div>
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="agent-info d-flex align-items-center">
-											<img src="https://picsum.photos/30/30?agent=5" class="rounded-circle me-2">
-											<span class="small">Prime Properties</span>
-										</div>
-										<button class="btn btn-primary btn-sm">Details</button>
-									</div>
-									<p class="listed-date mt-2 mb-0">Listed 5 days ago</p>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-4">
-							<div class="property-card">
-								<div class="card-image" style="background-image: url('https://picsum.photos/600/400?property=6')">
-									<span class="status-badge">Foreclosure</span>
-									<button class="favorite-btn">♥</button>
-									<span class="photo-count"><i class="fas fa-camera"></i> 9</span>
-								</div>
-								<div class="card-body">
-									<h3 class="price">$290,000</h3>
-									<p class="address">303 Cedar Lane<br>Springfield, IL 62704</p>
-									<div class="highlights mb-3">
-										<span>2 bd</span> • <span>1 ba</span> • <span>850 sqft</span>
-									</div>
-									<div class="details row g-2 mb-3">
-										<div class="col-6 detail-item">
-											<i class="fas fa-bed"></i>
-											<span>2 Beds</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-bath"></i>
-											<span>1 Bath</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-ruler-combined"></i>
-											<span>850 sqft</span>
-										</div>
-										<div class="col-6 detail-item">
-											<i class="fas fa-car"></i>
-											<span>1 Garage</span>
-										</div>
-									</div>
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="agent-info d-flex align-items-center">
-											<img src="https://picsum.photos/30/30?agent=6" class="rounded-circle me-2">
-											<span class="small">Value Homes</span>
-										</div>
-										<button class="btn btn-primary btn-sm">Details</button>
-									</div>
-									<p class="listed-date mt-2 mb-0">Listed 3 weeks ago</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				}
 			</div>
 		</div>
 	</div>
