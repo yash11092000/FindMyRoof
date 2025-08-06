@@ -3,6 +3,7 @@ using PhysioWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Reflection.PortableExecutable;
 using System.Threading.Tasks;
 
 
@@ -556,6 +557,194 @@ namespace PhysioWeb.Repository
             {
                 throw e;
             }
+        }
+        public async Task<AreaMaster> EditAreaMaster(int UniqueID, int UserID)
+        {
+
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { UniqueID, UserID };
+
+
+                string Sp = "FMR_EditAreaMaster";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    AreaMaster AreaMaster = new AreaMaster(data, 1);
+                    return AreaMaster;
+                }
+                return null;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<DataTableResult> ListAreaMaster(DataTablePara dataTablePara)
+        {
+            try
+            {
+                string[] parameterName = new string[]
+                {
+                    "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
+                    "AreaName","SubAreaName", "City","IsActive", "CreatedBy", "AgencyId"
+                };
+
+                object[] parameterValue = new object[]
+                {
+                    dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
+                    dataTablePara.sSortDir_0,dataTablePara.sSearch,dataTablePara.sSearch_0,
+                    dataTablePara.sSearch_1,dataTablePara.sSearch_2,dataTablePara.sSearch_3,
+                    dataTablePara.sSearch_4,dataTablePara.AgencyId
+                };
+
+
+                var reader = await _dbHelper.GetDataReaderAsync("[FMR_DataListAreaMaster]", parameterName, parameterValue);
+
+                var result = new DataTableResult();
+                var list = new List<AreaMaster>();
+
+                while (reader.Read())
+                {
+                    list.Add(new AreaMaster(reader));
+                }
+
+                if (reader.NextResult())
+                {
+                    while (reader.Read())
+                    {
+                        result.iTotalRecords = Convert.ToInt32(reader[0]);
+                    }
+                }
+
+                result.iTotalDisplayRecords = result.iTotalRecords;
+                result.aaData = list;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<bool> SaveAreaMaster(AreaMaster AreaMaster)
+        {
+            try
+            {
+                string[] parametersName = {
+    "UniquId", "AreaName", "SubAreaName", "City", "State", "Country",
+    "Pincode", "IsActive", "UserID"
+};
+
+                object[] Values = {
+    AreaMaster.UniquId,
+    AreaMaster.AreaName,
+    AreaMaster.SubAreaName,
+    AreaMaster.City,
+    AreaMaster.State,
+    AreaMaster.Country,
+    AreaMaster.Pincode,
+    AreaMaster.IsActive,
+    AreaMaster.AgencyId
+};
+
+
+                string Sp = "FMR_SaveAreaMaster";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+        public async Task<bool> DeleteAreaMaster(AreaMaster AreaMaster)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { AreaMaster.UniquId, AreaMaster.AgencyId };
+
+                string Sp = "FMR_DeleteAreaMaster";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<List<DropDownSource>> GetCountryList()
+        {
+            string[] parameterNames = new string[] { };
+            object[] parameterValues = new object[] { };
+
+            var list = new List<DropDownSource>();
+
+            using (var reader = await _dbHelper.GetDataReaderAsync("FMR_GetCountryList", parameterNames, parameterValues))
+            {
+                while (reader.Read())
+                {
+                    list.Add(new DropDownSource
+                    {
+                        Value = reader["Value"].ToString(),
+                        Text = reader["Text"].ToString()
+                    });
+                }
+            }
+
+            return list;
+        }
+
+        public async Task<List<DropDownSource>> GetStateList(string countryId)
+        {
+            string[] parameterNames = new string[] { "countryId" };
+            object[] parameterValues = new object[] { countryId };
+
+
+            string Sp = "FMR_GetStateList";
+            var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+            var list = new List<DropDownSource>();
+            while (data.Read())
+            {
+                list.Add(new DropDownSource
+                {
+                    Value = data["Value"].ToString(),
+                    Text = data["Text"].ToString()
+                });
+            }
+            return list;
+           
+        }
+        public async Task<List<DropDownSource>> GetCityList(string stateId)
+        {
+            string[] parameterNames = new string[] { "stateId" };
+            object[] parameterValues = new object[] { stateId };
+
+            var list = new List<DropDownSource>();
+
+            using (var reader = await _dbHelper.GetDataReaderAsync("FMR_GetCityList", parameterNames, parameterValues))
+            {
+                while (reader.Read())
+                {
+                    list.Add(new DropDownSource
+                    {
+                        Value = reader["Value"].ToString(),
+                        Text = reader["Text"].ToString()
+                    });
+                }
+            }
+
+            return list;
         }
     }
 }

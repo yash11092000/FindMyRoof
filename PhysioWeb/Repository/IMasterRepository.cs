@@ -24,5 +24,12 @@ namespace PhysioWeb.Repository
         Task<bool> DeleteAmenityMaster(AmenityMaster AmenityMaster);
         Task<DataTableResult> ListAmenityMaster(DataTablePara dataTablePara);
         Task<AmenityMaster> EditAmenityMaster(int UniqueID, int UserID);
+        Task<AreaMaster> EditAreaMaster(int UniqueID, int UserID);
+        Task<DataTableResult> ListAreaMaster(DataTablePara dataTablePara);
+        Task<bool> SaveAreaMaster(AreaMaster AreaMaster);
+        Task<bool> DeleteAreaMaster(AreaMaster AreaMaster);
+        Task<List<DropDownSource>> GetCountryList();
+        Task<List<DropDownSource>> GetStateList(string countryId);
+        Task<List<DropDownSource>> GetCityList(string stateId);
     }
 }
