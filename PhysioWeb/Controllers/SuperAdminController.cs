@@ -32,7 +32,7 @@ namespace PhysioWeb.Controllers
             if (model == null)
                 return Json(new { success = false, message = "Invalid request" });
 
-            string basePath = Path.Combine(Directory.GetCurrentDirectory(), "SecureUploads/" + model.AgencyName);
+            string basePath = Path.Combine(Directory.GetCurrentDirectory(), "SecureUploads",model.AgencyName);
             if (!Directory.Exists(basePath))
                 Directory.CreateDirectory(basePath);
 

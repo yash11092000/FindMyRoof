@@ -1,4 +1,5 @@
-﻿@* visible to All *@
+﻿@using System.IO
+@* visible to All *@
 @model PhysioWeb.Models.HomeDashboard
 
 @{
@@ -323,7 +324,6 @@
 	<div class="container-fluid py-5">
 		<h2 class="text-center mb-5">Featured Properties</h2>
 		<div class="d-flex justify-content-between align-items-center mb-4">
-			<h2 class="mb-0">Featured Properties</h2>
 			<div>
 				<button class="btn btn-outline-secondary me-2" data-bs-target="#propertyCarousel" data-bs-slide="prev">
 					<i class="fas fa-chevron-left"></i>
@@ -353,7 +353,7 @@
 								var prop = Model.PropertyDetails[propertyIndex];
 								<div class="col-md-4">
 									<div class="property-card">
-										<div class="card-image" style="background-image: url('@prop.PropertyImg')">
+										<div class="card-image" style="background-image: url('/secure-images/@prop.PropertyImg')">
 											<span class="status-badge">New</span>
 											<button class="favorite-btn">♥</button>
 											<span class="photo-count"><i class="fas fa-camera"></i> 12</span>
@@ -386,7 +386,7 @@
 												<div class="agent-info d-flex align-items-center">
 													<span class="small">@prop.PropertyName</span>
 												</div>
-												<button class="btn btn-primary btn-sm">Details</button>
+												<a href="/PropertyDetails/Property?PropertyId=@prop.PropertyId" class="btn btn-primary btn-sm">Details</a>
 											</div>
 											<p class="listed-date mt-2 mb-0">@prop.WhenListed</p>
 										</div>

@@ -1,4 +1,6 @@
-﻿using Microsoft.Identity.Client;
+﻿using System.Data;
+using System.Runtime.Intrinsics.Arm;
+using Microsoft.Identity.Client;
 
 namespace PhysioWeb.Models
 {
@@ -69,6 +71,12 @@ namespace PhysioWeb.Models
         public List<DropDownSource> BedRoomList { get; set; }
         public List<DropDownSource> AmenityList { get; set; }
 
+        public List<string> Images { get; set; }
+
+        public List<string> Videos { get; set; }
+
+        public List<string> Amenitie { get; set; }
+
         public PropertyMaster()
         {
             CountryList = new List<DropDownSource>();
@@ -81,8 +89,165 @@ namespace PhysioWeb.Models
             RentalTypeList = new List<DropDownSource>();
             BedRoomList = new List<DropDownSource>();
             AmenityList = new List<DropDownSource>();
+            Amenitie = new List<string>();
+            Videos = new List<string>();
+            Images = new List<string>();
         }
 
+        public PropertyMaster(IDataReader Idr)
+        {
+            populateObject(this, Idr);
+        }
 
+        private void populateObject(PropertyMaster obj, IDataReader rdr)
+        {
+            if (!rdr.IsDBNull(rdr.GetOrdinal("UniqueID")))
+            {
+                obj.UniquId = rdr.GetInt32(rdr.GetOrdinal("UniqueID"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyName")))
+            {
+                obj.Title = rdr.GetString(rdr.GetOrdinal("PropertyName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Description")))
+            {
+                obj.Description = rdr.GetString(rdr.GetOrdinal("Description"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyType")))
+            {
+                obj.PropertyType = rdr.GetString(rdr.GetOrdinal("PropertyType"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("TransactionType")))
+            {
+                obj.TransactionType = rdr.GetString(rdr.GetOrdinal("TransactionType"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Bedrooms")))
+            {
+                obj.Bedrooms = rdr.GetInt32(rdr.GetOrdinal("Bedrooms"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Bathrooms")))
+            {
+                obj.Bathrooms = rdr.GetInt32(rdr.GetOrdinal("Bathrooms"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("CarpetArea")))
+            {
+                obj.CarpetArea = rdr.GetDecimal(rdr.GetOrdinal("CarpetArea"));
+            }
+
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("BuiltUpArea")))
+            //{
+            //    obj.BuiltUpArea = rdr.GetDecimal(rdr.GetOrdinal("BuiltUpArea"));
+            //}
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Address")))
+            {
+                obj.Address = rdr.GetString(rdr.GetOrdinal("Address"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("City")))
+            {
+                obj.City = rdr.GetString(rdr.GetOrdinal("City"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("State")))
+            {
+                obj.State = rdr.GetString(rdr.GetOrdinal("State"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PinCode")))
+            {
+                obj.PinCode = rdr.GetString(rdr.GetOrdinal("PinCode"));
+            }
+
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("Latitude")))
+            //{
+            //    obj.Latitude = rdr.GetDecimal(rdr.GetOrdinal("Latitude"));
+            //}
+
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("Longitude")))
+            //{
+            //    obj.Longitude = rdr.GetDecimal(rdr.GetOrdinal("Longitude"));
+            //}
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Landmark")))
+            {
+                obj.Landmark = rdr.GetString(rdr.GetOrdinal("Landmark"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("BudgetMin")))
+            {
+                obj.BudgetMin = rdr.GetDecimal(rdr.GetOrdinal("BudgetMin"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("BudgetMax")))
+            {
+                obj.BudgetMax = rdr.GetDecimal(rdr.GetOrdinal("BudgetMax"));
+            }
+
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("Amenities")))
+            //{
+            //    obj.Amenities = rdr.GetString(rdr.GetOrdinal("Amenities"));
+            //}
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("FurnishingStatus")))
+            {
+                obj.FurnishingStatus = rdr.GetString(rdr.GetOrdinal("FurnishingStatus"));
+            }
+
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("PossessionDate")))
+            //{
+            //    obj.PossessionDate = rdr.GetDateTime(rdr.GetOrdinal("PossessionDate"));
+            //}
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
+            {
+                obj.IsActive = rdr.GetBoolean(rdr.GetOrdinal("IsActive"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ContactPersonName")))
+            {
+                obj.ContactPersonName = rdr.GetString(rdr.GetOrdinal("ContactPersonName"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ContactPersonPhone")))
+            {
+                obj.ContactPersonPhone = rdr.GetString(rdr.GetOrdinal("ContactPersonPhone"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ContactPersonAlternatePhone")))
+            {
+                obj.ContactPersonAlternatePhone = rdr.GetString(rdr.GetOrdinal("ContactPersonAlternatePhone"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Area")))
+            {
+                obj.Area = rdr.GetString(rdr.GetOrdinal("Area"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("SubArea")))
+            {
+                obj.SubArea = rdr.GetString(rdr.GetOrdinal("SubArea"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Country")))
+            {
+                obj.Country = rdr.GetInt32(rdr.GetOrdinal("Country"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Floor")))
+            {
+                obj.Floor = rdr.GetString(rdr.GetOrdinal("Floor"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyCategory")))
+            {
+                obj.PropertyCategory = rdr.GetString(rdr.GetOrdinal("PropertyCategory"));
+            }
+        }
     }
 }
