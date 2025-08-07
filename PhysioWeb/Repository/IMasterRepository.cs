@@ -1,4 +1,5 @@
-﻿using PhysioWeb.Models;
+﻿using System.Data;
+using PhysioWeb.Models;
 
 namespace PhysioWeb.Repository
 {
@@ -31,6 +32,9 @@ namespace PhysioWeb.Repository
         Task<List<DropDownSource>> GetCountryList();
         Task<List<DropDownSource>> GetStateList(string countryId);
         Task<List<DropDownSource>> GetCityList(string stateId);
+        Task<int> SaveProperty(PropertyMaster propertyMaster);
+        Task<bool> SavePropertyMedia(DataTable mediaTable, int propertyId);
+        Task<PropertyMaster> PropertyMasterDropDown();
         Task<List<DropDownSource>> GetAreaList(string searchTerm);
         Task<Dictionary<string, List<DropDownSource>>> GetPropertyDetails();
     }

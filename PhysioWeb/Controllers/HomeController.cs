@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
 using PhysioWeb.Models;
 using PhysioWeb.Repository;
+using BCrypt.Net;
+using Microsoft.Win32;
+using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.Claims;
@@ -24,9 +27,10 @@ namespace PhysioWeb.Controllers
             _userRepository = userRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            HomeDashboard propertyDetails = await _userRepository.GetDashboardData();
+            return View(propertyDetails);
         }
 
         public IActionResult AccessDenied()

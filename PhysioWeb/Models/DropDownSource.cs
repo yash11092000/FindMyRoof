@@ -11,9 +11,28 @@ namespace PhysioWeb.Models
         {
 
         }
-        public DropDownSource(IDataReader Idr)
+        public DropDownSource(IDataReader Idr, bool ForPages = false)
         {
-            populateObject(this, Idr);
+            if (ForPages)
+            {
+                populateObjectForPages(this, Idr);
+            }
+            else
+            {
+                populateObject(this, Idr);
+            }
+        }
+
+        private void populateObjectForPages(DropDownSource obj, IDataReader rdr)
+        {
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Value")))
+            {
+                obj.Value = rdr.GetString(rdr.GetOrdinal("Value"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Text")))
+            {
+                obj.Text = rdr.GetString(rdr.GetOrdinal("Text"));
+            }
         }
 
         private void populateObject(DropDownSource obj, IDataReader rdr)

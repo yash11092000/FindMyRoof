@@ -78,7 +78,7 @@ namespace PhysioWeb.Repository
                 MenuMaster result = new MenuMaster();
                 while (data.Read())
                 {
-                    result.MenuList.Add(new DropDownSource(data));
+                    result.MenuList.Add(new MenuDetails(data));
                 }
                 return result;
             }

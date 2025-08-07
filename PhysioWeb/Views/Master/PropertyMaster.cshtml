@@ -1,4 +1,6 @@
-﻿@{
+﻿@model PhysioWeb.Models.PropertyMaster
+
+@{
 	ViewData["Title"] = "Property Master";
 }
 <style>
@@ -133,7 +135,7 @@
 	<!-- Form -->
 	<form id="propertyForm" enctype="multipart/form-data">
 		<div class="tab-content">
-
+			<input type="text" value="0" id="UniquId" name="UniquId" hidden />
 			<!-- Step 1 -->
 			<div class="tab-pane fade show active" id="step1">
 				<div class="mb-3">
@@ -146,41 +148,45 @@
 						<label class="form-label fw-bold">Property Type</label>
 						<select class="form-select" name="PropertyType" id="PropertyType">
 							<option value="">Select Property Type</option>
-							<option>Apartment</option>
-							<option>Villa</option>
-							<option>Plot</option>
-							<option>Office Space</option>
+
+							@foreach (var item in Model.PropertyTypeList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
+
 						</select>
 					</div>
 
 					<div class="col-md-4 mb-3">
-						<label class="form-label fw-bold">Availability</label>
+						<label class="form-label fw-bold">Transaction Type</label>
 						<select class="form-select" name="Availability" id="Availability">
-							<option value="">Select</option>
-							<option>For Sale</option>
-							<option>For Rent</option>
+							<option value="">Select Transaction Type</option>
+							@foreach (var item in Model.RentalTypeList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
 						</select>
 					</div>
 
 					<div class="col-md-2 mb-3">
 						<label class="form-label fw-bold">Bedrooms</label>
 						<select class="form-select" name="Bedrooms" id="Bedrooms">
-							<option value="">Select</option>
-							<option>1 BHK</option>
-							<option>2 BHK</option>
-							<option>3 BHK</option>
-							<option>4+ BHK</option>
+							<option value="1">Select Bedrooms</option>
+							@foreach (var item in Model.BedRoomList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
 						</select>
 					</div>
 
 					<div class="col-md-2 mb-3">
 						<label class="form-label fw-bold">Bathrooms</label>
 						<select class="form-select" name="Bathrooms" id="Bathrooms">
-							<option value="">Select</option>
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4+</option>
+							<option value="">Select Bathrooms</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4+</option>
 						</select>
 					</div>
 				</div>
@@ -192,13 +198,33 @@
 					</div>
 
 					<div class="col-md-4 mb-3">
-						<label class="form-label fw-bold">Furnishing Status</label>
+						<label class="form-label fw-bold">Furnishing Type</label>
 						<select class="form-select" name="Furnishing" id="FurnishingStatus">
-							<option value="">Select</option>
-							<option>Furnished</option>
-							<option>Semi-Furnished</option>
-							<option>Unfurnished</option>
+							<option value="">Select Furnishing Type</option>
+							@foreach (var item in Model.FurnishingTypeList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
 						</select>
+					</div>
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Floor</label>
+						<input type="text" class="form-control" id="Floor" name="Floor" placeholder="Enter Floor">
+					</div>
+
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Contact Person Name</label>
+						<input type="text" class="form-control" id="ContactPersonName" name="ContactPersonName" placeholder="Enter Contact Person Name">
+					</div>
+
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Contact No</label>
+						<input type="tel" class="form-control" id="ContactPersonNo" name="ContactPersonNo" placeholder="Enter Contact No">
+					</div>
+
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Alternate No</label>
+						<input type="text" class="form-control" id="ContactPersonAlternatePhone" name="ContactPersonAlternatePhone" placeholder="Enter Alternate No">
 					</div>
 				</div>
 
@@ -215,19 +241,55 @@
 			<div class="tab-pane fade" id="step2">
 				<div class="row">
 					<div class="col-md-4 mb-3">
-						<label class="form-label fw-bold">City</label>
-						<input type="text" class="form-control" name="City" id="City" placeholder="Enter city">
+						<label class="form-label fw-bold">Area</label>
+						<select class="form-select" name="Area" id="Area">
+							<option value="">Select Area</option>
+							@foreach (var item in Model.AreaList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
+						</select>
 					</div>
-
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">SubArea</label>
+						<input type="text" class="form-control" name="SubArea" id="SubArea" placeholder="Enter SubArea">
+					</div>
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Pincode</label>
+						<input type="text" class="form-control" name="PinCode" id="PinCode" placeholder="Enter Pincode">
+					</div>
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">Country</label>
+						<select class="form-select" name="Country" id="Country">
+							<option value="">Select Country</option>
+							@foreach (var item in Model.CountryList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
+						</select>
+					</div>
 					<div class="col-md-4 mb-3">
 						<label class="form-label fw-bold">State</label>
-						<input type="text" class="form-control" name="State" id="State" placeholder="Enter state">
+						<select class="form-select" name="State" id="State">
+							<option value="">Select State</option>
+							@foreach (var item in Model.StateList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
+						</select>
+					</div>
+					<div class="col-md-4 mb-3">
+						<label class="form-label fw-bold">City</label>
+						<select class="form-select" name="City" id="City">
+							<option value="">Select City</option>
+							@foreach (var item in Model.CityList)
+							{
+								<option value="@item.Value">@item.Text</option>
+							}
+						</select>
 					</div>
 
-					<div class="col-md-4 mb-3">
-						<label class="form-label fw-bold">Pin Code</label>
-						<input type="text" class="form-control" name="PinCode" id="PinCode" placeholder="Enter pin code">
-					</div>
+
 				</div>
 
 				<div class="mb-3">
@@ -247,13 +309,13 @@
 							<div class="col-6">
 								<div class="input-group">
 									<span class="input-group-text">₹</span>
-									<input type="number" class="form-control" name="PriceMin" placeholder="Min">
+									<input type="number" class="form-control" name="PriceMin" id="BudgetMin" placeholder="Min">
 								</div>
 							</div>
 							<div class="col-6">
 								<div class="input-group">
 									<span class="input-group-text">₹</span>
-									<input type="number" class="form-control" name="PriceMax" placeholder="Max">
+									<input type="number" class="form-control" name="PriceMax" id="BudgetMax" placeholder="Max">
 								</div>
 							</div>
 						</div>
@@ -270,14 +332,12 @@
 				<div class="mb-3">
 					<label class="form-label fw-bold">Amenities</label>
 					<select class="form-select" name="Amenities" id="Amenities" multiple>
-						<option>Parking</option>
-						<option>Gym</option>
-						<option>Swimming Pool</option>
-						<option>Garden</option>
-						<option>Lift</option>
-						<option>Clubhouse</option>
+						<option value="1">Select Amenities</option>
+						@foreach (var item in Model.AmenityList)
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
 					</select>
-					<small class="text-muted">Hold CTRL to select multiple amenities</small>
 				</div>
 
 				<!-- Image Upload -->
@@ -325,13 +385,13 @@
 @section Scripts {
 	<script>
 		new Choices('#Amenities', {
-									removeItemButton: true,
-									placeholder: true,
-									placeholderValue: 'Select Amenities',
-									searchEnabled: true
-								});
+			removeItemButton: true,
+			placeholder: true,
+			placeholderValue: 'Select Amenities',
+			searchEnabled: true
+		});
 
-										function isValidFile(file, allowedTypes) {
+		function isValidFile(file, allowedTypes) {
 									return file.size > 0 && allowedTypes.some(type => file.type.startsWith(type));
 								}
 
@@ -451,126 +511,126 @@
 
 
 			$("#submitProperty").on("click", function (e) {
+			e.preventDefault();
 
+			// ✅ Collect all fields into an object
+			var propertyMaster = {
+				UniquId : $("#UniquId").val(),
+				Title: $("#Title").val(),
+				PropertyType: $("#PropertyType").val(),
+				TransactionType: $("#Availability").val(),
+				Bedrooms: $("#Bedrooms").val(),
+				Bathrooms: $("#Bathrooms").val(),
+				CarpetArea: $("#CarpetArea").val(),
+				//BuiltUpArea: $("#BuiltUpArea").val(),
+				FurnishingStatus: $("#FurnishingStatus").val(),
+				Floor: $("#Floor").val(),
+				ContactPersonName: $("#ContactPersonName").val(),
+				ContactPersonNo: $("#ContactPersonNo").val(),
+				ContactPersonAlternatePhone: $("#ContactPersonAlternatePhone").val(),
+				Description: $("#Description").val(),
+				Area: $("#Area").val(),
+				SubArea: $("#SubArea").val(),
+				PinCode: $("#PinCode").val(),
+				Country: $("#Country").val(),
+				State: $("#State").val(),
+				City: $("#City").val(),
+				Address: $("#Address").val(),
+				BudgetMin: $("#BudgetMin").val(),
+				BudgetMax: $("#BudgetMax").val(),
+				Amenities: $("#Amenities").val().toString(),
+				//PossessionDate: $("#PossessionDate").val(),
+				IsActive: true
+			};
 
-				// ✅ Collect required fields
-				let title = $("#Title").val();
-				let description = $("#Description").val();
-				let city = $("#City").val();
-				let state = $("#State").val();
-				let pin = $("#PinCode").val();
-				// let price = $("Price").val().trim();
-				let amenities = $("#Amenities").val();
+			// ✅ Create FormData
 
-				// ✅ Validate text fields
-				if (!title) { notyf.error("Please enter Property Title");$("#Title").focus(); return; }
-				if (!description) { notyf.error("Please enter Description"); return; }
-				if (!city) { notyf.error("Please enter City"); return; }
-				if (!state) { notyf.error("Please enter State"); return; }
-				if (!pin) { notyf.error("Please enter PinCode"); return; }
-				//if (!price || price <= 0) { notyf.error("Please enter a valid Price"); return; }
-				if (!amenities || amenities.length === 0) { notyf.error("Please select at least one Amenity"); return; }
-
-				// ✅ Validate at least one image
-				let hasImage = false;
-				document.querySelectorAll("#imageInputs input[type='file']").forEach(input => {
-					if (input.files.length > 0) hasImage = true;
-				});
-				if (!hasImage) { notyf.error("Please upload at least one Image"); return; }
-
-				// ✅ Validate at least one video
-				let hasVideo = false;
-				document.querySelectorAll("#videoInputs input[type='file']").forEach(input => {
-					if (input.files.length > 0) hasVideo = true;
-				});
-				if (!hasVideo) { notyf.error("Please upload at least one Video"); return; }
-
-		// 			var propertyMaster = {
-		// 			Title: $("#Title").val(),
-		// 			Description: $("#Description").val(),
-		// 			City: $("#City").val(),
-		// 			State: $("#State").val(),
-		// 			PinCode: $("#PinCode").val(),
-		// 			Amenities: $("#Amenities").val()  // if multiple, this will be array
-		// };
-
-				var propertyMaster = {
-			// Basic details
-			Title: "Luxury Apartment in Mumbai",
-			Description: "A spacious 3BHK apartment with sea view.",
-			PropertyType: "Apartment",
-			Bedrooms: 3,
-			Bathrooms: 2,
-			CarpetArea: 1200.50,     // in sq.ft
-			BuiltUpArea: 1400.75,    // in sq.ft
-
-			// Location
-			Address: "123, Marine Drive",
-			City: "Mumbai",
-			State: "Maharashtra",
-			PinCode: "400001",
-			Latitude: 18.9388,
-			Longitude: 72.8354,
-
-			// Pricing
-			Price: 25000000,         // ₹ 2.5 Cr
-			BudgetMin: 20000000,     // ₹ 2 Cr
-			BudgetMax: 30000000,     // ₹ 3 Cr
-
-			// Features
-			Amenities: ["Parking", "Swimming Pool", "Gym"],
-			FurnishingStatus: "Fully Furnished",
-			PossessionDate: "2025-12-31", // ISO Date format
-
-			// Status
-			IsActive: true
-		};
-
-		// ✅ Create FormData
-		let formData = new FormData();
-		formData.append("PropertyMaster", JSON.stringify(propertyMaster)); // send as JSON string
-
-		// ✅ Append Images
-		document.querySelectorAll("#imageInputs input[type='file']").forEach(input => {
-			if (input.files.length > 0) formData.append("Images", input.files[0]);
-		});
-
-		// ✅ Append Videos
-				// ✅ Append Videos with indexed keys
-		// let videoIndex = 0;
-		// document.querySelectorAll("#videoInputs input[type='file']").forEach(input => {
-		// 	if (input.files.length > 0) {
-		// 		formData.append(`Videos[${videoIndex}]`, input.files[0]);
-		// 		videoIndex++;
-		// 	}
-		// });
-
-		// 		console.log(formData);
-		// 				for (var pair of formData.entries()) {
-		// 	console.log(pair[0] + ": " + pair[1]);
-		// }
-
-				// ✅ AJAX call
-				$.ajax({
-					url: '/Master/SaveProperty',
-					type: 'POST',
-					data: formData,
-					processData: false,
-					contentType: false,
-					success: function (res) {
-						if (res.success) {
-							notyf.success("Property saved successfully!");
-							form.reset();
-							$("#imageGallery, #videoGallery").empty();
-						} else {
-							notyf.error(res.message || "Failed to save property");
-						}
-					},
-					error: function () {
-						notyf.error("An error occurred while saving the property.");
+				  // ✅ Send AJAX request
+			$.ajax({
+				url: "/Master/SaveProperty",
+				type: "POST",
+				contentType: "application/json",
+				data: JSON.stringify(propertyMaster),
+				success: function (res) {
+					console.log(res);
+					if (res.success) {
+						notyf.success("Property details saved!");
+						InsertImagesVideos(res.propertyId);
+					} else {
+						notyf.error(res.message || "Failed to save property");
 					}
-				});
+				},
+				error: function () {
+					notyf.error("Error while saving property details.");
+				}
+			});
 		});
+
+		function InsertImagesVideos(propertyId){
+			if(!propertyId || propertyId<=0){
+				notyf.error("Property ID missing! Save property details first.");
+				return;
+			}
+
+		let formData = new FormData();
+		formData.append("PropertyId", propertyId); // ✅ link media with property
+
+				 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
+
+		// Validate image sizes
+		document.querySelectorAll("#imageInputs input[type='file']").forEach(input => {
+			if (input.files[0]?.size > MAX_FILE_SIZE) {
+				notyf.error(`Image ${input.files[0].name} exceeds 50MB`);
+				return;
+			}
+		});
+
+		// Validate video sizes
+		document.querySelectorAll("#videoInputs input[type='file']").forEach(input => {
+			if (input.files[0]?.size > MAX_FILE_SIZE) {
+				notyf.error(`Video ${input.files[0].name} exceeds 50MB`);
+				return;
+			}
+		});
+
+
+			  const imageInputs = document.querySelectorAll("#imageInputs input[type='file']");
+		Array.from(imageInputs).forEach((input, index) => {
+			if (input.files[0]) {
+				formData.append(`Images[${index}]`, input.files[0]); // ✅ Correct format
+			}
+		});
+
+		// Append Videos (with array indices)
+		const videoInputs = document.querySelectorAll("#videoInputs input[type='file']");
+		Array.from(videoInputs).forEach((input, index) => {
+			if (input.files[0]) {
+				formData.append(`Videos[${index}]`, input.files[0]); // ✅ Correct format
+			}
+		});
+
+		// Optional: Debug FormData before sending
+		for (let pair of formData.entries()) {
+			console.log(pair[0], pair[1]);
+		}
+			 $.ajax({
+			url: "/Master/UploadPropertyMedia",
+			type: "POST",
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function (res) {
+				if (res.success) {
+					notyf.success("Property media uploaded successfully!");
+				} else {
+					notyf.error(res.message || "Failed to upload media");
+				}
+			},
+			error: function () {
+				notyf.error("Error while uploading media.");
+			}
+		});
+		}
 
 	</script>
 

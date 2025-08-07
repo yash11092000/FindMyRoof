@@ -1,11 +1,14 @@
-﻿using PhysioWeb.Data;
+﻿using Microsoft.AspNetCore.Components;
+using PhysioWeb.Data;
 using PhysioWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection.PortableExecutable;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Data.Common;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PhysioWeb.Repository
 {
@@ -22,8 +25,8 @@ namespace PhysioWeb.Repository
         {
             try
             {
-                string[] parametersName = { "UniquId", "PropertyCategory", "IsActive" , "UserID" };
-                object[] Values = { propertyCategoryMaster.UniquId, propertyCategoryMaster.CategoryName, 
+                string[] parametersName = { "UniquId", "PropertyCategory", "IsActive", "UserID" };
+                object[] Values = { propertyCategoryMaster.UniquId, propertyCategoryMaster.CategoryName,
                     propertyCategoryMaster.IsActive,propertyCategoryMaster.AgencyId };
 
                 string Sp = "FMR_SavePropertyCategory";
@@ -112,8 +115,8 @@ namespace PhysioWeb.Repository
         {
             try
             {
-                string[] parametersName = { "UniquId" ,"UserID"};
-                object[] Values = { PropertyCategoryMaster.UniquId , 0};
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { PropertyCategoryMaster.UniquId, 0 };
 
                 string Sp = "FMR_DeletePropertyCategory";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -133,9 +136,9 @@ namespace PhysioWeb.Repository
                 object[] Values = { PropertyTypeMaster.UniquId,PropertyTypeMaster.PropertyType, PropertyTypeMaster.Description,
                 PropertyTypeMaster.IsActive ,0 };
 
-            string Sp = "FMR_SavePropertyType";
-            int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
-            return RecordAffected > 0;
+                string Sp = "FMR_SavePropertyType";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
             }
             catch (Exception ex)
             {
@@ -147,7 +150,7 @@ namespace PhysioWeb.Repository
         {
             try
             {
-                string[] parametersName = { "UniquId"};
+                string[] parametersName = { "UniquId" };
                 object[] Values = { PropertyTypeMaster.UniquId };
 
                 string Sp = "FMR_DeletePropertyType";
@@ -212,7 +215,7 @@ namespace PhysioWeb.Repository
             try
             {
                 string[] parametersName = { "UniquId", "RentalType", "Description", "IsActive", "UserID" };
-                object[] Values = { RentalTypeMaster.UniquId, RentalTypeMaster.RentalType, RentalTypeMaster.Description, 
+                object[] Values = { RentalTypeMaster.UniquId, RentalTypeMaster.RentalType, RentalTypeMaster.Description,
                     RentalTypeMaster.IsActive, RentalTypeMaster.AgencyId };
 
                 string Sp = "FMR_SaveRentalType";
@@ -239,7 +242,7 @@ namespace PhysioWeb.Repository
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
                 while (data.Read())
                 {
-                    PropertyTypeMaster PropertyTypeMaster = new PropertyTypeMaster(data,1);
+                    PropertyTypeMaster PropertyTypeMaster = new PropertyTypeMaster(data, 1);
                     return PropertyTypeMaster;
                 }
                 return null;
@@ -301,7 +304,7 @@ namespace PhysioWeb.Repository
 
         public async Task<RentalTypeMaster> EditRentalType(int UniqueID, int UserID)
         {
-            
+
             try
             {
                 string[] parameterNames = { "UniqueID", "UserID" };
@@ -328,8 +331,8 @@ namespace PhysioWeb.Repository
         {
             try
             {
-                string[] parametersName = { "UniquId" ,"UserID" };
-                object[] Values = { RentalTypeMaster.UniquId , RentalTypeMaster.AgencyId };
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { RentalTypeMaster.UniquId, RentalTypeMaster.AgencyId };
 
                 string Sp = "FMR_DeleteRentalType";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -346,7 +349,7 @@ namespace PhysioWeb.Repository
         {
             try
             {
-                string[] parametersName = { "UniquId", "FurnishingType",  "IsActive", "UserID" };
+                string[] parametersName = { "UniquId", "FurnishingType", "IsActive", "UserID" };
                 object[] Values = { FurnishingTypeMaster.UniquId,FurnishingTypeMaster.FurnishingType,
                 FurnishingTypeMaster.IsActive ,0 };
 
@@ -723,7 +726,7 @@ namespace PhysioWeb.Repository
                 });
             }
             return list;
-           
+
         }
         public async Task<List<DropDownSource>> GetCityList(string stateId)
         {
@@ -767,6 +770,132 @@ namespace PhysioWeb.Repository
             }
 
             return list;
+        }
+
+        public async Task<int> SaveProperty(PropertyMaster propertyMaster)
+        {
+            try
+            {
+
+                string[] parameterNames = { "UniquID", "PropertyName", "Description", "PropertyType", "Bedrooms", "Bathrooms", "CarpetArea", "BuiltUpArea", "Address", "City", "State", "PinCode", "MinPrice", "MaxPrice", "FurnishingStatus", "PossessionDate", "IsActive","TransactionType","Floor","ContactPersonName","ContactPersonNo","AlternateNo","Area","SubArea","Country" };
+                object[] parameterValues = { propertyMaster.UniquId, propertyMaster.Title, propertyMaster.Description, propertyMaster.PropertyType, propertyMaster.Bedrooms, propertyMaster.Bathrooms, propertyMaster.CarpetArea, propertyMaster.BuiltUpArea, propertyMaster.Address, propertyMaster.City, propertyMaster.State, propertyMaster.PinCode, propertyMaster.BudgetMin, propertyMaster.BudgetMax, propertyMaster.FurnishingStatus, propertyMaster.PossessionDate.HasValue ? propertyMaster.PossessionDate.Value.ToString("yyyy-MM-dd") : (object)DBNull.Value, propertyMaster.IsActive, propertyMaster.TransactionType, propertyMaster.Floor, propertyMaster.ContactPersonName, propertyMaster.ContactPersonPhone, propertyMaster.ContactPersonAlternatePhone, propertyMaster.Area, propertyMaster.SubArea, propertyMaster.Country };
+                string Sp = "FMR_SavePropertyDetails";
+                var data = await _dbHelper.ExecuteScalarAsync(Sp, parameterNames, parameterValues);
+                return Convert.ToInt32(data);
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<bool> SavePropertyMedia(DataTable mediaTable, int propertyId)
+        {
+            try
+            {
+                string[] parametersName = { "PropertyId", "MediaFiles" };
+                object[] Values = { propertyId, mediaTable };
+                SqlDbType[] paramTypes = { SqlDbType.Int, SqlDbType.Structured };
+                string[] tvpTypeNames = { null, "dbo.PropertyImageType" };
+
+                string Sp = "FMR_InsertPropertyMedia";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values, paramTypes, tvpTypeNames);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<PropertyMaster> PropertyMasterDropDown()
+        {
+            try
+            {
+                string[] parameterNames = { };
+                object[] parameterValues = { };
+
+
+                string Sp = "FMR_PropertyMasterDropDown";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                PropertyMaster propertyMaster = new PropertyMaster();
+                while (data.Read())
+                {
+                    propertyMaster.CountryList.Add(new DropDownSource(data, true));
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        propertyMaster.StateList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        propertyMaster.CityList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        propertyMaster.PropertyCategoryList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        propertyMaster.AreaList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        propertyMaster.PropertyTypeList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        propertyMaster.FurnishingTypeList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        propertyMaster.RentalTypeList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        propertyMaster.BedRoomList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        propertyMaster.AmenityList.Add(new DropDownSource(data, true));
+                    }
+                }
+                return propertyMaster;
+
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public async Task<Dictionary<string, List<DropDownSource>>> GetPropertyDetails()
