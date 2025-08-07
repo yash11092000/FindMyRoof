@@ -655,12 +655,7 @@ namespace PhysioWeb.Controllers
             return Json(areas.Select(a => a.Text).ToList());
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetPropertyDetails()
-        {
-            var data = await _masterRepository.GetPropertyDetails();
-            return Json(data);
-        }
+        
 
         #endregion
     }

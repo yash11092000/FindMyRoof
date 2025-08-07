@@ -3,7 +3,7 @@ using System.Runtime.Intrinsics.Arm;
 
 namespace PhysioWeb.Models
 {
-    public class MenuMaster
+    public class MenuMaster : CommanProp
     {
         public List<MenuDetails> MenuList { get; set; }
 

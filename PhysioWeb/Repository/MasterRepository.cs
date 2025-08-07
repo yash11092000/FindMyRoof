@@ -898,46 +898,9 @@ namespace PhysioWeb.Repository
             }
         }
 
-        public async Task<Dictionary<string, List<DropDownSource>>> GetPropertyDetails()
-        {
-            var result = new Dictionary<string, List<DropDownSource>>();
+       
 
-            using (var dataReader = await _dbHelper.GetDataReaderAsync("FMR_GetPropertyDetails", new string[] { }, new object[] { }))
-            {
-                var reader = (System.Data.Common.DbDataReader)dataReader;
-
-                result["PropertyTypes"] = ReadDropDownList(reader);
-
-                await reader.NextResultAsync();
-                result["Bedrooms"] = ReadDropDownList(reader);
-
-                await reader.NextResultAsync();
-                result["Amenities"] = ReadDropDownList(reader);
-
-                await reader.NextResultAsync();
-                result["RentalTypes"] = ReadDropDownList(reader);
-
-                await reader.NextResultAsync();
-                result["PropertyCategories"] = ReadDropDownList(reader);
-            }
-
-            return result;
-        }
-
-        private List<DropDownSource> ReadDropDownList(DbDataReader reader)
-        {
-            var list = new List<DropDownSource>();
-            while (reader.Read())
-            {
-                list.Add(new DropDownSource
-                {
-                    Value = reader["Value"].ToString(),
-                    Text = reader["Text"].ToString()
-                });
-            }
-            return list;
-        }
-
+       
 
 
     }

@@ -69,6 +69,43 @@ namespace PhysioWeb.Repository
                     home.PropertyDetails.Add(new PropertyDetails(data));
 
                 }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        home.PropertyTypeList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        home.BedroomList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        home.AmenityList.Add(new DropDownSource(data, true));
+                    }
+                }
+
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        home.RentalTypeList.Add(new DropDownSource(data, true));
+                    }
+                }
+
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        home.PropertyCategoryList.Add(new DropDownSource(data, true));
+                    }
+                }
                 return home;
             }
             catch (Exception e)
@@ -76,6 +113,29 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
+        //public async Task<PropertyMaster> GetPropertyDetails()
+        //{
+        //    try
+        //    {
+        //        string[] parameterNames = { };
+        //        object[] parameterValues = { };
 
+
+        //        string Sp = "FMR_GetPropertyDetails";
+        //        var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+        //        PropertyMaster propertyMaster = new PropertyMaster();
+
+               
+
+
+        //        return propertyMaster;
+
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw e;
+        //    }
+        //}
     }
 }

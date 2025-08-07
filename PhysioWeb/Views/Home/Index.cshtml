@@ -4,7 +4,7 @@
 @{
 	ViewData["Title"] = "Home Page";
 }
-
+@* <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> *@
 <style>
 	body {
 		font-family: 'Inter', sans-serif;
@@ -224,9 +224,13 @@
 			display: none;
 		}
 	}
+
+	select[multiple] {
+		min-height: 120px;
+	}
 </style>
 
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+ @* <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">  *@
 @* <a class="nav-link text-light btn btn-primary btn-sm" asp-controller="PropertyDetails" asp-action="Property">Go to Some Property</a> *@
 
 <div class="container">
@@ -240,96 +244,107 @@
 	</section>
 
 
-
+	<!-- ✅ Search Form Section -->
 	<section class="py-5 bg-light">
 		<div class="container">
 			<h3 class="text-center mb-4 fw-bold text-success">Find Your Dream Property</h3>
 			<form class="row g-3">
+
 				<!-- Location -->
 				<div class="col-md-3">
 					<label for="location" class="form-label fw-bold">Location</label>
-					<input type="text" id="location" class="form-control p-2" placeholder="Enter Location">
+					<input type="text" id="location" class="form-control" placeholder="Enter Location">
 				</div>
 
-				<div class="row">
-					<!-- Property Type -->
-					<div class="col-md-3">
-						<label for="propertyType" class="form-label fw-bold">Property Type</label>
-						<select multiple class="form-select" id="propertyType"></select>
-					</div>
-
-					<!-- Bedrooms -->
-					<div class="col-md-3">
-						<label for="bedrooms" class="form-label fw-bold">Bedrooms</label>
-						<select multiple class="form-select" id="bedrooms"></select>
-					</div>
-
-					<!-- Rental Type -->
-					<div class="col-md-3">
-						<label for="rentalType" class="form-label fw-bold">Rental Type</label>
-						<select multiple class="form-select" id="rentalType"></select>
-					</div>
-
-					<!-- Property Category -->
-					<div class="col-md-3">
-						<label for="propertyCategory" class="form-label fw-bold">Property Category</label>
-						<select multiple class="form-select" id="propertyCategory"></select>
-					</div>
+				<!-- Property Type -->
+				<div class="col-md-3">
+					<label class="form-label fw-bold">Property Type</label>
+					<select multiple class="form-select select2" id="propertyType" name="PropertyType">
+						<option></option>
+						@foreach (var item in Model.PropertyTypeList)
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
+					</select>
 				</div>
 
-				<div class="row mt-3">
-					<!-- Amenities -->
-					<div class="col-md-12">
-						<label for="amenities" class="form-label fw-bold">Amenities</label>
-						<select multiple class="form-select" id="amenities"></select>
-					</div>
+				<!-- Bedrooms -->
+				<div class="col-md-3">
+					<label class="form-label fw-bold">Bedrooms</label>
+					<select multiple class="form-select select2" id="bedrooms" name="Bedrooms">
+						<option></option>
+						@foreach (var item in Model.BedroomList)
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
+					</select>
 				</div>
 
-				<!-- Budget (Price Range) -->
+				<!-- Rental Type -->
+				<div class="col-md-3">
+					<label class="form-label fw-bold">Rental Type</label>
+					<select multiple class="form-select select2" id="RentalType" name="RentalType">
+						<option></option>
+						@foreach (var item in Model.RentalTypeList)
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
+					</select>
+				</div>
+
+				<!-- Property Category -->
+				<div class="col-md-3">
+					<label class="form-label fw-bold">Property Category</label>
+					<select multiple class="form-select select2" id="PropertyCategory" name="PropertyCategory">
+						<option></option>
+						@foreach (var item in Model.PropertyCategoryList)
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
+					</select>
+				</div>
+
+				<!-- Amenities -->
+				<div class="col-md-6">
+					<label class="form-label fw-bold">Amenities</label>
+					<select multiple class="form-select select2" name="Amenities" id="Amenities">
+						<option></option>
+						@foreach (var item in Model.AmenityList)
+						{
+							<option value="@item.Value">@item.Text</option>
+						}
+					</select>
+				</div>
+
+				<!-- Budget -->
 				<div class="col-md-3">
 					<label class="form-label fw-bold">Budget</label>
 					<div class="row g-1">
 						<div class="col-6">
-							@* <small class="text-muted">Min</small> *@
 							<div class="input-group">
 								<span class="input-group-text">₹</span>
-								<input type="number" class="form-control" placeholder="0">
+								<input type="number" class="form-control" placeholder="Min">
 							</div>
 						</div>
 						<div class="col-6">
-							@* <small class="text-muted">Max</small> *@
 							<div class="input-group">
 								<span class="input-group-text">₹</span>
-								<input type="number" class="form-control" placeholder="10000000">
+								<input type="number" class="form-control" placeholder="Max">
 							</div>
 						</div>
 					</div>
 				</div>
-				@* <div class="col-md-3">
-					<label for="propertyCategory" class="form-label fw-bold">Property Category</label>
-					<select class="form-select" multiple id="propertyCategory" data-placeholder="Select Property Category">
-						<!-- Options will be loaded dynamically -->
-					</select>
-				</div>
-				<!-- Amenities (multi-select) -->
-				<div class="col-md-12">
-					<label for="amenities" class="form-label fw-bold">Amenities</label>
-					<select class="form-select" multiple id="amenities" data-placeholder="Select Amenities">
-						<!-- Options will be loaded dynamically -->
-					</select>
-				</div> *@
 
-				<!-- Search Button -->
-				<div class="col-md-3 mx-auto text-center">
-					<label class="form-label d-block">&nbsp;</label>
+				<!-- Submit Button -->
+				<div class="col-md-3 mx-auto text-center mt-3">
 					<button type="submit" class="btn btn-success w-100">
 						<i class="bi bi-search"></i> Search
 					</button>
 				</div>
 			</form>
-
 		</div>
 	</section>
+
 </div>
 
 <div class="container-fluid">
@@ -474,18 +489,20 @@
 
 
 @section Scripts {
-	
-	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+@* 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>  *@
 	<script>
 					new Choices('#propertyType', {
 		  removeItemButton: true,
 		  duplicateItemsAllowed: false
 		});
 
-		new Choices('#bedrooms', { removeItemButton: true });
-		new Choices('#amenities', { removeItemButton: true });
+		new Choices('#bedrooms', { removeItemButton: true ,duplicateItemsAllowed: false});
+		new Choices('#Amenities', { removeItemButton: true,duplicateItemsAllowed: false });
+		new Choices('#PropertyCategory', { removeItemButton: true ,duplicateItemsAllowed: false});
+		new Choices('#RentalType', { removeItemButton: true ,duplicateItemsAllowed: false});
 
-				 $("#location").autocomplete({
+				 $("#location").autocomplete({	
 			source: function (request, response) {
 				$.ajax({
 					url: '/Master/GetAreas',
@@ -502,37 +519,13 @@
 			minLength: 1
 		});
 		// 	 $(document).ready(function () {
-		// 	$.ajax({
-		// 		url: '/Master/GetPropertyDetails',
-		// 		type: 'GET',
-		// 		success: function (data) {
-		// 			console.log(data);
-		// 			bindDropdown('#propertyType', data.PropertyTypes);
-		// 			bindDropdown('#bedrooms', data.Bedrooms);
-		// 			bindDropdown('#amenities', data.Amenities);
-		// 			bindDropdown('#rentalType', data.RentalTypes);
-		// 			bindDropdown('#propertyCategory', data.PropertyCategories);
-		// 		},
-		// 		error: function () {
-		// 			console.error("Error loading dropdown data.");
-		// 		}
+		// 	$('.select2').select2({
+		// 	placeholder: "Select options",
+		// 	width: '100%'
+		// });
 		// 	});
 
-		// 	function bindDropdown(selector, items) {
-		// 		const $el = $(selector);
-		// 		$el.empty(); // clear existing options
-
-		// 		if (items && items.length > 0) {
-		// 			$.each(items, function (i, item) {
-		// 				$el.append($('<option>', {
-		// 					value: item.Value,
-		// 					text: item.Text
-		// 				}));
-		// 			});
-		// 		}
-		// 	}
-		// });
-
+		
 		  document.querySelectorAll('.favorite-btn').forEach(button => {
 			button.addEventListener('click', function() {
 				this.classList.toggle('active');

@@ -1,4 +1,5 @@
 ﻿
+using System.Collections;
 using System.Data;
 
 namespace PhysioWeb.Models
@@ -6,9 +7,22 @@ namespace PhysioWeb.Models
     public class HomeDashboard
     {
         public List<PropertyDetails> PropertyDetails { get; set; }
+        public List<DropDownSource> PropertyCategoryList { get; set; }
+        public List<DropDownSource> FurnishingTypeList { get; set; }
+        public List<DropDownSource> PropertyTypeList { get; set; }
+        public List<DropDownSource> RentalTypeList { get; set; }
+        public List<DropDownSource> BedroomList { get; set; }
+        public List<DropDownSource> AmenityList { get; set; }
         public HomeDashboard()
         {
             PropertyDetails = new List<PropertyDetails>();
+            PropertyCategoryList = new List<DropDownSource>();
+         
+            PropertyTypeList = new List<DropDownSource>();
+            FurnishingTypeList = new List<DropDownSource>();
+            RentalTypeList = new List<DropDownSource>();
+            BedroomList = new List<DropDownSource>();
+            AmenityList = new List<DropDownSource>();
         }
 
     }
