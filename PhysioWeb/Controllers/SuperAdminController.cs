@@ -165,7 +165,9 @@ namespace PhysioWeb.Controllers
             string username = User.Identity?.Name;
             string role = User.FindFirst(ClaimTypes.Role)?.Value;
             string userId = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+
             MenuMaster menuMaster = await _superAdminRepository.GetMenuList(role, userId);
+           
             return View(menuMaster);
         }
 

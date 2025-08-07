@@ -7,8 +7,8 @@ using System.Data;
 using System.Reflection.PortableExecutable;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Data.Common;
 using static System.Net.Mime.MediaTypeNames;
-
 
 namespace PhysioWeb.Repository
 {
@@ -750,6 +750,28 @@ namespace PhysioWeb.Repository
             return list;
         }
 
+        public async Task<List<DropDownSource>> GetAreaList(string searchTerm)
+        {
+            string[] parameterNames = new string[] { "@SearchTerm" };
+            object[] parameterValues = new object[] { searchTerm ?? (object)DBNull.Value };
+
+            var list = new List<DropDownSource>();
+
+            using (var reader = await _dbHelper.GetDataReaderAsync("FMR_GetGetAreaList", parameterNames, parameterValues))
+            {
+                while (reader.Read())
+                {
+                    list.Add(new DropDownSource
+                    {
+                        Value = reader["Value"].ToString(),
+                        Text = reader["Text"].ToString()
+                    });
+                }
+            }
+
+            return list;
+        }
+
         public async Task<int> SaveProperty(PropertyMaster propertyMaster)
         {
             try
@@ -875,5 +897,11 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
+
+       
+
+       
+
+
     }
 }

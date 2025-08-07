@@ -43,3 +43,15 @@ function DeleteData(ID, Controller, Action) {
         }
     });
 }
+
+
+function populateDropdown(selector, items) {
+    let $dropdown = $(selector);
+    $dropdown.empty();
+    $.each(items, function (index, item) {
+        $dropdown.append($('<option>', {
+            value: item.Value,
+            text: item.Text
+        }));
+    });
+}

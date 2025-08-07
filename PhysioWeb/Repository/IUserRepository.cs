@@ -7,5 +7,6 @@ namespace PhysioWeb.Repository
         Task<HomeDashboard> GetDashboardData();
         Task<Users> Login(string Email, string Mobile, string Password);
         Task<bool> RegisterUser(Register register);
+       // Task<PropertyMaster> GetPropertyDetails();
     }
 }

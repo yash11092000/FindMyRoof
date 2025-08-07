@@ -2,6 +2,6 @@
 {
     public class Index
     {
-
+        public List<DropDownSource> AreaList { get; set; }
     }
 }

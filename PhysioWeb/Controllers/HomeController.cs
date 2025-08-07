@@ -1,13 +1,16 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using BCrypt.Net;
 using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 using PhysioWeb.Models;
 using PhysioWeb.Repository;
 using BCrypt.Net;
 using Microsoft.Win32;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Reflection;
+using System.Security.Claims;
 
 
 namespace PhysioWeb.Controllers
@@ -27,11 +30,7 @@ namespace PhysioWeb.Controllers
         public async Task<IActionResult> Index()
         {
             HomeDashboard propertyDetails = await _userRepository.GetDashboardData();
-            //foreach (var prop in propertyDetails.PropertyDetails)
-            //{
-            //    prop.PropertyImg = GetImage(prop.PropertyId,prop.PropertyImg);
-
-            //}
+            
             return View(propertyDetails);
         }
 
@@ -51,6 +50,8 @@ namespace PhysioWeb.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         //New Changes Added By Group
+       
+
 
         #region login
         [HttpGet]
