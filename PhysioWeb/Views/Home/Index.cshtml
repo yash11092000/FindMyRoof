@@ -83,7 +83,7 @@
 	}
 </style>
 
-
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 @* <a class="nav-link text-light btn btn-primary btn-sm" asp-controller="PropertyDetails" asp-action="Property">Go to Some Property</a> *@
 
 <div class="container">
@@ -108,25 +108,38 @@
 					<input type="text" id="location" class="form-control p-2" placeholder="Enter Location">
 				</div>
 
-				<!-- Property Type (multi-select) -->
-				<div class="col-md-3">
-					<label for="propertyType" class="form-label fw-bold">Property Type</label>
-					<select class="form-select" multiple id="propertyType" data-placeholder="Select Property Type">
-						<option value="Apartment">Apartment</option>
-						<option value="Villa">Villa</option>
-						<option value="Plot">Plot</option>
-					</select>
+				<div class="row">
+					<!-- Property Type -->
+					<div class="col-md-3">
+						<label for="propertyType" class="form-label fw-bold">Property Type</label>
+						<select multiple class="form-select" id="propertyType"></select>
+					</div>
+
+					<!-- Bedrooms -->
+					<div class="col-md-3">
+						<label for="bedrooms" class="form-label fw-bold">Bedrooms</label>
+						<select multiple class="form-select" id="bedrooms"></select>
+					</div>
+
+					<!-- Rental Type -->
+					<div class="col-md-3">
+						<label for="rentalType" class="form-label fw-bold">Rental Type</label>
+						<select multiple class="form-select" id="rentalType"></select>
+					</div>
+
+					<!-- Property Category -->
+					<div class="col-md-3">
+						<label for="propertyCategory" class="form-label fw-bold">Property Category</label>
+						<select multiple class="form-select" id="propertyCategory"></select>
+					</div>
 				</div>
 
-				<!-- Bedrooms (multi-select) -->
-				<div class="col-md-3">
-					<label for="bedrooms" class="form-label fw-bold">Bedrooms</label>
-					<select class="form-select" multiple id="bedrooms" data-placeholder="Select Bedrooms">
-						<option value="1">1 BHK</option>
-						<option value="2">2 BHK</option>
-						<option value="3">3 BHK</option>
-						<option value="4+">4+ BHK</option>
-					</select>
+				<div class="row mt-3">
+					<!-- Amenities -->
+					<div class="col-md-12">
+						<label for="amenities" class="form-label fw-bold">Amenities</label>
+						<select multiple class="form-select" id="amenities"></select>
+					</div>
 				</div>
 
 				<!-- Budget (Price Range) -->
@@ -149,18 +162,19 @@
 						</div>
 					</div>
 				</div>
-
+				@* <div class="col-md-3">
+					<label for="propertyCategory" class="form-label fw-bold">Property Category</label>
+					<select class="form-select" multiple id="propertyCategory" data-placeholder="Select Property Category">
+						<!-- Options will be loaded dynamically -->
+					</select>
+				</div>
 				<!-- Amenities (multi-select) -->
 				<div class="col-md-12">
 					<label for="amenities" class="form-label fw-bold">Amenities</label>
 					<select class="form-select" multiple id="amenities" data-placeholder="Select Amenities">
-						<option value="parking">Parking</option>
-						<option value="swimming">Swimming Pool</option>
-						<option value="garden">Garden</option>
-						<option value="gym">Gym</option>
-						<option value="lift">Lift</option>
+						<!-- Options will be loaded dynamically -->
 					</select>
-				</div>
+				</div> *@
 
 				<!-- Search Button -->
 				<div class="col-md-3 mx-auto text-center">
@@ -338,6 +352,8 @@
 
 
 @section Scripts {
+	
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 	<script>
 					new Choices('#propertyType', {
 		  removeItemButton: true,
@@ -346,5 +362,53 @@
 
 		new Choices('#bedrooms', { removeItemButton: true });
 		new Choices('#amenities', { removeItemButton: true });
+
+				 $("#location").autocomplete({
+			source: function (request, response) {
+				$.ajax({
+					url: '/Master/GetAreas',
+					type: 'GET',
+					data: { searchTerm: request.term },
+					success: function (data) {
+						response(data); // expects list of strings
+					},
+					error: function () {
+						response([]);
+					}
+				});
+			},
+			minLength: 1
+		});
+		// 	 $(document).ready(function () {
+		// 	$.ajax({
+		// 		url: '/Master/GetPropertyDetails',
+		// 		type: 'GET',
+		// 		success: function (data) {
+		// 			console.log(data);
+		// 			bindDropdown('#propertyType', data.PropertyTypes);
+		// 			bindDropdown('#bedrooms', data.Bedrooms);
+		// 			bindDropdown('#amenities', data.Amenities);
+		// 			bindDropdown('#rentalType', data.RentalTypes);
+		// 			bindDropdown('#propertyCategory', data.PropertyCategories);
+		// 		},
+		// 		error: function () {
+		// 			console.error("Error loading dropdown data.");
+		// 		}
+		// 	});
+
+		// 	function bindDropdown(selector, items) {
+		// 		const $el = $(selector);
+		// 		$el.empty(); // clear existing options
+
+		// 		if (items && items.length > 0) {
+		// 			$.each(items, function (i, item) {
+		// 				$el.append($('<option>', {
+		// 					value: item.Value,
+		// 					text: item.Text
+		// 				}));
+		// 			});
+		// 		}
+		// 	}
+		// });
 	</script>
 }

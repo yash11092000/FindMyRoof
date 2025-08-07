@@ -564,5 +564,22 @@ namespace PhysioWeb.Controllers
         }
 
         #endregion
+
+        #region Comman Things
+        [HttpGet]
+        public async Task<IActionResult> GetAreas(string searchTerm)
+        {
+            var areas = await _masterRepository.GetAreaList(searchTerm);
+            return Json(areas.Select(a => a.Text).ToList());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPropertyDetails()
+        {
+            var data = await _masterRepository.GetPropertyDetails();
+            return Json(data);
+        }
+
+        #endregion
     }
 }

@@ -31,5 +31,7 @@ namespace PhysioWeb.Repository
         Task<List<DropDownSource>> GetCountryList();
         Task<List<DropDownSource>> GetStateList(string countryId);
         Task<List<DropDownSource>> GetCityList(string stateId);
+        Task<List<DropDownSource>> GetAreaList(string searchTerm);
+        Task<Dictionary<string, List<DropDownSource>>> GetPropertyDetails();
     }
 }
