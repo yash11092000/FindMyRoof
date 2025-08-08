@@ -3,7 +3,8 @@
     public class CommanProp
     {
         public int UniquId { get; set; }
-        public int AgencyId { get; set; }
+        public string AgencyId { get; set; }
+        public string UserID { get; set; }
         public string CreatedDate { get; set; }
 
         public string CreatedBy { get; set; }

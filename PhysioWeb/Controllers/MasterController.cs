@@ -1,12 +1,13 @@
-﻿using System.Net.NetworkInformation;
-using System.Net;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PhysioWeb.Models;
 using PhysioWeb.Repository;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Authorization;
-using System.Reflection;
 using System.Data;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Reflection;
+using System.Security.Claims;
 
 namespace PhysioWeb.Controllers
 {
@@ -29,6 +30,8 @@ namespace PhysioWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> SavePropCategory(PropertyCategoryMaster propertyCategoryMaster)
         {
+            propertyCategoryMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            propertyCategoryMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.SavePropCategory(propertyCategoryMaster);
             return Json(result);
         }
@@ -77,8 +80,10 @@ namespace PhysioWeb.Controllers
         {
             try
             {
-                int UserID = 0;
-                var data = await _masterRepository.EditPropertyCategory(UniqueID, UserID);
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                string AgencyID = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+                
+                var data = await _masterRepository.EditPropertyCategory(UniqueID, AgencyID);
 
                 return Json(data);
 

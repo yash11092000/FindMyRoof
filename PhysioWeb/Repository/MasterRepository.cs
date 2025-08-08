@@ -25,9 +25,9 @@ namespace PhysioWeb.Repository
         {
             try
             {
-                string[] parametersName = { "UniquId", "PropertyCategory", "IsActive", "UserID" };
+                string[] parametersName = { "UniquId", "PropertyCategory", "IsActive", "UserID" , "AgencyId" };
                 object[] Values = { propertyCategoryMaster.UniquId, propertyCategoryMaster.CategoryName,
-                    propertyCategoryMaster.IsActive,propertyCategoryMaster.AgencyId };
+                    propertyCategoryMaster.IsActive,propertyCategoryMaster.UserID ,propertyCategoryMaster.AgencyId};
 
                 string Sp = "FMR_SavePropertyCategory";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -86,13 +86,13 @@ namespace PhysioWeb.Repository
             }
         }
 
-        public async Task<PropertyCategoryMaster> EditPropertyCategory(int UniqueID, int UserID)
+        public async Task<PropertyCategoryMaster> EditPropertyCategory(int UniqueID, string AgencyID)
         {
             //why there is no try catch??
             try
             {
-                string[] parameterNames = { "UniqueID", "UserID" };
-                object[] parameterValues = { UniqueID, UserID };
+                string[] parameterNames = { "UniqueID", "AgencyID" };
+                object[] parameterValues = { UniqueID, AgencyID };
 
 
                 string Sp = "FMR_EditPropertyCategory";
