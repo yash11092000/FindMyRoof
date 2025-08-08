@@ -314,7 +314,7 @@ namespace PhysioWeb.Controllers
                     return Json(new { success = false, message = "Invalid PropertyId" });
 
 
-                string basePath = Path.Combine(Directory.GetCurrentDirectory(), "Property/" + PropertyId + "/");
+                string basePath = Path.Combine(Directory.GetCurrentDirectory(), "Property",PropertyId.ToString());
                 if (!Directory.Exists(basePath))
                     Directory.CreateDirectory(basePath);
 
@@ -330,7 +330,8 @@ namespace PhysioWeb.Controllers
                         string fileName = Guid.NewGuid() + Path.GetExtension(img.FileName);
                         string filePath = Path.Combine(ImagesDir, fileName);
 
-                        mediaTable.Rows.Add(Guid.NewGuid(), filePath, fileName, 1);
+                        var relativePath = Path.Combine("Property", PropertyId.ToString(), "Images", fileName).Replace("\\", "/");
+                        mediaTable.Rows.Add(Guid.NewGuid(), relativePath, fileName, 1);
 
                         using (var stream = new FileStream(filePath, FileMode.Create))
                         {
@@ -351,7 +352,8 @@ namespace PhysioWeb.Controllers
                         string fileName = Guid.NewGuid() + Path.GetExtension(vid.FileName);
                         string filePath = Path.Combine(VideosDir, fileName);
 
-                        mediaTable.Rows.Add(Guid.NewGuid(), filePath, fileName, 2);
+                        var relativePath = Path.Combine("Property", PropertyId.ToString(), "Videos", fileName).Replace("\\", "/");
+                        mediaTable.Rows.Add(Guid.NewGuid(), relativePath, fileName, 2);
 
                         using (var stream = new FileStream(filePath, FileMode.Create))
                         {
@@ -369,6 +371,8 @@ namespace PhysioWeb.Controllers
             }
 
         }
+
+
 
         #endregion
 

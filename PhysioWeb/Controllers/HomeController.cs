@@ -141,5 +141,19 @@ namespace PhysioWeb.Controllers
             return View();
         }
         #endregion
+
+        [Route("secure-images/{*filePath}")]
+        public IActionResult GetSecureImage(string filePath)
+        {
+            var basePath = Path.Combine("E:/CodingPractice/FindMyRoof/PhysioWeb");
+            var fullPath = Path.Combine(basePath, filePath);
+
+            if (!System.IO.File.Exists(fullPath))
+                return NotFound();
+
+            var contentType = "image/jpeg"; // Or detect based on extension
+            return PhysicalFile(fullPath, contentType);
+        }
+
     }
 }

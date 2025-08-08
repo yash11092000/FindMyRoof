@@ -1,13 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PhysioWeb.Models;
+using PhysioWeb.Repository;
 
 namespace PhysioWeb.Controllers
 {
     public class PropertyDetailsController : Controller
     {
-        public IActionResult Property()
+        private readonly IPropertyRepository _propertyRepository;
+        public PropertyDetailsController(IPropertyRepository propertyRepository)
         {
-            return View();
+            _propertyRepository = propertyRepository;
+        }
+        public async Task<ActionResult> Property(int PropertyId)
+        {
+            var PropertyDetails = _propertyRepository.GetPropertyDetails(PropertyId);
+            return View(PropertyDetails);
         }
 
     }

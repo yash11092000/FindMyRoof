@@ -641,21 +641,21 @@ namespace PhysioWeb.Repository
             try
             {
                 string[] parametersName = {
-    "UniquId", "AreaName", "SubAreaName", "City", "State", "Country",
-    "Pincode", "IsActive", "UserID"
-};
+                "UniquId", "AreaName", "SubAreaName", "City", "State", "Country",
+                "Pincode", "IsActive", "UserID"
+            };
 
                 object[] Values = {
-    AreaMaster.UniquId,
-    AreaMaster.AreaName,
-    AreaMaster.SubAreaName,
-    AreaMaster.City,
-    AreaMaster.State,
-    AreaMaster.Country,
-    AreaMaster.Pincode,
-    AreaMaster.IsActive,
-    AreaMaster.AgencyId
-};
+                        AreaMaster.UniquId,
+                        AreaMaster.AreaName,
+                        AreaMaster.SubAreaName,
+                        AreaMaster.City,
+                        AreaMaster.State,
+                        AreaMaster.Country,
+                        AreaMaster.Pincode,
+                        AreaMaster.IsActive,
+                        AreaMaster.AgencyId
+                    };
 
 
                 string Sp = "FMR_SaveAreaMaster";
@@ -777,7 +777,7 @@ namespace PhysioWeb.Repository
             try
             {
 
-                string[] parameterNames = { "UniquID", "PropertyName", "Description", "PropertyType", "Bedrooms", "Bathrooms", "CarpetArea", "BuiltUpArea", "Address", "City", "State", "PinCode", "MinPrice", "MaxPrice", "FurnishingStatus", "PossessionDate", "IsActive","TransactionType","Floor","ContactPersonName","ContactPersonNo","AlternateNo","Area","SubArea","Country" };
+                string[] parameterNames = { "UniquID", "PropertyName", "Description", "PropertyType", "Bedrooms", "Bathrooms", "CarpetArea", "BuiltUpArea", "Address", "City", "State", "PinCode", "MinPrice", "MaxPrice", "FurnishingStatus", "PossessionDate", "IsActive", "TransactionType", "Floor", "ContactPersonName", "ContactPersonNo", "AlternateNo", "Area", "SubArea", "Country" };
                 object[] parameterValues = { propertyMaster.UniquId, propertyMaster.Title, propertyMaster.Description, propertyMaster.PropertyType, propertyMaster.Bedrooms, propertyMaster.Bathrooms, propertyMaster.CarpetArea, propertyMaster.BuiltUpArea, propertyMaster.Address, propertyMaster.City, propertyMaster.State, propertyMaster.PinCode, propertyMaster.BudgetMin, propertyMaster.BudgetMax, propertyMaster.FurnishingStatus, propertyMaster.PossessionDate.HasValue ? propertyMaster.PossessionDate.Value.ToString("yyyy-MM-dd") : (object)DBNull.Value, propertyMaster.IsActive, propertyMaster.TransactionType, propertyMaster.Floor, propertyMaster.ContactPersonName, propertyMaster.ContactPersonPhone, propertyMaster.ContactPersonAlternatePhone, propertyMaster.Area, propertyMaster.SubArea, propertyMaster.Country };
                 string Sp = "FMR_SavePropertyDetails";
                 var data = await _dbHelper.ExecuteScalarAsync(Sp, parameterNames, parameterValues);
