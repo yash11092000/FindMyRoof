@@ -30,8 +30,15 @@ namespace PhysioWeb.Controllers
         public async Task<IActionResult> Index()
         {
             HomeDashboard propertyDetails = await _userRepository.GetDashboardData();
-            
+
             return View(propertyDetails);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetPropertiesList()
+        {
+            HomeDashboard propertyDetails = await _userRepository.GetDashboardData();
+            return Json(propertyDetails.PropertyDetails);
         }
 
         public IActionResult AccessDenied()
@@ -50,7 +57,7 @@ namespace PhysioWeb.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         //New Changes Added By Group
-       
+
 
 
         #region login

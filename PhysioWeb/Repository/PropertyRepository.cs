@@ -27,22 +27,32 @@ namespace PhysioWeb.Repository
                     Property = new PropertyMaster(data);
                     if (data.NextResult())
                     {
-                        Property.Images.Add(Convert.ToString(data));
+                        while (data.Read())
+                        {
+
+                            Property.Images.Add(new DropDownSource(data, true));
+                        }
                     }
                     if (data.NextResult())
                     {
-                        Property.Videos.Add(Convert.ToString(data));
+                        while (data.Read())
+                        {
+
+                            Property.Videos.Add(new DropDownSource(data, true));
+                        }
                     }
-                    if (data.NextResult())
-                    {
-                        Property.Amenitie.Add(Convert.ToString(data));
-                    }
+                    //    if (data.NextResult())
+                    //    {
+                    //        Property.Amenitie.Add(new DropDownSource(data, true));
+                    //    }
+
+                    return Property;
                 }
 
 
-                return null;
+                return new PropertyMaster();
 
-                //bind 
+
             }
             catch (Exception e)
             {
