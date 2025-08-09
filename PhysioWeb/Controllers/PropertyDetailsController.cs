@@ -13,7 +13,7 @@ namespace PhysioWeb.Controllers
         }
         public async Task<ActionResult> Property(int PropertyId)
         {
-            var PropertyDetails = _propertyRepository.GetPropertyDetails(PropertyId);
+            var PropertyDetails = await _propertyRepository.GetPropertyDetails(PropertyId);
             return View(PropertyDetails);
         }
 

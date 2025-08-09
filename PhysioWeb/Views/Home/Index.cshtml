@@ -1,5 +1,4 @@
 ﻿@using System.IO
-@* visible to All *@
 @model PhysioWeb.Models.HomeDashboard
 
 @{
@@ -229,10 +228,49 @@
 	select[multiple] {
 		min-height: 120px;
 	}
+
+	/* Ensure horizontal scrolling on all screens */
+	.carousel-inner {
+		overflow-x: auto;
+		white-space: nowrap;
+	}
+
+	.carousel-item .row {
+		display: flex;
+		flex-wrap: nowrap;
+	}
+
+	.carousel-item .col-10 {
+		display: inline-block;
+		float: none;
+		white-space: normal;
+	}
+
+	/* Hide scrollbar */
+	.carousel-inner::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Card styling */
+	.card {
+		min-width: 250px;
+		transition: transform 0.3s;
+	}
+
+		.card:hover {
+			transform: translateY(-5px);
+		}
+
+	/* Responsive adjustments */
+	@@media (min-width: 576px) {
+		.carousel-inner {
+			overflow-x: hidden;
+		}
+	}
+
 </style>
 
- @* <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">  *@
-@* <a class="nav-link text-light btn btn-primary btn-sm" asp-controller="PropertyDetails" asp-action="Property">Go to Some Property</a> *@
+
 
 <div class="container">
 	<!-- Hero Section -->
@@ -349,87 +387,63 @@
 </div>
 
 <div class="container-fluid">
-
-	<div class="container-fluid py-5">
-		<h2 class="text-center mb-5">Featured Properties</h2>
-		<div class="d-flex justify-content-between align-items-center mb-4">
-			<div>
-				<button class="btn btn-outline-secondary me-2" data-bs-target="#propertyCarousel" data-bs-slide="prev">
-					<i class="fas fa-chevron-left"></i>
-				</button>
-				<button class="btn btn-outline-secondary" data-bs-target="#propertyCarousel" data-bs-slide="next">
-					<i class="fas fa-chevron-right"></i>
-				</button>
-			</div>
+	<div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
+		<!-- Custom controls -->
+		<div class="d-flex justify-content-end mb-3">
+			<button class="btn btn-sm btn-outline-dark me-2" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+				<i class="fas fa-chevron-left"></i>
+			</button>
+			<button class="btn btn-sm btn-outline-dark" data-bs-target="#propertyCarousel" data-bs-slide="next">
+				<i class="fas fa-chevron-right"></i>
+			</button>
 		</div>
-		<div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
-			<div class="carousel-inner">
-				@{
-					int itemsPerSlide = 3;
-					int totalItems = Model.PropertyDetails.Count;
-					int totalSlides = (int)Math.Ceiling((double)totalItems / itemsPerSlide);
-					int propertyIndex = 0;
-				}
 
-				@for (int slide = 0; slide < totalSlides; slide++)
-				{
-					var isActive = slide == 0 ? "active" : "";
+		<div class="carousel-inner">
+			@{
+				int itemsPerSlide = 4; // Number of cards to show per slide
+				int totalItems = Model.PropertyDetails.Count;
+				int totalSlides = (int)Math.Ceiling((double)totalItems / itemsPerSlide);
+				int propertyIndex = 0;
+			}
 
-					<div class="carousel-item @isActive">
-						<div class="row g-4">
-							@for (int j = 0; j < itemsPerSlide && propertyIndex < totalItems; j++, propertyIndex++)
-							{
-								var prop = Model.PropertyDetails[propertyIndex];
-								<div class="col-md-4">
-									<div class="property-card">
-										<div class="card-image" style="background-image: url('/secure-images/@prop.PropertyImg')">
-											<span class="status-badge">New</span>
-											<button class="favorite-btn">♥</button>
-											<span class="photo-count"><i class="fas fa-camera"></i> 12</span>
+			@for (int slide = 0; slide < totalSlides; slide++)
+			{
+				<div class="carousel-item @(slide == 0 ? "active" : "")">
+					<div class="row flex-nowrap g-3">
+						@for (int j = 0; j < itemsPerSlide && propertyIndex < totalItems; j++, propertyIndex++)
+						{
+							var prop = Model.PropertyDetails[propertyIndex];
+							<div class="col-10 col-sm-8 col-md-6 col-lg-4 col-xl-3">
+								<div class="card h-100 border-0 shadow-sm">
+									<img src="/secure-images/@prop.PropertyImg" class="card-img-top" alt="@prop.PropertyName">
+									<div class="card-body">
+										@* <span class="badge @(prop.Status == "Sale" ? "bg-success" : "bg-primary") mb-2">
+											@(prop.Status == "Sale" ? "For Sale" : "For Rent")
+										</span> *@
+										<h5 class="card-title">@prop.PropertyName</h5>
+										<p class="text-muted"><i class="fas fa-map-marker-alt"></i> @prop.Address</p>
+										<div class="d-flex justify-content-between text-muted mb-3">
+											<span><i class="fas fa-bed"></i> @prop.BedRooms Beds</span>
+											<span><i class="fas fa-bath"></i> @prop.BathRooms Baths</span>
+											<span><i class="fas fa-ruler-combined"></i> @prop.Sqrtft sqft</span>
 										</div>
-										<div class="card-body">
-											<h3 class="price">₹@prop.Price</h3>
-											<p class="address">@prop.Address</p>
-											<div class="highlights mb-3">
-												<span>@prop.BedRooms bd</span> • <span>@prop.BathRooms ba</span> • <span>@prop.Sqrtft sqft</span>
-											</div>
-											<div class="details row g-2 mb-3">
-												<div class="col-6 detail-item">
-													<i class="fas fa-bed"></i>
-													<span>@prop.BedRooms Beds</span>
-												</div>
-												<div class="col-6 detail-item">
-													<i class="fas fa-bath"></i>
-													<span>@prop.BathRooms Baths</span>
-												</div>
-												<div class="col-6 detail-item">
-													<i class="fas fa-ruler-combined"></i>
-													<span>@prop.Sqrtft sqft</span>
-												</div>
-												<div class="col-6 detail-item">
-													<i class="fas fa-car"></i>
-													<span>2 Garage</span>
-												</div>
-											</div>
-											<div class="d-flex justify-content-between align-items-center">
-												<div class="agent-info d-flex align-items-center">
-													<span class="small">@prop.PropertyName</span>
-												</div>
-												<a href="/PropertyDetails/Property?PropertyId=@prop.PropertyId" class="btn btn-primary btn-sm">Details</a>
-											</div>
-											<p class="listed-date mt-2 mb-0">@prop.WhenListed</p>
-										</div>
+										<h4 class="text-primary">₹@prop.Price</h4>
+									</div>
+									<div class="card-footer bg-white border-0">
+										<a href="/PropertyDetails/Property?PropertyId=@prop.PropertyId"
+										   class="btn btn-primary w-100">View Details</a>
 									</div>
 								</div>
-							}
-						</div>
+							</div>
+						}
 					</div>
-				}
-			</div>
+				</div>
+			}
 		</div>
 	</div>
 
 </div>
+
 
 <div class="container">
 	<section class="py-5 bg-light" id="why-us">
@@ -489,10 +503,11 @@
 
 
 @section Scripts {
-@* 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>  *@
 	<script>
-					new Choices('#propertyType', {
+
+
+
+		new Choices('#propertyType', {
 		  removeItemButton: true,
 		  duplicateItemsAllowed: false
 		});
@@ -502,7 +517,7 @@
 		new Choices('#PropertyCategory', { removeItemButton: true ,duplicateItemsAllowed: false});
 		new Choices('#RentalType', { removeItemButton: true ,duplicateItemsAllowed: false});
 
-				 $("#location").autocomplete({	
+				 $("#location").autocomplete({
 			source: function (request, response) {
 				$.ajax({
 					url: '/Master/GetAreas',
@@ -518,25 +533,37 @@
 			},
 			minLength: 1
 		});
-		// 	 $(document).ready(function () {
-		// 	$('.select2').select2({
-		// 	placeholder: "Select options",
-		// 	width: '100%'
-		// });
-		// 	});
 
-		
-		  document.querySelectorAll('.favorite-btn').forEach(button => {
-			button.addEventListener('click', function() {
-				this.classList.toggle('active');
+			 document.addEventListener('DOMContentLoaded', function() {
+			const carousel = new bootstrap.Carousel(document.getElementById('propertyCarousel'), {
+				interval: false,
+				wrap: false
 			});
+
+			// Enable touch swiping
+			const carouselInner = document.querySelector('.carousel-inner');
+			let touchStartX = 0;
+			let touchEndX = 0;
+
+			carouselInner.addEventListener('touchstart', e => {
+				touchStartX = e.changedTouches[0].screenX;
+			}, {passive: true});
+
+			carouselInner.addEventListener('touchend', e => {
+				touchEndX = e.changedTouches[0].screenX;
+				handleSwipe();
+			}, {passive: true});
+
+			function handleSwipe() {
+				if (touchEndX < touchStartX - 50) {
+					carousel.next();
+				}
+				if (touchEndX > touchStartX + 50) {
+					carousel.prev();
+				}
+			}
 		});
 
-		// Optional: Auto-advance carousel every 5 seconds
-		const myCarousel = document.querySelector('#propertyCarousel');
-		const carousel = new bootstrap.Carousel(myCarousel, {
-			interval: 5000,
-			wrap: true
-		});
+
 	</script>
 }

@@ -51,7 +51,7 @@ namespace PhysioWeb.Models
 
         public string SubArea { get; set; }
 
-        public int Country { get; set; }
+        public string Country { get; set; }
 
         public string Floor { get; set; }
 
@@ -71,11 +71,11 @@ namespace PhysioWeb.Models
         public List<DropDownSource> BedRoomList { get; set; }
         public List<DropDownSource> AmenityList { get; set; }
 
-        public List<string> Images { get; set; }
+        public List<DropDownSource> Images { get; set; }
 
-        public List<string> Videos { get; set; }
+        public List<DropDownSource> Videos { get; set; }
 
-        public List<string> Amenitie { get; set; }
+        public List<DropDownSource> Amenitie { get; set; }
 
         public PropertyMaster()
         {
@@ -89,21 +89,34 @@ namespace PhysioWeb.Models
             RentalTypeList = new List<DropDownSource>();
             BedRoomList = new List<DropDownSource>();
             AmenityList = new List<DropDownSource>();
-            Amenitie = new List<string>();
-            Videos = new List<string>();
-            Images = new List<string>();
+            Amenitie = new List<DropDownSource>();
+            Videos = new List<DropDownSource>();
+            Images = new List<DropDownSource>();
         }
 
         public PropertyMaster(IDataReader Idr)
         {
+            CountryList = new List<DropDownSource>();
+            StateList = new List<DropDownSource>();
+            CityList = new List<DropDownSource>();
+            PropertyCategoryList = new List<DropDownSource>();
+            AreaList = new List<DropDownSource>();
+            PropertyTypeList = new List<DropDownSource>();
+            FurnishingTypeList = new List<DropDownSource>();
+            RentalTypeList = new List<DropDownSource>();
+            BedRoomList = new List<DropDownSource>();
+            AmenityList = new List<DropDownSource>();
+            Amenitie = new List<DropDownSource>();
+            Videos = new List<DropDownSource>();
+            Images = new List<DropDownSource>();
             populateObject(this, Idr);
         }
 
         private void populateObject(PropertyMaster obj, IDataReader rdr)
         {
-            if (!rdr.IsDBNull(rdr.GetOrdinal("UniqueID")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("UniquId")))
             {
-                obj.UniquId = rdr.GetInt32(rdr.GetOrdinal("UniqueID"));
+                obj.UniquId = rdr.GetInt32(rdr.GetOrdinal("UniquId"));
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyName")))
             {
@@ -158,6 +171,10 @@ namespace PhysioWeb.Models
             {
                 obj.State = rdr.GetString(rdr.GetOrdinal("State"));
             }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Country")))
+            {
+                obj.Country = rdr.GetString(rdr.GetOrdinal("Country"));
+            }
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("PinCode")))
             {
@@ -204,10 +221,10 @@ namespace PhysioWeb.Models
             //    obj.PossessionDate = rdr.GetDateTime(rdr.GetOrdinal("PossessionDate"));
             //}
 
-            if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
-            {
-                obj.IsActive = rdr.GetBoolean(rdr.GetOrdinal("IsActive"));
-            }
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
+            //{
+            //    obj.IsActive = rdr.GetBoolean(rdr.GetOrdinal("IsActive"));
+            //}
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("ContactPersonName")))
             {
@@ -236,7 +253,7 @@ namespace PhysioWeb.Models
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("Country")))
             {
-                obj.Country = rdr.GetInt32(rdr.GetOrdinal("Country"));
+                obj.Country = rdr.GetString(rdr.GetOrdinal("Country"));
             }
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("Floor")))
@@ -244,10 +261,10 @@ namespace PhysioWeb.Models
                 obj.Floor = rdr.GetString(rdr.GetOrdinal("Floor"));
             }
 
-            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyCategory")))
-            {
-                obj.PropertyCategory = rdr.GetString(rdr.GetOrdinal("PropertyCategory"));
-            }
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyCategory")))
+            //{
+            //    obj.PropertyCategory = rdr.GetString(rdr.GetOrdinal("PropertyCategory"));
+            //}
         }
     }
 }

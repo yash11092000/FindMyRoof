@@ -1,4 +1,6 @@
-﻿@{
+﻿@model PhysioWeb.Models.PropertyMaster
+
+@{
 	ViewData["Title"] = "Properies";
 }
 
@@ -99,11 +101,11 @@
 	<div class="container">
 		<div class="d-flex justify-content-between align-items-center">
 			<div>
-				<h1 class="h3 mb-1">Modern Family Home</h1>
-				<p class="text-muted mb-0"><i class="bi bi-geo-alt"></i> 123 Green Valley Road, Springfield</p>
+				<h1 class="h3 mb-1">@Model.Title</h1>
+				<p class="text-muted mb-0"><i class="bi bi-geo-alt"></i> @Model.Address</p>
 			</div>
 			<div>
-				<span class="badge price-badge py-2 px-3">$525,000</span>
+				<span class="badge price-badge py-2 px-3">₹@Model.BudgetMin - @Model.BudgetMax</span>
 			</div>
 			<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#shareModal">
 				<i class="bi bi-share"></i> Share
@@ -119,15 +121,15 @@
 		<div class="col-lg-8">
 			<!-- Main Image -->
 			<div class="gallery-main mb-3">
-				<img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6" class="w-100 h-100 object-fit-cover" id="mainImage" alt="Property image">
+				<img src="@Model.Images[0].Value" class="w-100 h-100 object-fit-cover" id="mainImage" alt="Property image">
 			</div>
 
 			<!-- Thumbnails -->
 			<div class="d-flex gap-2 mb-4">
-				<img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6" class="gallery-thumb active" onclick="changeMainImage(this.src, this)">
-				<img src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6" class="gallery-thumb" onclick="changeMainImage(this.src, this)">
-				<img src="https://images.unsplash.com/photo-1600121848594-d8644e57abab" class="gallery-thumb" onclick="changeMainImage(this.src, this)">
-				<img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea" class="gallery-thumb" onclick="changeMainImage(this.src, this)">
+				@for (int i = 1; i < Model.Images.Count; i++)
+				{
+					<img src="@Model.Images[i].Value" class="gallery-thumb active" onclick="changeMainImage(this.src, this)">
+				}
 				<div class="video-thumb" onclick="openVideoModal()">
 					<i class="bi bi-play-circle-fill text-success"></i>
 				</div>
@@ -140,30 +142,30 @@
 					<div class="col-md-6">
 						<div class="d-flex justify-content-between py-2 border-bottom">
 							<span class="text-muted">Property Type:</span>
-							<span>Single Family</span>
+							<span>@Model.PropertyType</span>
 						</div>
-						<div class="d-flex justify-content-between py-2 border-bottom">
+						@* <div class="d-flex justify-content-between py-2 border-bottom">
 							<span class="text-muted">Year Built:</span>
 							<span>2018</span>
-						</div>
+						</div> *@
 						<div class="d-flex justify-content-between py-2 border-bottom">
 							<span class="text-muted">Square Feet:</span>
-							<span>2,450</span>
+							<span>@Model.BuiltUpArea</span>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="d-flex justify-content-between py-2 border-bottom">
 							<span class="text-muted">Bedrooms:</span>
-							<span>4</span>
+							<span>@Model.Bedrooms</span>
 						</div>
 						<div class="d-flex justify-content-between py-2 border-bottom">
 							<span class="text-muted">Bathrooms:</span>
-							<span>3.5</span>
+							<span>@Model.Bathrooms</span>
 						</div>
-						<div class="d-flex justify-content-between py-2 border-bottom">
+						@* <div class="d-flex justify-content-between py-2 border-bottom">
 							<span class="text-muted">Garage:</span>
 							<span>2 cars</span>
-						</div>
+						</div> *@
 					</div>
 				</div>
 			</div>
@@ -171,23 +173,18 @@
 			<!-- Description -->
 			<div class="detail-card p-4 mb-4">
 				<h3 class="h5 mb-4">Description</h3>
-				<p>This stunning modern home in the sought-after Green Valley neighborhood offers the perfect blend of contemporary design and family-friendly functionality. The open floor plan features large windows that flood the space with natural light.</p>
-				<p>The gourmet kitchen features stainless steel appliances, quartz countertops, and a spacious island perfect for entertaining. The primary suite includes a luxurious bathroom with dual vanities, soaking tub, and walk-in shower.</p>
-				<p>Outdoor living spaces include a covered patio, professionally landscaped yard, and plenty of space for outdoor activities. The property is located in a top-rated school district and just minutes from shopping and dining.</p>
+				<p>@Model.Description</p>
 			</div>
 
 			<!-- Amenities -->
 			<div class="detail-card p-4 mb-4">
 				<h3 class="h5 mb-4">Amenities</h3>
 				<div class="d-flex flex-wrap gap-2">
-					<span class="badge amenity-badge"><i class="bi bi-droplet me-1"></i> Pool</span>
-					<span class="badge amenity-badge"><i class="bi bi-thermometer-sun me-1"></i> Central AC</span>
-					<span class="badge amenity-badge"><i class="bi bi-fire me-1"></i> Fireplace</span>
-					<span class="badge amenity-badge"><i class="bi bi-wifi me-1"></i> High-speed WiFi</span>
-					<span class="badge amenity-badge"><i class="bi bi-shield-check me-1"></i> Security System</span>
-					<span class="badge amenity-badge"><i class="bi bi-tree me-1"></i> Landscaped Yard</span>
-					<span class="badge amenity-badge"><i class="bi bi-car-front me-1"></i> Garage</span>
-					<span class="badge amenity-badge"><i class="bi bi-door-closed me-1"></i> Walk-in Closets</span>
+					@for (int j = 0; j < Model.AmenityList.Count; j++)
+					{
+						<span class="badge amenity-badge"><i class="bi bi-droplet me-1"></i> @Model.AmenityList[j].Text</span>
+					}
+					
 				</div>
 			</div>
 
@@ -197,7 +194,7 @@
 				<div class="ratio ratio-16x9 mb-3">
 					<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.2152091328346!2d-73.987844924366!3d40.75798597138926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzI4LjciTiA3M8KwNTknMTQuMiJX!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
 				</div>
-				<p class="mb-0"><i class="bi bi-info-circle text-success me-2"></i> Located in the desirable Green Valley neighborhood with excellent schools and convenient access to downtown.</p>
+				<p class="mb-0"><i class="bi bi-info-circle text-success me-2"></i>@Model.Address</p>
 			</div>
 		</div>
 
@@ -237,7 +234,7 @@
 			</div>
 
 			<!-- Virtual Tour -->
-			<div class="detail-card p-4">
+			@* <div class="detail-card p-4">
 				<h3 class="h5 mb-4">Virtual Tour</h3>
 				<div class="ratio ratio-16x9 bg-light rounded mb-3 d-flex align-items-center justify-content-center" style="cursor: pointer;" onclick="openVirtualTour()">
 					<i class="bi bi-joystick fs-1 text-success"></i>
@@ -245,13 +242,13 @@
 				<button class="btn btn-outline-green w-100">
 					<i class="bi bi-box-arrow-up-right me-2"></i> Launch 3D Tour
 				</button>
-			</div>
+			</div> *@
 		</div>
 	</div>
 </div>
 
 <!-- Video Modal -->
-<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+@* <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -265,7 +262,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div> *@
 
 <!-- Share Modal HTML -->
 <div class="modal fade" id="shareModal" tabindex="-1" aria-hidden="true">
@@ -331,10 +328,10 @@
 				  modal.show();
 			  }
 
-			  // Open virtual tour (placeholder)
-			  function openVirtualTour() {
-				  alert('Virtual tour would launch here');
-			  }
+			  // // Open virtual tour (placeholder)
+			  // function openVirtualTour() {
+				 //  alert('Virtual tour would launch here');
+			  // }
 
 			   // Initialize modal with current URL
 		document.addEventListener('DOMContentLoaded', function() {
