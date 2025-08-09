@@ -7,7 +7,7 @@ namespace PhysioWeb.Repository
     {
         Task<bool> SavePropCategory(PropertyCategoryMaster propertyCategoryMaster);
         Task<DataTableResult> ListPropertyCategory(DataTablePara dataTablePara);
-        Task<PropertyCategoryMaster> EditPropertyCategory(int UniqueID, int UserID);
+        Task<PropertyCategoryMaster> EditPropertyCategory(int UniqueID, string AgencyID);
         Task<bool> DeletePropertyCategory(PropertyCategoryMaster PropertyCategoryMaster);
         Task<bool> SavePropType(PropertyTypeMaster PropertyTypeMaster);
         Task<bool> DeletePropertyType(PropertyTypeMaster PropertyTypeMaster);
