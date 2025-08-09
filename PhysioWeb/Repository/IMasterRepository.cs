@@ -13,7 +13,7 @@ namespace PhysioWeb.Repository
         Task<bool> DeletePropertyType(PropertyTypeMaster PropertyTypeMaster);
         Task<DataTableResult> ListPropertyType(DataTablePara dataTablePara);
         Task<bool> SaveRentalType(RentalTypeMaster RentalTypeMaster);
-        Task<PropertyTypeMaster> EditPropertyType(int UniqueID, int UserID);
+        Task<PropertyTypeMaster> EditPropertyType(int UniqueID, string UserID);
         Task<DataTableResult> ListRentalType(DataTablePara dataTablePara);
         Task<RentalTypeMaster> EditRentalType(int UniqueID, int UserID);
         Task<bool> DeleteRentalType(RentalTypeMaster RentalTypeMaster);

@@ -74,6 +74,7 @@ namespace PhysioWeb.Controllers
                     new Claim(ClaimTypes.Name, User.UserName),
                     new Claim(ClaimTypes.Role, User.UserRole),
                     new Claim(ClaimTypes.PrimarySid, Convert.ToString(User.UserId)),
+                    new Claim(ClaimTypes.GroupSid, User.AgencyId),
                 };
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties

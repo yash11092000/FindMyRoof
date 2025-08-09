@@ -132,9 +132,9 @@ namespace PhysioWeb.Repository
         {
             try
             {
-                string[] parametersName = { "UniquId", "PropertyType", "Description", "IsActive", "UserID" };
+                string[] parametersName = { "UniquId", "PropertyType", "Description", "IsActive", "AgencyID", "UserID" };
                 object[] Values = { PropertyTypeMaster.UniquId,PropertyTypeMaster.PropertyType, PropertyTypeMaster.Description,
-                PropertyTypeMaster.IsActive ,0 };
+                PropertyTypeMaster.IsActive ,PropertyTypeMaster.AgencyId ,PropertyTypeMaster.UserID };
 
                 string Sp = "FMR_SavePropertyType";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -150,8 +150,8 @@ namespace PhysioWeb.Repository
         {
             try
             {
-                string[] parametersName = { "UniquId" };
-                object[] Values = { PropertyTypeMaster.UniquId };
+                string[] parametersName = { "UniquId" , "UserID" };
+                object[] Values = { PropertyTypeMaster.UniquId , PropertyTypeMaster.UserID };
 
                 string Sp = "FMR_DeletePropertyType";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -214,9 +214,9 @@ namespace PhysioWeb.Repository
         {
             try
             {
-                string[] parametersName = { "UniquId", "RentalType", "Description", "IsActive", "UserID" };
+                string[] parametersName = { "UniquId", "RentalType", "Description", "IsActive", "UserID" , "AgencyId" };
                 object[] Values = { RentalTypeMaster.UniquId, RentalTypeMaster.RentalType, RentalTypeMaster.Description,
-                    RentalTypeMaster.IsActive, RentalTypeMaster.AgencyId };
+                    RentalTypeMaster.IsActive,RentalTypeMaster.UserID ,RentalTypeMaster.AgencyId };
 
                 string Sp = "FMR_SaveRentalType";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -229,14 +229,12 @@ namespace PhysioWeb.Repository
             }
 
         }
-        public async Task<PropertyTypeMaster> EditPropertyType(int UniqueID, int UserID)
+        public async Task<PropertyTypeMaster> EditPropertyType(int UniqueID, string UserID)
         {
-            //why there is no try catch??
             try
             {
                 string[] parameterNames = { "UniqueID", "UserID" };
                 object[] parameterValues = { UniqueID, UserID };
-
 
                 string Sp = "FMR_EditPropertyType";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);

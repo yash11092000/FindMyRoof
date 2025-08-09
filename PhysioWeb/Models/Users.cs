@@ -56,6 +56,10 @@ namespace PhysioWeb.Models
             {
                 obj.UserRole = rdr.GetString(rdr.GetOrdinal("UserRole"));
             }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AgencyId")))
+            {
+                obj.AgencyId = rdr.GetString(rdr.GetOrdinal("AgencyId"));
+            }
             //if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
             //{
             //    obj.IsActive = rdr.GetBoolean(rdr.GetOrdinal("IsActive"));
