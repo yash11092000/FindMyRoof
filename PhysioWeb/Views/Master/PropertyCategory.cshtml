@@ -53,7 +53,7 @@
                         <input type="text" id="CategoryName" name="CategoryName" class="form-control" placeholder="Enter category name" />
                     </div>
                     <div class="form-check mb-3">
-                        <input type="checkbox" class="form-check-input" id="IsActive" name="IsActive" />
+                        <input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
                         <label class="form-check-label fw-bold" for="IsActive">Is Active</label>
                     </div>
                 </form>
@@ -188,7 +188,7 @@
             function ClearData() {
                 $("#UniquId").val("");
                 $("#CategoryName").val("");
-                $("#IsActive").prop("checked", false);
+                $("#IsActive").prop("checked", true);
             }
 
 
@@ -196,7 +196,7 @@
                 $("#addCategoryModal").modal('show');
                 $("#UniquId").val(data.uniquId);
                 $("#CategoryName").val(data.categoryName);
-                $("#IsActive").prop("checked", data.isActive);
+               $("#IsActive").prop("checked", data.isActive);
             }
 
              function OnSuccessOfDelete(){

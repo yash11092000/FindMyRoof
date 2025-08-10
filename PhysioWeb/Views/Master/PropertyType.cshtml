@@ -189,29 +189,28 @@
 					});
 
 
-							function OnSuccessOfEdit(data){
-									console.log(data);
-								$("#addPropertyModal").modal('show');
-								$("#UniquId").val(data.uniquId);
-								$("#PropertyType").val(data.propertyType);
-								$("#Description").val(data.description);
-								$("#IsActive").val(data.isActive);
-							}
+						function OnSuccessOfEdit(data){
+							$("#addPropertyModal").modal('show');
+							$("#UniquId").val(data.uniquId);
+							$("#PropertyType").val(data.propertyType);
+							$("#Description").val(data.description);
+							$("#IsActive").prop("checked", data.isActive);
+						}
 
 					  $('.btn-cancel').on('click', function () {
 					  $('#propertyForm')[0].reset();
 					  ClearData();
 					});
 
-					function ClearData(){
-						 $("#UniquId").val("");
-						 $("#PropertyType").val("");
-						 $("#Description").val("");
-						 //$("#IsActive").val("");
-					}
-					function OnSuccessOfDelete(){
-						notyf.success("Property Type Deleted");
-					}
+				function ClearData(){
+					 $("#UniquId").val("");
+					 $("#PropertyType").val("");
+					 $("#Description").val("");
+					  $("#IsActive").prop("checked", true);
+				}
+				function OnSuccessOfDelete(){
+					notyf.success("Property Type Deleted");
+				}
 	</script>
 
 }
