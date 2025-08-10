@@ -166,7 +166,7 @@
 						 {
 							data: null,
 							render: function (data, type, row) {
-								let para = `'${row.uniquId}', 'Master', 'EditPropertyCategory'`;
+								let para = `'${row.uniquId}', 'Master', 'EditRentalType'`;
 								return `<a href="javascript:void(0)" onclick="EditData(${para})">
 											<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
 										</a>`;
@@ -178,7 +178,7 @@
 								{
 							data: null,
 							render: function (data, type, row) {
-								 let para = `'${row.uniquId}', 'Master', 'DeletePropertyCategory'`;
+								 let para = `'${row.uniquId}', 'Master', 'DeleteRentalType'`;
 								return `<a href="javascript:void(0)" onclick="DeleteData(${para})">
 											<i class="bi bi-trash text-danger fs-5" title="Delete"></i>
 										</a>`;
@@ -253,6 +253,8 @@
 			 $("#Description").val("");
 			 $("#IsActive").val("");
 		}
-
+		function OnSuccessOfDelete(){
+			notyf.success("Rental Type Deleted Successfully");
+		}
 	</script>
 }
