@@ -121,14 +121,14 @@
 		<div class="col-lg-8">
 			<!-- Main Image -->
 			<div class="gallery-main mb-3">
-				<img src="@Model.Images[0].Value" class="w-100 h-100 object-fit-cover" id="mainImage" alt="Property image">
+				<img src="/secure-images/@Model.Images[0].Value" class="w-100 h-100 object-fit-cover" id="mainImage" alt="Property image">
 			</div>
 
 			<!-- Thumbnails -->
 			<div class="d-flex gap-2 mb-4">
 				@for (int i = 1; i < Model.Images.Count; i++)
 				{
-					<img src="@Model.Images[i].Value" class="gallery-thumb active" onclick="changeMainImage(this.src, this)">
+					<img src="/secure-images/@Model.Images[i].Value" class="gallery-thumb active" onclick="changeMainImage(this.src, this)">
 				}
 				<div class="video-thumb" onclick="openVideoModal()">
 					<i class="bi bi-play-circle-fill text-success"></i>

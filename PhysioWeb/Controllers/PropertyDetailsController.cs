@@ -16,6 +16,17 @@ namespace PhysioWeb.Controllers
             var PropertyDetails = await _propertyRepository.GetPropertyDetails(PropertyId);
             return View(PropertyDetails);
         }
+        [Route("secure-images/{*filePath}")]
+        public IActionResult GetSecureImage(string filePath)
+        {
+            var basePath = Path.Combine(Directory.GetCurrentDirectory());
+            var fullPath = Path.Combine(basePath, filePath);
 
+            if (!System.IO.File.Exists(fullPath))
+                return NotFound();
+
+            var contentType = "image/jpeg"; // Or detect based on extension
+            return PhysicalFile(fullPath, contentType);
+        }
     }
 }

@@ -153,7 +153,7 @@ namespace PhysioWeb.Controllers
         [Route("secure-images/{*filePath}")]
         public IActionResult GetSecureImage(string filePath)
         {
-            var basePath = Path.Combine("E:/CodingPractice/FindMyRoof/PhysioWeb");
+            var basePath = Path.Combine(Directory.GetCurrentDirectory());
             var fullPath = Path.Combine(basePath, filePath);
 
             if (!System.IO.File.Exists(fullPath))
