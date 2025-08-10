@@ -194,7 +194,7 @@
 							$("#UniquId").val(data.uniquId);
 							$("#PropertyType").val(data.propertyType);
 							$("#Description").val(data.description);
-							$("#IsActive").val(data.isActive);
+							$("#IsActive").prop("checked", data.isActive);
 						}
 
 				  $('.btn-cancel').on('click', function () {
@@ -206,7 +206,7 @@
 					 $("#UniquId").val("");
 					 $("#PropertyType").val("");
 					 $("#Description").val("");
-					 $("#IsActive").val("");
+					  $("#IsActive").prop("checked", true);
 				}
 				function OnSuccessOfDelete(){
 					notyf.success("Property Type Deleted");

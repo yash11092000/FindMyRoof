@@ -190,7 +190,7 @@
                     $("#addFurnishingTypeModal").modal('show');
                     $("#UniquId").val(data.uniquId);
                     $("#FurnishingType").val(data.furnishingType);
-                    $("#IsActive").val(data.isActive);
+                $("#IsActive").prop("checked", data.isActive);
                 }
 
           $('.btn-cancel').on('click', function () {
@@ -201,7 +201,7 @@
         function ClearData(){
              $("#UniquId").val("");
              $("#FurnishingType").val("");
-             $("#IsActive").val("");
+             $("#IsActive").prop("checked", true);
         }
 
         function OnSuccessOfDelete(){

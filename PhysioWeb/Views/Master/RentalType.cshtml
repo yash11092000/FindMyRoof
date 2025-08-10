@@ -239,7 +239,7 @@
 					$("#UniquId").val(data.uniquId);
 					$("#RentalType").val(data.rentalType);
 					$("#Description").val(data.description);
-					$("#IsActive").val(data.isActive);
+					$("#IsActive").prop("checked", data.isActive);
 				}
 
 		  $('.btn-cancel').on('click', function () {
@@ -251,7 +251,7 @@
 			 $("#UniquId").val("");
 			 $("#RentalType").val("");
 			 $("#Description").val("");
-			 $("#IsActive").val("");
+			 $("#IsActive").prop("checked", true);
 		}
 		function OnSuccessOfDelete(){
 			notyf.success("Rental Type Deleted Successfully");

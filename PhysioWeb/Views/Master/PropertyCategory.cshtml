@@ -188,7 +188,7 @@
             function ClearData() {
                 $("#UniquId").val("");
                 $("#CategoryName").val("");
-                $("#IsActive").prop("checked", false);
+                $("#IsActive").prop("checked", true);
             }
 
 
@@ -196,7 +196,7 @@
                 $("#addCategoryModal").modal('show');
                 $("#UniquId").val(data.uniquId);
                 $("#CategoryName").val(data.categoryName);
-                $("#IsActive").prop("checked", data.isActive);
+               $("#IsActive").prop("checked", data.isActive);
             }
 
              function OnSuccessOfDelete(){
