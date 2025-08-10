@@ -18,6 +18,7 @@ builder.Services.AddScoped<IMasterRepository, MasterRepository>();
 builder.Services.AddScoped<ISuperAdminRepository, SuperAdminRepository>();
 builder.Services.AddScoped<IAgencyRepository, AgencyRepository>();
 builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+builder.Services.AddScoped<FileUploadService>();
 
 
 
