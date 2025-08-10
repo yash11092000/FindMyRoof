@@ -116,7 +116,7 @@ namespace PhysioWeb.Repository
             try
             {
                 string[] parametersName = { "UniquId", "UserID" };
-                object[] Values = { PropertyCategoryMaster.UniquId, 0 };
+                object[] Values = { PropertyCategoryMaster.UniquId, PropertyCategoryMaster.UserID };
 
                 string Sp = "FMR_DeletePropertyCategory";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -300,7 +300,7 @@ namespace PhysioWeb.Repository
         }
 
 
-        public async Task<RentalTypeMaster> EditRentalType(int UniqueID, int UserID)
+        public async Task<RentalTypeMaster> EditRentalType(int UniqueID, string UserID)
         {
 
             try
@@ -330,7 +330,7 @@ namespace PhysioWeb.Repository
             try
             {
                 string[] parametersName = { "UniquId", "UserID" };
-                object[] Values = { RentalTypeMaster.UniquId, RentalTypeMaster.AgencyId };
+                object[] Values = { RentalTypeMaster.UniquId, RentalTypeMaster.UserID };
 
                 string Sp = "FMR_DeleteRentalType";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -347,9 +347,9 @@ namespace PhysioWeb.Repository
         {
             try
             {
-                string[] parametersName = { "UniquId", "FurnishingType", "IsActive", "UserID" };
+                string[] parametersName = { "UniquId", "FurnishingType", "IsActive", "UserID" ,"AgencyID"};
                 object[] Values = { FurnishingTypeMaster.UniquId,FurnishingTypeMaster.FurnishingType,
-                FurnishingTypeMaster.IsActive ,0 };
+                FurnishingTypeMaster.IsActive ,FurnishingTypeMaster.UserID ,FurnishingTypeMaster.AgencyID};
 
                 string Sp = "FMR_SaveFurnishingType";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -366,7 +366,7 @@ namespace PhysioWeb.Repository
             try
             {
                 string[] parametersName = { "UniquId", "UserID" };
-                object[] Values = { FurnishingTypeMaster.UniquId, FurnishingTypeMaster.AgencyId };
+                object[] Values = { FurnishingTypeMaster.UniquId, FurnishingTypeMaster.UserID };
 
                 string Sp = "FMR_DeleteFurnishingType";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -451,14 +451,14 @@ namespace PhysioWeb.Repository
             }
         }
 
-
         public async Task<bool> SaveAmenityMaster(AmenityMaster AmenityMaster)
         {
             try
             {
-                string[] parametersName = { "UniquId", "AmenityName", "IconImage", "IsActive", "UserID" };
+                string[] parametersName = { "UniquId", "AmenityName", "IconImage", "IsActive",
+                    "UserID" ,"AgencyID"};
                 object[] Values = { AmenityMaster.UniquId,AmenityMaster.AmenityName,AmenityMaster.IconImage,
-                AmenityMaster.IsActive ,0 };
+                AmenityMaster.IsActive ,AmenityMaster.UserID , AmenityMaster.AgencyId };
 
                 string Sp = "FMR_SaveAmenityMaster";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -475,7 +475,7 @@ namespace PhysioWeb.Repository
             try
             {
                 string[] parametersName = { "UniquId", "UserID" };
-                object[] Values = { AmenityMaster.UniquId, AmenityMaster.AgencyId };
+                object[] Values = { AmenityMaster.UniquId, AmenityMaster.UserID };
 
                 string Sp = "FMR_DeleteAmenityMaster";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -559,7 +559,7 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
-        public async Task<AreaMaster> EditAreaMaster(int UniqueID, int UserID)
+        public async Task<AreaMaster> EditAreaMaster(int UniqueID, string UserID)
         {
 
             try
@@ -640,7 +640,7 @@ namespace PhysioWeb.Repository
             {
                 string[] parametersName = {
                 "UniquId", "AreaName", "SubAreaName", "City", "State", "Country",
-                "Pincode", "IsActive", "UserID"
+                "Pincode", "IsActive", "UserID" , "AgencyID"
             };
 
                 object[] Values = {
@@ -652,6 +652,7 @@ namespace PhysioWeb.Repository
                         AreaMaster.Country,
                         AreaMaster.Pincode,
                         AreaMaster.IsActive,
+                        AreaMaster.UserID,
                         AreaMaster.AgencyId
                     };
 
@@ -671,7 +672,7 @@ namespace PhysioWeb.Repository
             try
             {
                 string[] parametersName = { "UniquId", "UserID" };
-                object[] Values = { AreaMaster.UniquId, AreaMaster.AgencyId };
+                object[] Values = { AreaMaster.UniquId, AreaMaster.UserID };
 
                 string Sp = "FMR_DeleteAreaMaster";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -748,10 +749,10 @@ namespace PhysioWeb.Repository
             return list;
         }
 
-        public async Task<List<DropDownSource>> GetAreaList(string searchTerm)
+        public async Task<List<DropDownSource>> GetAreaList(string searchTerm , string AgencyID)
         {
-            string[] parameterNames = new string[] { "@SearchTerm" };
-            object[] parameterValues = new object[] { searchTerm ?? (object)DBNull.Value };
+            string[] parameterNames = new string[] { "@SearchTerm" , "AgencyID" };
+            object[] parameterValues = new object[] { searchTerm ?? (object)DBNull.Value , AgencyID };
 
             var list = new List<DropDownSource>();
 
@@ -775,8 +776,25 @@ namespace PhysioWeb.Repository
             try
             {
 
-                string[] parameterNames = { "UniquID", "PropertyName", "Description", "PropertyType", "Bedrooms", "Bathrooms", "CarpetArea", "BuiltUpArea", "Address", "City", "State", "PinCode", "MinPrice", "MaxPrice", "FurnishingStatus", "PossessionDate", "IsActive", "TransactionType", "Floor", "ContactPersonName", "ContactPersonNo", "AlternateNo", "Area", "SubArea", "Country" };
-                object[] parameterValues = { propertyMaster.UniquId, propertyMaster.Title, propertyMaster.Description, propertyMaster.PropertyType, propertyMaster.Bedrooms, propertyMaster.Bathrooms, propertyMaster.CarpetArea, propertyMaster.BuiltUpArea, propertyMaster.Address, propertyMaster.City, propertyMaster.State, propertyMaster.PinCode, propertyMaster.BudgetMin, propertyMaster.BudgetMax, propertyMaster.FurnishingStatus, propertyMaster.PossessionDate.HasValue ? propertyMaster.PossessionDate.Value.ToString("yyyy-MM-dd") : (object)DBNull.Value, propertyMaster.IsActive, propertyMaster.TransactionType, propertyMaster.Floor, propertyMaster.ContactPersonName, propertyMaster.ContactPersonPhone, propertyMaster.ContactPersonAlternatePhone, propertyMaster.Area, propertyMaster.SubArea, propertyMaster.Country };
+                string[] parameterNames = { "UniquID", "PropertyName", "Description",
+                    "PropertyType", "Bedrooms", "Bathrooms", "CarpetArea", "BuiltUpArea",
+                    "Address", "City", "State", "PinCode", "MinPrice", "MaxPrice", 
+                    "FurnishingStatus", "PossessionDate", "IsActive", "TransactionType", 
+                    "Floor", "ContactPersonName", "ContactPersonNo", "AlternateNo", "Area", 
+                    "SubArea", "Country" ,"UserID" ,"AgencyID" };
+
+                object[] parameterValues = { propertyMaster.UniquId, propertyMaster.Title, 
+                    propertyMaster.Description, propertyMaster.PropertyType, 
+                    propertyMaster.Bedrooms, propertyMaster.Bathrooms, propertyMaster.CarpetArea,
+                    propertyMaster.BuiltUpArea, propertyMaster.Address, propertyMaster.City, 
+                    propertyMaster.State, propertyMaster.PinCode, propertyMaster.BudgetMin,
+                    propertyMaster.BudgetMax, propertyMaster.FurnishingStatus, 
+                    propertyMaster.PossessionDate.HasValue ? propertyMaster.PossessionDate.Value.ToString("yyyy-MM-dd") : (object)DBNull.Value,
+                    propertyMaster.IsActive, propertyMaster.TransactionType, propertyMaster.Floor,
+                    propertyMaster.ContactPersonName, propertyMaster.ContactPersonPhone,
+                    propertyMaster.ContactPersonAlternatePhone, propertyMaster.Area, propertyMaster.SubArea,
+                    propertyMaster.Country , propertyMaster.UserID,  propertyMaster.AgencyId};
+
                 string Sp = "FMR_SavePropertyDetails";
                 var data = await _dbHelper.ExecuteScalarAsync(Sp, parameterNames, parameterValues);
                 return Convert.ToInt32(data);
@@ -808,13 +826,12 @@ namespace PhysioWeb.Repository
             }
         }
 
-        public async Task<PropertyMaster> PropertyMasterDropDown()
+        public async Task<PropertyMaster> PropertyMasterDropDown(string  AgencyID)
         {
             try
             {
-                string[] parameterNames = { };
-                object[] parameterValues = { };
-
+                string[] parameterNames = { "AgencyID" };
+                object[] parameterValues = { AgencyID };
 
                 string Sp = "FMR_PropertyMasterDropDown";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
@@ -895,11 +912,6 @@ namespace PhysioWeb.Repository
                 throw e;
             }
         }
-
-       
-
-       
-
 
     }
 }

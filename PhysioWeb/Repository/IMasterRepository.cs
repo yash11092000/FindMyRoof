@@ -15,7 +15,7 @@ namespace PhysioWeb.Repository
         Task<bool> SaveRentalType(RentalTypeMaster RentalTypeMaster);
         Task<PropertyTypeMaster> EditPropertyType(int UniqueID, string UserID);
         Task<DataTableResult> ListRentalType(DataTablePara dataTablePara);
-        Task<RentalTypeMaster> EditRentalType(int UniqueID, int UserID);
+        Task<RentalTypeMaster> EditRentalType(int UniqueID, string UserID);
         Task<bool> DeleteRentalType(RentalTypeMaster RentalTypeMaster);
         Task<bool> SaveFurnishingType(FurnishingTypeMaster FurnishingTypeMaster);
         Task<bool> DeleteFurnishingType(FurnishingTypeMaster FurnishingTypeMaster);
@@ -25,7 +25,7 @@ namespace PhysioWeb.Repository
         Task<bool> DeleteAmenityMaster(AmenityMaster AmenityMaster);
         Task<DataTableResult> ListAmenityMaster(DataTablePara dataTablePara);
         Task<AmenityMaster> EditAmenityMaster(int UniqueID, int UserID);
-        Task<AreaMaster> EditAreaMaster(int UniqueID, int UserID);
+        Task<AreaMaster> EditAreaMaster(int UniqueID, string UserID);
         Task<DataTableResult> ListAreaMaster(DataTablePara dataTablePara);
         Task<bool> SaveAreaMaster(AreaMaster AreaMaster);
         Task<bool> DeleteAreaMaster(AreaMaster AreaMaster);
@@ -34,8 +34,8 @@ namespace PhysioWeb.Repository
         Task<List<DropDownSource>> GetCityList(string stateId);
         Task<int> SaveProperty(PropertyMaster propertyMaster);
         Task<bool> SavePropertyMedia(DataTable mediaTable, int propertyId);
-        Task<PropertyMaster> PropertyMasterDropDown();
-        Task<List<DropDownSource>> GetAreaList(string searchTerm);
+        Task<PropertyMaster> PropertyMasterDropDown(string AgencyID);
+        Task<List<DropDownSource>> GetAreaList(string searchTerm, string AgencyID);
     
     }
 }

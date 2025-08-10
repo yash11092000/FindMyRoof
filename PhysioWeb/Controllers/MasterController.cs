@@ -102,7 +102,7 @@ namespace PhysioWeb.Controllers
             {
                 UniquId = UniqueID
             };
-
+            PropertyCategoryMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             var result = await _masterRepository.DeletePropertyCategory(PropertyCategoryMaster);
             return Json(new { success = result });
         }
@@ -140,7 +140,6 @@ namespace PhysioWeb.Controllers
 
 
         [HttpPost]
-
         public async Task<ActionResult> ListPropertyType()
         {
             var form = Request.Form;
@@ -214,6 +213,7 @@ namespace PhysioWeb.Controllers
             var result = await _masterRepository.SaveRentalType(RentalTypeMaster);
             return Json(result);
         }
+
         [HttpPost]
         public async Task<ActionResult> ListRentalType()
         {
@@ -240,6 +240,8 @@ namespace PhysioWeb.Controllers
                         ?.SetValue(dataTablePara, Request.Form[key].ToString());
                 }
             }
+            dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.ListRentalType(dataTablePara);
             var requestForm = Request.Form;
             return Json(new
@@ -257,7 +259,8 @@ namespace PhysioWeb.Controllers
         {
             try
             {
-                int UserID = 0;
+                string UserID  = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                
                 var data = await _masterRepository.EditRentalType(UniqueID, UserID);
 
                 return Json(data);
@@ -271,12 +274,11 @@ namespace PhysioWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> DeleteRentalType(int UniqueID)
         {
-            // propertyTypeMaster.AgencyId = 0;
             var RentalTypeMaster = new RentalTypeMaster
             {
                 UniquId = UniqueID
             };
-
+            RentalTypeMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             var result = await _masterRepository.DeleteRentalType(RentalTypeMaster);
             return Json(new { success = result });
         }
@@ -286,7 +288,8 @@ namespace PhysioWeb.Controllers
         #region Property Master
         public async Task<ActionResult> PropertyMaster()
         {
-            var PropertyMasterDropDown = await _masterRepository.PropertyMasterDropDown();
+            string AgencyID = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var PropertyMasterDropDown = await _masterRepository.PropertyMasterDropDown(AgencyID);
             return View(PropertyMasterDropDown);
         }
 
@@ -295,6 +298,9 @@ namespace PhysioWeb.Controllers
         {
             if (PropertyMaster == null)
                 return Json(new { success = false, message = "Model binding failed!" });
+
+            PropertyMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            PropertyMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
 
             var result = await _masterRepository.SaveProperty(PropertyMaster);
             return Json(new { success = true, propertyId = result });
@@ -393,6 +399,9 @@ namespace PhysioWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> SaveFurnishingType(FurnishingTypeMaster FurnishingTypeMaster)
         {
+            FurnishingTypeMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            FurnishingTypeMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+
             var result = await _masterRepository.SaveFurnishingType(FurnishingTypeMaster);
             return Json(result);
         }
@@ -406,7 +415,7 @@ namespace PhysioWeb.Controllers
             {
                 UniquId = UniqueID
             };
-
+            FurnishingTypeMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             var result = await _masterRepository.DeleteFurnishingType(FurnishingTypeMaster);
             return Json(new { success = result });
         }
@@ -439,6 +448,8 @@ namespace PhysioWeb.Controllers
                         ?.SetValue(dataTablePara, Request.Form[key].ToString());
                 }
             }
+            dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.ListFurnishingType(dataTablePara);
             var requestForm = Request.Form;
             return Json(new
@@ -456,11 +467,10 @@ namespace PhysioWeb.Controllers
         {
             try
             {
-                int UserID = 0;
-                var data = await _masterRepository.EditFurnishingType(UniqueID, UserID);
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _masterRepository.EditFurnishingType(UniqueID, Convert.ToInt32(UserID));
 
                 return Json(data);
-
             }
             catch (Exception ex)
             {
@@ -481,6 +491,8 @@ namespace PhysioWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> SaveAmenityMaster(AmenityMaster AmenityMaster)
         {
+            AmenityMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            AmenityMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.SaveAmenityMaster(AmenityMaster);
             return Json(result);
         }
@@ -493,7 +505,7 @@ namespace PhysioWeb.Controllers
             {
                 UniquId = UniqueID
             };
-
+            AmenityMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
             var result = await _masterRepository.DeleteAmenityMaster(AmenityMaster);
             return Json(new { success = result });
         }
@@ -526,6 +538,8 @@ namespace PhysioWeb.Controllers
                         ?.SetValue(dataTablePara, Request.Form[key].ToString());
                 }
             }
+            dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.ListAmenityMaster(dataTablePara);
             var requestForm = Request.Form;
             return Json(new
@@ -543,8 +557,8 @@ namespace PhysioWeb.Controllers
         {
             try
             {
-                int UserID = 0;
-                var data = await _masterRepository.EditAmenityMaster(UniqueID, UserID);
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _masterRepository.EditAmenityMaster(UniqueID, Convert.ToInt32(UserID));
 
                 return Json(data);
 
@@ -569,10 +583,11 @@ namespace PhysioWeb.Controllers
             return View(model);
         }
 
-
         [HttpPost]
         public async Task<ActionResult> SaveAreaMaster(AreaMaster AreaMaster)
         {
+            AreaMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            AreaMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.SaveAreaMaster(AreaMaster);
             return Json(result);
         }
@@ -585,14 +600,14 @@ namespace PhysioWeb.Controllers
             {
                 UniquId = UniqueID
             };
-
+            AreaMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            
             var result = await _masterRepository.DeleteAreaMaster(AreaMaster);
             return Json(new { success = result });
         }
 
-
+        
         [HttpPost]
-
         public async Task<ActionResult> ListAreaMaster()
         {
             var form = Request.Form;
@@ -618,6 +633,8 @@ namespace PhysioWeb.Controllers
                         ?.SetValue(dataTablePara, Request.Form[key].ToString());
                 }
             }
+            dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
             var result = await _masterRepository.ListAreaMaster(dataTablePara);
             var requestForm = Request.Form;
             return Json(new
@@ -635,7 +652,8 @@ namespace PhysioWeb.Controllers
         {
             try
             {
-                int UserID = 0;
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+               
                 var data = await _masterRepository.EditAreaMaster(UniqueID, UserID);
 
                 return Json(data);
@@ -666,11 +684,10 @@ namespace PhysioWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAreas(string searchTerm)
         {
-            var areas = await _masterRepository.GetAreaList(searchTerm);
+            string AgencyID = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var areas = await _masterRepository.GetAreaList(searchTerm , AgencyID);
             return Json(areas.Select(a => a.Text).ToList());
         }
-
-        
 
         #endregion
     }
