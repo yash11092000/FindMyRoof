@@ -320,7 +320,7 @@ namespace PhysioWeb.Controllers
                     return Json(new { success = false, message = "Invalid PropertyId" });
 
 
-                string basePath = Path.Combine(Directory.GetCurrentDirectory(), "Property",PropertyId.ToString());
+                string basePath = Path.Combine(Directory.GetCurrentDirectory(), "secure-images", "Property",PropertyId.ToString());
                 if (!Directory.Exists(basePath))
                     Directory.CreateDirectory(basePath);
 

@@ -94,6 +94,68 @@
 		border-top: 1px solid #e9ecef;
 		margin: 2rem 0;
 	}
+	/* Base container for all thumbnails */
+	.thumb-container {
+		position: relative;
+		width: 120px; /* Fixed width */
+		height: 80px; /* Fixed height */
+		overflow: hidden;
+		border-radius: 4px;
+		cursor: pointer;
+		flex-shrink: 0; /* Prevent shrinking */
+	}
+
+	/* Image thumbnails */
+	.gallery-thumb {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.2s;
+	}
+
+		.gallery-thumb:hover {
+			transform: scale(1.05);
+		}
+
+	/* Video thumbnails */
+	.video-thumb {
+		background-color: #000;
+	}
+
+		.video-thumb .thumbnail-preview {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			opacity: 0.7;
+			transition: opacity 0.2s;
+		}
+
+		.video-thumb:hover .thumbnail-preview {
+			opacity: 1;
+		}
+
+		/* Play icon for video thumbs */
+		.video-thumb .bi-play-circle-fill {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			font-size: 2rem;
+			color: rgba(255, 255, 255, 0.9);
+			text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+			transition: all 0.2s;
+		}
+
+		.video-thumb:hover .bi-play-circle-fill {
+			color: #fff;
+			font-size: 2.2rem;
+		}
+
+	/* Active state */
+	.gallery-thumb.active {
+		border: 3px solid #0d6efd;
+		box-sizing: border-box;
+	}
 </style>
 
 <!-- Property Header -->
@@ -125,14 +187,26 @@
 			</div>
 
 			<!-- Thumbnails -->
-			<div class="d-flex gap-2 mb-4">
-				@for (int i = 1; i < Model.Images.Count; i++)
+			<div class="d-flex gap-2 mb-4 flex-wrap">
+				@for (int i = 0; i < Model.Images.Count; i++)
 				{
-					<img src="/secure-images/@Model.Images[i].Value" class="gallery-thumb active" onclick="changeMainImage(this.src, this)">
+					string IsActive = i == 0 ? "active" : "";
+					<div class="thumb-container">
+						<img src="/secure-images/@Model.Images[i].Value"
+							 class="gallery-thumb @IsActive"
+							 onclick="changeMainImage(this.src, this)">
+					</div>
 				}
-				<div class="video-thumb" onclick="openVideoModal()">
-					<i class="bi bi-play-circle-fill text-success"></i>
-				</div>
+				@for (int i = 0; i < Model.Videos.Count; i++)
+				{
+					<div class="thumb-container video-thumb"
+						 onclick="openVideoModal('@Url.Content("~/secure-images/" + Model.Videos[i].Value)')">
+						<i class="bi bi-play-circle-fill text-success"></i>
+						<video class="thumbnail-preview" muted loop>
+							<source src="@Url.Content("~/secure-images/" + Model.Videos[i].Value)" type="video/mp4">
+						</video>
+					</div>
+				}
 			</div>
 
 			<!-- Property Details -->
@@ -184,18 +258,18 @@
 					{
 						<span class="badge amenity-badge"><i class="bi bi-droplet me-1"></i> @Model.AmenityList[j].Text</span>
 					}
-					
+
 				</div>
 			</div>
 
-			<!-- Location -->
+		@* 	<!-- Location -->
 			<div class="detail-card p-4">
 				<h3 class="h5 mb-4">Location</h3>
 				<div class="ratio ratio-16x9 mb-3">
 					<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.2152091328346!2d-73.987844924366!3d40.75798597138926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzI4LjciTiA3M8KwNTknMTQuMiJX!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
 				</div>
 				<p class="mb-0"><i class="bi bi-info-circle text-success me-2"></i>@Model.Address</p>
-			</div>
+			</div> *@
 		</div>
 
 		<!-- Sidebar Column -->
@@ -248,7 +322,7 @@
 </div>
 
 <!-- Video Modal -->
-@* <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -257,12 +331,14 @@
 			</div>
 			<div class="modal-body">
 				<div class="ratio ratio-16x9">
-					<iframe src="https://www.youtube.com/embed/7ZOdtF7ZP9E" title="Property video tour" allowfullscreen></iframe>
+					<iframe id="MyVideoFrame" allowfullscreen
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+							frameborder="0"></iframe>
 				</div>
 			</div>
 		</div>
 	</div>
-</div> *@
+</div>
 
 <!-- Share Modal HTML -->
 <div class="modal fade" id="shareModal" tabindex="-1" aria-hidden="true">
@@ -323,9 +399,10 @@
 			  }
 
 			  // Open video modal
-			  function openVideoModal() {
+			  function openVideoModal(videoLink) {
 				  const modal = new bootstrap.Modal(document.getElementById('videoModal'));
 				  modal.show();
+				  $("#MyVideoFrame").prop("src",videoLink);
 			  }
 
 			  // // Open virtual tour (placeholder)
