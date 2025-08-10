@@ -349,7 +349,7 @@ namespace PhysioWeb.Repository
             {
                 string[] parametersName = { "UniquId", "FurnishingType", "IsActive", "UserID" ,"AgencyID"};
                 object[] Values = { FurnishingTypeMaster.UniquId,FurnishingTypeMaster.FurnishingType,
-                FurnishingTypeMaster.IsActive ,FurnishingTypeMaster.UserID ,FurnishingTypeMaster.AgencyID};
+                FurnishingTypeMaster.IsActive ,FurnishingTypeMaster.UserID ,FurnishingTypeMaster.AgencyId};
 
                 string Sp = "FMR_SaveFurnishingType";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
@@ -777,14 +777,13 @@ namespace PhysioWeb.Repository
             try
             {
 
-                string[] parameterNames = { "UniquID", "PropertyName", "Description", "PropertyType", "Bedrooms", "Bathrooms", "CarpetArea", "BuiltUpArea", "Address", "City", "State", "PinCode", "MinPrice", "MaxPrice", "FurnishingStatus", "PossessionDate", "IsActive", "TransactionType", "Floor", "ContactPersonName", "ContactPersonNo", "AlternateNo", "Area", "SubArea", "Country", "Amenities" };
-                object[] parameterValues = { propertyMaster.UniquId, propertyMaster.Title, propertyMaster.Description, propertyMaster.PropertyType, propertyMaster.Bedrooms, propertyMaster.Bathrooms, propertyMaster.CarpetArea, propertyMaster.BuiltUpArea, propertyMaster.Address, propertyMaster.City, propertyMaster.State, propertyMaster.PinCode, propertyMaster.BudgetMin, propertyMaster.BudgetMax, propertyMaster.FurnishingStatus, propertyMaster.PossessionDate.HasValue ? propertyMaster.PossessionDate.Value.ToString("yyyy-MM-dd") : (object)DBNull.Value, propertyMaster.IsActive, propertyMaster.TransactionType, propertyMaster.Floor, propertyMaster.ContactPersonName, propertyMaster.ContactPersonPhone, propertyMaster.ContactPersonAlternatePhone, propertyMaster.Area, propertyMaster.SubArea, propertyMaster.Country, propertyMaster.Amenities };
+                
                 string[] parameterNames = { "UniquID", "PropertyName", "Description",
                     "PropertyType", "Bedrooms", "Bathrooms", "CarpetArea", "BuiltUpArea",
                     "Address", "City", "State", "PinCode", "MinPrice", "MaxPrice", 
                     "FurnishingStatus", "PossessionDate", "IsActive", "TransactionType", 
                     "Floor", "ContactPersonName", "ContactPersonNo", "AlternateNo", "Area", 
-                    "SubArea", "Country" ,"UserID" ,"AgencyID" };
+                    "SubArea", "Country", "Amenities","UserID" ,"AgencyID" };
 
                 object[] parameterValues = { propertyMaster.UniquId, propertyMaster.Title, 
                     propertyMaster.Description, propertyMaster.PropertyType, 
@@ -796,7 +795,7 @@ namespace PhysioWeb.Repository
                     propertyMaster.IsActive, propertyMaster.TransactionType, propertyMaster.Floor,
                     propertyMaster.ContactPersonName, propertyMaster.ContactPersonPhone,
                     propertyMaster.ContactPersonAlternatePhone, propertyMaster.Area, propertyMaster.SubArea,
-                    propertyMaster.Country , propertyMaster.UserID,  propertyMaster.AgencyId};
+                    propertyMaster.Country ,propertyMaster.Amenities, propertyMaster.UserID,  propertyMaster.AgencyId};
 
                 string Sp = "FMR_SavePropertyDetails";
                 var data = await _dbHelper.ExecuteScalarAsync(Sp, parameterNames, parameterValues);
