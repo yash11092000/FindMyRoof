@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using PhysioWeb.Hubs;
 using PhysioWeb.Models;
 using PhysioWeb.Repository;
 using System.Data;
@@ -15,9 +17,13 @@ namespace PhysioWeb.Controllers
     public class MasterController : Controller
     {
         private readonly IMasterRepository _masterRepository;
-        public MasterController(IMasterRepository masterRepository)
+        private readonly IHubContext<NotificationHub> _hubContext;
+
+        public MasterController(IMasterRepository masterRepository, IHubContext<NotificationHub> hubContext)
         {
             _masterRepository = masterRepository;
+            _hubContext = hubContext;
+
         }
 
         #region Property Category Master
@@ -84,7 +90,7 @@ namespace PhysioWeb.Controllers
             {
                 string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
                 string AgencyID = User.FindFirst(ClaimTypes.GroupSid)?.Value;
-                
+
                 var data = await _masterRepository.EditPropertyCategory(UniqueID, AgencyID);
 
                 return Json(data);
@@ -303,6 +309,11 @@ namespace PhysioWeb.Controllers
             PropertyMaster.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
 
             var result = await _masterRepository.SaveProperty(PropertyMaster);
+
+            // 2. Send notification to SuperAdmin group
+            await _hubContext.Clients.Group("SuperAdmin")
+                .SendAsync("ReceiveNotification", $"Property Added : {PropertyMaster.Title}");
+
             return Json(new { success = true, propertyId = result });
         }
 
@@ -326,7 +337,7 @@ namespace PhysioWeb.Controllers
                     return Json(new { success = false, message = "Invalid PropertyId" });
 
 
-                string basePath = Path.Combine(Directory.GetCurrentDirectory(), "secure-images", "Property",PropertyId.ToString());
+                string basePath = Path.Combine(Directory.GetCurrentDirectory(), "secure-images", "Property", PropertyId.ToString());
                 if (!Directory.Exists(basePath))
                     Directory.CreateDirectory(basePath);
 
@@ -667,14 +678,14 @@ namespace PhysioWeb.Controllers
         [HttpGet]
         public async Task<JsonResult> GetStatesByCountry(string countryId)
         {
-            var states = await _masterRepository.GetStateList(countryId); 
+            var states = await _masterRepository.GetStateList(countryId);
             return Json(states);
         }
 
         [HttpGet]
         public async Task<JsonResult> GetCitiesByState(string stateId)
         {
-            var cities = await _masterRepository.GetCityList(stateId); 
+            var cities = await _masterRepository.GetCityList(stateId);
             return Json(cities);
         }
 
@@ -688,6 +699,8 @@ namespace PhysioWeb.Controllers
             var areas = await _masterRepository.GetAreaList(searchTerm , AgencyID);
             return Json(areas.Select(a => a.Text).ToList());
         }
+
+
 
         #endregion
     }
