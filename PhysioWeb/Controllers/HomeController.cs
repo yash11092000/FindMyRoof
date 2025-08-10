@@ -153,15 +153,48 @@ namespace PhysioWeb.Controllers
         [Route("secure-images/{*filePath}")]
         public IActionResult GetSecureImage(string filePath)
         {
-            var basePath = Path.Combine(Directory.GetCurrentDirectory());
-            var fullPath = Path.Combine(basePath, filePath);
+            // Combine with secure-images directory
+            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "secure-images", filePath);
+
+            // Security check - prevent directory traversal
+            fullPath = Path.GetFullPath(fullPath);
+            if (!fullPath.StartsWith(Path.Combine(Directory.GetCurrentDirectory(), "secure-images")))
+            {
+                return BadRequest("Invalid file path");
+            }
 
             if (!System.IO.File.Exists(fullPath))
                 return NotFound();
 
-            var contentType = "image/jpeg"; // Or detect based on extension
+            // Get proper content type based on file extension
+            var contentType = GetContentType(fullPath);
+
+            // Special handling for video files
+            if (contentType.StartsWith("video/"))
+            {
+                // Enable range requests for video streaming
+                var fileStream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                return File(fileStream, contentType, enableRangeProcessing: true);
+            }
+
+            // Standard handling for images
             return PhysicalFile(fullPath, contentType);
         }
 
+        private string GetContentType(string path)
+        {
+            var extension = Path.GetExtension(path).ToLowerInvariant();
+            return extension switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".webp" => "image/webp",
+                ".mp4" => "video/mp4",
+                ".webm" => "video/webm",
+                ".ogg" => "video/ogg",
+                _ => "application/octet-stream"
+            };
+        }
     }
 }

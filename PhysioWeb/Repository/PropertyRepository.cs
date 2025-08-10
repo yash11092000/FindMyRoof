@@ -41,10 +41,13 @@ namespace PhysioWeb.Repository
                             Property.Videos.Add(new DropDownSource(data, true));
                         }
                     }
-                    //    if (data.NextResult())
-                    //    {
-                    //        Property.Amenitie.Add(new DropDownSource(data, true));
-                    //    }
+                    if (data.NextResult())
+                    {
+                        while (data.Read())
+                        {
+                            Property.AmenityList.Add(new DropDownSource(data, true));
+                        }
+                    }
 
                     return Property;
                 }
