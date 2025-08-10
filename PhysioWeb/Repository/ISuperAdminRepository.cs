@@ -6,6 +6,8 @@ namespace PhysioWeb.Repository
     {
         Task<DataTableResult> GetAllAgencies(DataTablePara dataTablePara);
         Task<MenuMaster> GetMenuList(string? role, string? userId);
+        Task<Notification> GetNotifications();
         Task<bool> SaveAgency(AgencyDetails model);
+        Task<bool> SaveNotification(Notification notification);
     }
 }

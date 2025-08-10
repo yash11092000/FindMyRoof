@@ -1,7 +1,7 @@
 ﻿@model PhysioWeb.Models.PropertyMaster
 
 @{
-	ViewData["Title"] = "Properies";
+	ViewData["Title"] = "Properties";
 }
 
 <style>
@@ -9,175 +9,277 @@
 		--primary-green: #28a745;
 		--dark-green: #218838;
 		--light-green: #d4edda;
+		--light-gray: #f8f9fa;
+		--medium-gray: #e9ecef;
+		--dark-gray: #6c757d;
 	}
 
 	body {
-		background-color: #f8f9fa;
+		background-color: var(--light-gray);
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	}
 
 	.property-header {
 		background-color: white;
-		border-bottom: 1px solid #e9ecef;
+		border-bottom: 1px solid var(--medium-gray);
+		box-shadow: 0 2px 15px rgba(0,0,0,0.05);
 	}
 
 	.gallery-main {
-		height: 400px;
+		height: 350px;
 		background-color: white;
-		border-radius: 8px;
+		border-radius: 0.5rem;
 		overflow: hidden;
+		box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 	}
 
-	.gallery-thumb {
-		width: 80px;
-		height: 60px;
-		object-fit: cover;
-		border-radius: 4px;
-		cursor: pointer;
-		border: 2px solid transparent;
-		transition: all 0.3s;
-	}
-
-		.gallery-thumb:hover, .gallery-thumb.active {
-			border-color: var(--primary-green);
+	@@media (min-width: 768px) {
+		.gallery-main {
+			height: 450px;
 		}
-
-	.video-thumb {
-		width: 80px;
-		height: 60px;
-		background-color: #e9ecef;
-		border-radius: 4px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
 	}
 
-	.detail-card {
-		background-color: white;
-		border-radius: 8px;
-		border: none;
-		box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-	}
-
-	.price-badge {
-		background-color: var(--light-green);
-		color: var(--dark-green);
-		font-size: 1.1rem;
-	}
-
-	.amenity-badge {
-		background-color: var(--light-green);
-		color: var(--dark-green);
-	}
-
-	.btn-green {
-		background-color: var(--primary-green);
-		color: white;
-	}
-
-		.btn-green:hover {
-			background-color: var(--dark-green);
-			color: white;
-		}
-
-	.btn-outline-green {
-		border-color: var(--primary-green);
-		color: var(--primary-green);
-	}
-
-		.btn-outline-green:hover {
-			background-color: var(--primary-green);
-			color: white;
-		}
-
-	.section-divider {
-		border-top: 1px solid #e9ecef;
-		margin: 2rem 0;
-	}
-	/* Base container for all thumbnails */
 	.thumb-container {
 		position: relative;
-		width: 120px; /* Fixed width */
-		height: 80px; /* Fixed height */
+		width: 80px;
+		height: 60px;
 		overflow: hidden;
-		border-radius: 4px;
+		border-radius: 0.4rem;
 		cursor: pointer;
-		flex-shrink: 0; /* Prevent shrinking */
+		flex-shrink: 0;
 	}
 
-	/* Image thumbnails */
+	@@media (min-width: 576px) {
+		.thumb-container {
+			width: 100px;
+			height: 75px;
+		}
+	}
+
 	.gallery-thumb {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		transition: transform 0.2s;
 	}
 
-		.gallery-thumb:hover {
-			transform: scale(1.05);
-		}
-
-	/* Video thumbnails */
 	.video-thumb {
 		background-color: #000;
+		position: relative;
 	}
 
 		.video-thumb .thumbnail-preview {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
-			opacity: 0.7;
-			transition: opacity 0.2s;
+			opacity: 0.8;
 		}
 
-		.video-thumb:hover .thumbnail-preview {
-			opacity: 1;
-		}
-
-		/* Play icon for video thumbs */
 		.video-thumb .bi-play-circle-fill {
 			position: absolute;
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
-			font-size: 2rem;
+			font-size: 1.5rem;
 			color: rgba(255, 255, 255, 0.9);
-			text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-			transition: all 0.2s;
 		}
 
-		.video-thumb:hover .bi-play-circle-fill {
-			color: #fff;
-			font-size: 2.2rem;
-		}
-
-	/* Active state */
-	.gallery-thumb.active {
-		border: 3px solid #0d6efd;
+	.active-thumb {
+		border: 3px solid var(--primary-green);
 		box-sizing: border-box;
+	}
+
+	.detail-card {
+		background-color: white;
+		border-radius: 0.5rem;
+		border: none;
+		box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+		margin-bottom: 1.5rem;
+	}
+
+	.price-badge {
+		background-color: var(--light-green);
+		color: var(--dark-green);
+		font-size: 1.1rem;
+		font-weight: 600;
+		padding: 0.5rem 1rem;
+		border-radius: 50px;
+	}
+
+	.amenity-badge {
+		background-color: var(--light-green);
+		color: var(--dark-green);
+		padding: 0.5rem 1rem;
+		border-radius: 50px;
+		font-size: 0.9rem;
+		margin-bottom: 0.5rem;
+		display: inline-block;
+	}
+
+	.btn-green {
+		background-color: var(--primary-green);
+		color: white;
+		font-weight: 500;
+		border-radius: 50px;
+	}
+
+	.btn-outline-green {
+		border-color: var(--primary-green);
+		color: var(--primary-green);
+		font-weight: 500;
+		border-radius: 50px;
+	}
+
+	.section-title {
+		font-weight: 600;
+		color: var(--dark-green);
+		position: relative;
+		padding-bottom: 0.5rem;
+		margin-bottom: 1.5rem;
+	}
+
+		.section-title:after {
+			content: '';
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 50px;
+			height: 3px;
+			background-color: var(--primary-green);
+			border-radius: 3px;
+		}
+
+	.thumbnail-scroll {
+		display: flex;
+		gap: 0.8rem;
+		overflow-x: auto;
+		padding-bottom: 1rem;
+		scrollbar-width: thin;
+		scrollbar-color: var(--primary-green) var(--medium-gray);
+	}
+
+		.thumbnail-scroll::-webkit-scrollbar {
+			height: 6px;
+		}
+
+		.thumbnail-scroll::-webkit-scrollbar-track {
+			background: var(--medium-gray);
+			border-radius: 10px;
+		}
+
+		.thumbnail-scroll::-webkit-scrollbar-thumb {
+			background-color: var(--primary-green);
+			border-radius: 10px;
+		}
+
+	.contact-form .form-control {
+		border-radius: 0.5rem;
+		padding: 0.8rem 1rem;
+	}
+
+	.social-share-btn {
+		width: 45px;
+		height: 45px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+	}
+
+	.property-highlight {
+		background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(33, 136, 56, 0.1) 100%);
+		border-left: 4px solid var(--primary-green);
+		padding: 1.5rem;
+		border-radius: 0 0.5rem 0.5rem 0;
+		margin: 1.5rem 0;
+	}
+
+	.feature-icon {
+		width: 50px;
+		height: 50px;
+		background-color: var(--light-green);
+		border-radius: 0.75rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--primary-green);
+		font-size: 1.5rem;
+		margin-right: 1rem;
+	}
+
+	.detail-item {
+		padding: 0.8rem 0;
+		border-bottom: 1px solid var(--medium-gray);
+	}
+
+	.detail-label {
+		color: var(--dark-gray);
+		font-weight: 500;
+	}
+
+	.detail-value {
+		font-weight: 600;
+	}
+
+	/* Responsive adjustments */
+	@@media (max-width: 767.98px) {
+		.property-header {
+			padding: 1rem 0;
+		}
+
+		.price-badge {
+			font-size: 1rem;
+			padding: 0.4rem 0.8rem;
+		}
+
+		.gallery-main {
+			height: 300px;
+		}
+
+		.feature-icon {
+			width: 40px;
+			height: 40px;
+			font-size: 1.2rem;
+			margin-right: 0.75rem;
+		}
+	}
+
+	@@media (max-width: 575.98px) {
+		.gallery-main {
+			height: 250px;
+		}
+
+		.section-title {
+			font-size: 1.25rem;
+		}
 	}
 </style>
 
 <!-- Property Header -->
-<div class="property-header py-4">
+<div class="property-header py-3 py-md-4">
 	<div class="container">
-		<div class="d-flex justify-content-between align-items-center">
-			<div>
-				<h1 class="h3 mb-1">@Model.Title</h1>
-				<p class="text-muted mb-0"><i class="bi bi-geo-alt"></i> @Model.Address</p>
+		<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+			<div class="mb-3 mb-md-0">
+				<h1 class="h4 h3-md mb-1 fw-bold">@Model.Title</h1>
+				<p class="text-muted mb-0">
+					<i class="bi bi-geo-alt-fill me-1"></i>
+					<span class="text-dark">@Model.Address</span>
+				</p>
 			</div>
-			<div>
-				<span class="badge price-badge py-2 px-3">₹@Model.BudgetMin - @Model.BudgetMax</span>
+			<div class="d-flex align-items-center gap-3">
+				<span class="badge price-badge">
+					₹@Model.BudgetMin - ₹@Model.BudgetMax
+				</span>
+				<button class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#shareModal">
+					<i class="bi bi-share-fill me-1 me-md-2"></i>
+					<span class="d-none d-md-inline">Share</span>
+				</button>
 			</div>
-			<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#shareModal">
-				<i class="bi bi-share"></i> Share
-			</button>
 		</div>
 	</div>
 </div>
 
 <!-- Main Content -->
-<div class="container my-4">
+<div class="container my-3 my-md-4">
 	<div class="row">
 		<!-- Gallery Column -->
 		<div class="col-lg-8">
@@ -187,260 +289,304 @@
 			</div>
 
 			<!-- Thumbnails -->
-			<div class="d-flex gap-2 mb-4 flex-wrap">
+			<div class="thumbnail-scroll mb-4">
 				@for (int i = 0; i < Model.Images.Count; i++)
 				{
-					string IsActive = i == 0 ? "active" : "";
-					<div class="thumb-container">
-						<img src="/secure-images/@Model.Images[i].Value"
-							 class="gallery-thumb @IsActive"
-							 onclick="changeMainImage(this.src, this)">
+					string activeClass = i == 0 ? "active-thumb" : "";
+					<div class="thumb-container @activeClass" onclick="changeMainImage('/secure-images/@Model.Images[i].Value', this)">
+						<img src="/secure-images/@Model.Images[i].Value" class="gallery-thumb" alt="Thumbnail @(i+1)">
 					</div>
 				}
 				@for (int i = 0; i < Model.Videos.Count; i++)
 				{
 					<div class="thumb-container video-thumb"
 						 onclick="openVideoModal('@Url.Content("~/secure-images/" + Model.Videos[i].Value)')">
-						<i class="bi bi-play-circle-fill text-success"></i>
 						<video class="thumbnail-preview" muted loop>
 							<source src="@Url.Content("~/secure-images/" + Model.Videos[i].Value)" type="video/mp4">
 						</video>
+						<i class="bi bi-play-circle-fill"></i>
 					</div>
 				}
 			</div>
 
+			<!-- Property Highlights -->
+			<div class="property-highlight">
+				<div class="row">
+					<div class="col-6 col-md-4 mb-3 mb-md-0">
+						<div class="feature-item">
+							<div class="feature-icon">
+								<i class="bi bi-house-door"></i>
+							</div>
+							<div>
+								<div class="h5 mb-0">@Model.PropertyType</div>
+								<small class="text-muted">Property Type</small>
+							</div>
+						</div>
+					</div>
+					<div class="col-6 col-md-4 mb-3 mb-md-0">
+						<div class="feature-item">
+							<div class="feature-icon">
+								<i class="bi bi-arrows-angle-expand"></i>
+							</div>
+							<div>
+								<div class="h5 mb-0">@Model.BuiltUpArea sq.ft</div>
+								<small class="text-muted">Built Up Area</small>
+							</div>
+						</div>
+					</div>
+					<div class="col-6 col-md-4">
+						<div class="feature-item">
+							<div class="feature-icon">
+								<i class="bi bi-door-open"></i>
+							</div>
+							<div>
+								<div class="h5 mb-0">@Model.Bedrooms</div>
+								<small class="text-muted">Bedrooms</small>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<!-- Property Details -->
-			<div class="detail-card p-4 mb-4">
-				<h3 class="h5 mb-4">Property Details</h3>
+			<div class="detail-card p-3 p-md-4">
+				<h3 class="section-title">Property Details</h3>
 				<div class="row">
 					<div class="col-md-6">
-						<div class="d-flex justify-content-between py-2 border-bottom">
-							<span class="text-muted">Property Type:</span>
-							<span>@Model.PropertyType</span>
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Property Type:</span>
+								<span class="detail-value">@Model.PropertyType</span>
+							</div>
 						</div>
-						@* <div class="d-flex justify-content-between py-2 border-bottom">
-							<span class="text-muted">Year Built:</span>
-							<span>2018</span>
-						</div> *@
-						<div class="d-flex justify-content-between py-2 border-bottom">
-							<span class="text-muted">Square Feet:</span>
-							<span>@Model.BuiltUpArea</span>
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Built Up Area:</span>
+								<span class="detail-value">@Model.BuiltUpArea sq.ft</span>
+							</div>
 						</div>
 					</div>
 					<div class="col-md-6">
-						<div class="d-flex justify-content-between py-2 border-bottom">
-							<span class="text-muted">Bedrooms:</span>
-							<span>@Model.Bedrooms</span>
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Bedrooms:</span>
+								<span class="detail-value">@Model.Bedrooms</span>
+							</div>
 						</div>
-						<div class="d-flex justify-content-between py-2 border-bottom">
-							<span class="text-muted">Bathrooms:</span>
-							<span>@Model.Bathrooms</span>
+						<div class="detail-item">
+							<div class="d-flex justify-content-between">
+								<span class="detail-label">Bathrooms:</span>
+								<span class="detail-value">@Model.Bathrooms</span>
+							</div>
 						</div>
-						@* <div class="d-flex justify-content-between py-2 border-bottom">
-							<span class="text-muted">Garage:</span>
-							<span>2 cars</span>
-						</div> *@
 					</div>
 				</div>
 			</div>
 
 			<!-- Description -->
-			<div class="detail-card p-4 mb-4">
-				<h3 class="h5 mb-4">Description</h3>
-				<p>@Model.Description</p>
+			<div class="detail-card p-3 p-md-4">
+				<h3 class="section-title">Description</h3>
+				<div class="description-content" style="line-height: 1.8;">
+					@Html.Raw(Model.Description.Replace("\n", "<br>"))
+				</div>
 			</div>
 
 			<!-- Amenities -->
-			<div class="detail-card p-4 mb-4">
-				<h3 class="h5 mb-4">Amenities</h3>
+			<div class="detail-card p-3 p-md-4">
+				<h3 class="section-title">Amenities</h3>
 				<div class="d-flex flex-wrap gap-2">
 					@for (int j = 0; j < Model.AmenityList.Count; j++)
 					{
-						<span class="badge amenity-badge"><i class="bi bi-droplet me-1"></i> @Model.AmenityList[j].Text</span>
+						<span class="amenity-badge">
+							<i class="bi bi-check-circle me-1"></i> @Model.AmenityList[j].Text
+						</span>
 					}
-
 				</div>
 			</div>
 
-		@* 	<!-- Location -->
-			<div class="detail-card p-4">
-				<h3 class="h5 mb-4">Location</h3>
-				<div class="ratio ratio-16x9 mb-3">
-					<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.2152091328346!2d-73.987844924366!3d40.75798597138926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzI4LjciTiA3M8KwNTknMTQuMiJX!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+			<!-- Floor Plans -->
+			<div class="detail-card p-3 p-md-4">
+				<h3 class="section-title">Floor Plans</h3>
+				<div class="text-center">
+					<img src="https://via.placeholder.com/800x600?text=Floor+Plan" alt="Floor Plan" class="img-fluid rounded mb-3">
+					<div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+						<button class="btn btn-outline-green mb-2 mb-sm-0">
+							<i class="bi bi-download me-2"></i> Download PDF
+						</button>
+						<button class="btn btn-green">
+							<i class="bi bi-printer me-2"></i> Print Plan
+						</button>
+					</div>
 				</div>
-				<p class="mb-0"><i class="bi bi-info-circle text-success me-2"></i>@Model.Address</p>
-			</div> *@
+			</div>
 		</div>
 
 		<!-- Sidebar Column -->
 		<div class="col-lg-4">
 			<!-- Contact Form -->
-			<div class="detail-card p-4 mb-4">
-				<h3 class="h5 mb-4">Schedule a Viewing</h3>
-				<form>
+			<div class="detail-card p-3 p-md-4 sticky-lg-top" style="top:5rem;">
+				<h3 class="section-title">Schedule a Viewing</h3>
+				<form class="contact-form">
 					<div class="mb-3">
-						<input type="text" class="form-control" placeholder="Your Name">
+						<label class="form-label">Your Name</label>
+						<input type="text" class="form-control" placeholder="Enter your name" required>
 					</div>
 					<div class="mb-3">
-						<input type="email" class="form-control" placeholder="Your Email">
+						<label class="form-label">Email Address</label>
+						<input type="email" class="form-control" placeholder="Enter your email" required>
 					</div>
 					<div class="mb-3">
-						<input type="tel" class="form-control" placeholder="Phone Number">
+						<label class="form-label">Phone Number</label>
+						<input type="tel" class="form-control" placeholder="Enter your phone" required>
 					</div>
 					<div class="mb-3">
-						<textarea class="form-control" rows="3" placeholder="Message"></textarea>
+						<label class="form-label">Message</label>
+						<textarea class="form-control" rows="3" placeholder="Any specific requirements?"></textarea>
 					</div>
-					<button type="submit" class="btn btn-green w-100">Request Information</button>
+					<button type="submit" class="btn btn-green w-100 py-2">
+						<i class="bi bi-calendar-check me-2"></i> Request Viewing
+					</button>
 				</form>
-			</div>
-
-			<!-- Key Features -->
-			<div class="detail-card p-4 mb-4">
-				<h3 class="h5 mb-4">Key Features</h3>
-				<ul class="list-unstyled">
-					<li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Newly renovated kitchen</li>
-					<li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Energy efficient windows</li>
-					<li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Smart home technology</li>
-					<li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Hardwood floors throughout</li>
-					<li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Irrigation system</li>
-					<li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Solar panels</li>
-				</ul>
-			</div>
-
-			<!-- Virtual Tour -->
-			@* <div class="detail-card p-4">
-				<h3 class="h5 mb-4">Virtual Tour</h3>
-				<div class="ratio ratio-16x9 bg-light rounded mb-3 d-flex align-items-center justify-content-center" style="cursor: pointer;" onclick="openVirtualTour()">
-					<i class="bi bi-joystick fs-1 text-success"></i>
+				<div class="text-center mt-3">
+					<p class="text-muted small mb-1">Or call us directly at</p>
+					<a href="tel:+919876543210" class="text-success fw-bold">+91 98765 43210</a>
 				</div>
-				<button class="btn btn-outline-green w-100">
-					<i class="bi bi-box-arrow-up-right me-2"></i> Launch 3D Tour
-				</button>
-			</div> *@
+			</div>
 		</div>
 	</div>
 </div>
 
 <!-- Video Modal -->
 <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Property Video Tour</h5>
+	<div class="modal-dialog modal-dialog-centered modal-xl">
+		<div class="modal-content border-0">
+			<div class="modal-header border-0">
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body p-0">
 				<div class="ratio ratio-16x9">
-					<iframe id="MyVideoFrame" allowfullscreen
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-							frameborder="0"></iframe>
+					<video id="propertyVideo" controls class="w-100 h-100">
+						<source src="" type="video/mp4">
+						Your browser does not support the video tag.
+					</video>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
-<!-- Share Modal HTML -->
+<!-- Share Modal -->
 <div class="modal fade" id="shareModal" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
-			<div class="modal-header">
+			<div class="modal-header bg-success text-white">
 				<h5 class="modal-title">Share This Property</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<div class="mb-3">
-					<label class="form-label">Share this link:</label>
+				<div class="mb-4">
+					<label class="form-label fw-bold mb-3">Copy this link:</label>
 					<div class="input-group">
 						<input type="text" class="form-control" id="shareUrl" readonly>
 						<button class="btn btn-success" onclick="copyToClipboard()">
-							<i class="bi bi-clipboard"></i> Copy
+							<i class="bi bi-clipboard me-2"></i> Copy
 						</button>
 					</div>
 				</div>
 				<div class="text-center">
-					<p class="mb-3">Or share via:</p>
+					<p class="mb-3 fw-bold">Share via social media</p>
 					<div class="d-flex justify-content-center gap-3">
-						<a href="#" class="btn btn-outline-primary rounded-circle p-3" id="facebookShare">
+						<a href="#" class="social-share-btn bg-primary text-white" id="facebookShare">
 							<i class="bi bi-facebook"></i>
 						</a>
-						<a href="#" class="btn btn-outline-info rounded-circle p-3" id="twitterShare">
+						<a href="#" class="social-share-btn bg-info text-white" id="twitterShare">
 							<i class="bi bi-twitter"></i>
 						</a>
-						<a href="#" class="btn btn-outline-danger rounded-circle p-3" id="whatsappShare">
+						<a href="#" class="social-share-btn bg-success text-white" id="whatsappShare">
 							<i class="bi bi-whatsapp"></i>
 						</a>
-						<a href="#" class="btn btn-outline-secondary rounded-circle p-3" id="emailShare">
+						<a href="#" class="social-share-btn bg-danger text-white" id="emailShare">
 							<i class="bi bi-envelope"></i>
 						</a>
 					</div>
 				</div>
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			<div class="modal-footer border-0">
+				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
 			</div>
 		</div>
 	</div>
 </div>
+
 @section Scripts {
-
 	<script>
-			  // Change main image when thumbnail is clicked
-			  function changeMainImage(src, element) {
-				  document.getElementById('mainImage').src = src;
+		// Change main image when thumbnail is clicked
+		function changeMainImage(src, element) {
+			document.getElementById('mainImage').src = src;
 
-				  // Remove active class from all thumbnails
-				  document.querySelectorAll('.gallery-thumb').forEach(thumb => {
-					  thumb.classList.remove('active');
-				  });
-
-				  // Add active class to clicked thumbnail
-				  element.classList.add('active');
-			  }
-
-			  // Open video modal
-			  function openVideoModal(videoLink) {
-				  const modal = new bootstrap.Modal(document.getElementById('videoModal'));
-				  modal.show();
-				  $("#MyVideoFrame").prop("src",videoLink);
-			  }
-
-			  // // Open virtual tour (placeholder)
-			  // function openVirtualTour() {
-				 //  alert('Virtual tour would launch here');
-			  // }
-
-			   // Initialize modal with current URL
-		document.addEventListener('DOMContentLoaded', function() {
-		  const shareModal = document.getElementById('shareModal');
-		  if (shareModal) {
-			shareModal.addEventListener('show.bs.modal', function() {
-			  const currentUrl = window.location.href;
-			  document.getElementById('shareUrl').value = currentUrl;
-
-			  // Set social share links
-			  document.getElementById('facebookShare').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
-			  document.getElementById('twitterShare').href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}`;
-			  document.getElementById('whatsappShare').href = `https://wa.me/?text=${encodeURIComponent('Check this property: ' + currentUrl)}`;
-			  document.getElementById('emailShare').href = `mailto:?body=${encodeURIComponent('Check this property: ' + currentUrl)}`;
+			// Remove active class from all thumbnails
+			document.querySelectorAll('.thumb-container').forEach(thumb => {
+				thumb.classList.remove('active-thumb');
 			});
-		  }
+
+			// Add active class to clicked thumbnail
+			element.classList.add('active-thumb');
+		}
+
+		// Open video modal
+		function openVideoModal(videoSrc) {
+			const modal = new bootstrap.Modal(document.getElementById('videoModal'));
+			const videoElement = document.getElementById('propertyVideo');
+
+			// Set video source
+			videoElement.src = videoSrc;
+
+			// Show modal
+			modal.show();
+
+			// Play video when modal is shown
+			modal._element.addEventListener('shown.bs.modal', function () {
+				videoElement.play();
+			});
+
+			// Pause video when modal is hidden
+			modal._element.addEventListener('hidden.bs.modal', function () {
+				videoElement.pause();
+			});
+		}
+
+		// Initialize share modal with current URL
+		document.addEventListener('DOMContentLoaded', function() {
+			const shareModal = document.getElementById('shareModal');
+			if (shareModal) {
+				shareModal.addEventListener('show.bs.modal', function() {
+					const currentUrl = window.location.href;
+					document.getElementById('shareUrl').value = currentUrl;
+
+					// Set social share links
+					document.getElementById('facebookShare').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+					document.getElementById('twitterShare').href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=Check%20this%20property`;
+					document.getElementById('whatsappShare').href = `https://wa.me/?text=${encodeURIComponent('Check this property: ' + currentUrl)}`;
+					document.getElementById('emailShare').href = `mailto:?subject=Property%20Listing&body=${encodeURIComponent('Check this property: ' + currentUrl)}`;
+				});
+			}
 		});
 
 		// Copy to clipboard function
 		function copyToClipboard() {
-		  const shareUrl = document.getElementById('shareUrl');
-		  shareUrl.select();
-		  shareUrl.setSelectionRange(0, 99999);
-		  document.execCommand('copy');
+			const shareUrl = document.getElementById('shareUrl');
+			shareUrl.select();
+			shareUrl.setSelectionRange(0, 99999);
+			document.execCommand('copy');
 
-		  // Show feedback
-		  const copyBtn = document.querySelector('#shareModal .btn-success');
-		  const originalText = copyBtn.innerHTML;
-		  copyBtn.innerHTML = '<i class="bi bi-check"></i> Copied!';
-		  setTimeout(() => {
-			copyBtn.innerHTML = originalText;
-		  }, 2000);
+			// Show feedback
+			const copyBtn = document.querySelector('#shareModal .btn-success');
+			const originalText = copyBtn.innerHTML;
+			copyBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i> Copied!';
+
+			setTimeout(() => {
+				copyBtn.innerHTML = originalText;
+			}, 2000);
 		}
 	</script>
 }

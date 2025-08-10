@@ -119,7 +119,6 @@
 </head>
 <body>
 	<header class="sticky-top">
-
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark-green">
 			<div class="container-fluid">
 				<a class="navbar-brand d-flex align-items-center" href="/">
@@ -131,9 +130,12 @@
 				</button>
 				<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
 					<ul class="navbar-nav">
+						<li class="nav-item"><a class="nav-link text-dark" href="/">Home</a></li>
 						@if (User.IsInRole("SuperAdmin"))
 						{
 							<li class="nav-item"><a class="nav-link text-dark" href="/SuperAdmin/AdminDashboard">Admin Dashboard</a></li>
+
+
 						}
 						@if (User.IsInRole("Agency"))
 						{
@@ -141,8 +143,6 @@
 						}
 						@if (User.IsInRole("User"))
 						{
-
-							<li class="nav-item"><a class="nav-link text-dark" href="#">Home</a></li>
 							<li class="nav-item"><a class="nav-link text-dark" href="#">Buy</a></li>
 							<li class="nav-item"><a class="nav-link text-dark" href="#">Sell</a></li>
 							<li class="nav-item"><a class="nav-link text-dark" href="#">Rent</a></li>
@@ -154,7 +154,6 @@
 						}
 						else
 						{
-							<li class="nav-item"><a class="nav-link text-dark" href="/Home/Logout">Logout</a></li>
 
 							string role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value?.ToUpper() ?? "";
 							string icon = "bi-person"; // default icon
@@ -164,12 +163,28 @@
 							else if (role == "USER") { icon = "bi-person-circle"; }
 
 							<li class="nav-item">
+								<input type="text" value="@role" hidden id="UserRole" />
 								<span class="nav-link text-dark" style="font-weight:500;">
 									<i class="bi @icon me-1"></i> @User.Identity.Name
 								</span>
 							</li>
+							@if (User.IsInRole("SuperAdmin"))
+							{
+								<li>
+									<button class="btn btn-light position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+										<i class="bi bi-bell"></i>
+										<span class="mt-1 position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="NotificationCount">
+											0
+										</span>
+									</button>
+								</li>
+							}
+
+							<li class="nav-item"><a class="nav-link text-dark" href="/Home/Logout">Logout</a></li>
 
 						}
+
+
 					</ul>
 				</div>
 			</div>
@@ -191,14 +206,25 @@
 				</div>
 			</div>
 
+			<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+				<div class="offcanvas-header">
+					<h5 id="offcanvasRightLabel">Notifications</h5>
+					<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+				</div>
+				<div class="offcanvas-body" id="NotifiactionList">
+					<ul class="list-group list-group-flush" id="notifListUl">
+					</ul>
+				</div>
+			</div>
+
 			@RenderBody()
 		</main>
 	</div>
 	<!-- 🌟 Loader -->
 	<div id="pageLoader"
 		 style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.9); display: flex; justify-content: center;
-            align-items: center; z-index: 9999;">
+				background: rgba(255,255,255,0.9); display: flex; justify-content: center;
+				align-items: center; z-index: 9999;">
 		<img src="~/time hourglass.gif" alt="Loading..." style="width:120px; height:auto;">
 
 	</div>
@@ -224,38 +250,69 @@
 
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	<script>
-				  const notyf = new Notyf({
-				duration: 3000,
-				position: { x: 'right', y: 'top' }
-			});
+		 const notyf = new Notyf({
+			duration: 3000,
+			position: { x: 'right', y: 'top' }
+		});
 
 		document.addEventListener('DOMContentLoaded', function () {
-				AOS.init({
-					duration: 800, // animation duration in ms
-					once: true     // only animate once per scroll
+			AOS.init({
+				duration: 800, // animation duration in ms
+				once: true     // only animate once per scroll
+			});
+		});
+
+			 // ✅ Hide loader after page loads
+		window.addEventListener('load', function () {
+			document.getElementById("pageLoader").style.display = "none";
+		});
+
+		// ✅ Optional: Show loader manually during AJAX calls
+		function showLoader() {
+			document.getElementById("pageLoader").style.display = "flex";
+		}
+
+		function hideLoader() {
+			document.getElementById("pageLoader").style.display = "none";
+		}
+
+		// ✅ Example usage with jQuery AJAX
+		$(document).ajaxStart(function () {
+			showLoader();
+		}).ajaxStop(function () {
+			hideLoader();
+		});
+
+
+		$(document).ready(function(){
+			var UserRole = $("#UserRole").val();
+			if(UserRole == "SUPERADMIN"){
+			$.ajax({
+					url: '/SuperAdmin/GetNotifications',
+					type: 'GET',
+					data: {  },
+					success: function (data) {
+						console.log(data); // expects list of strings
+						if(data != null){
+							$("#NotificationCount").text(data.notiCount);
+							 var $ul = $("#notifListUl");
+							$ul.empty(); // Clear old items
+
+							$.each(data.notifications, function (index, item) {
+								$ul.append(`
+									<li class="list-group-item d-flex align-items-center">
+										<i class="bi bi-bell me-2 text-primary"></i> ${item}
+									</li>
+								`);
+							});
+						}
+					},
+					error: function (e) {
+						  console.error("Failed to load notifications.");
+					}
 				});
-			});
-
-				 // ✅ Hide loader after page loads
-			window.addEventListener('load', function () {
-				document.getElementById("pageLoader").style.display = "none";
-			});
-
-			// ✅ Optional: Show loader manually during AJAX calls
-			function showLoader() {
-				document.getElementById("pageLoader").style.display = "flex";
 			}
-
-			function hideLoader() {
-				document.getElementById("pageLoader").style.display = "none";
-			}
-
-			// ✅ Example usage with jQuery AJAX
-			$(document).ajaxStart(function () {
-				showLoader();
-			}).ajaxStop(function () {
-				hideLoader();
-			});
+		})
 	</script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>

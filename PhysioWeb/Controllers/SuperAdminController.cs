@@ -1,7 +1,10 @@
-﻿using System.Security.Claims;
+﻿using System.Data;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Win32;
+using PhysioWeb.Hubs;
 using PhysioWeb.Models;
 using PhysioWeb.Repository;
 
@@ -11,13 +14,13 @@ namespace PhysioWeb.Controllers
     public class SuperAdminController : Controller
     {
         private readonly ISuperAdminRepository _superAdminRepository;
-        public SuperAdminController(ISuperAdminRepository superAdminRepository)
+        private readonly IHubContext<NotificationHub> _hubContext;
+
+        public SuperAdminController(ISuperAdminRepository superAdminRepository, IHubContext<NotificationHub> hubContext)
         {
             _superAdminRepository = superAdminRepository;
-        }
-        public IActionResult Index()
-        {
-            return View();
+            _hubContext = hubContext;
+
         }
 
         #region Agency Details
@@ -32,7 +35,7 @@ namespace PhysioWeb.Controllers
             if (model == null)
                 return Json(new { success = false, message = "Invalid request" });
 
-            string basePath = Path.Combine(Directory.GetCurrentDirectory(), "SecureUploads",model.AgencyName);
+            string basePath = Path.Combine(Directory.GetCurrentDirectory(), "SecureUploads", model.AgencyName);
             if (!Directory.Exists(basePath))
                 Directory.CreateDirectory(basePath);
 
@@ -113,6 +116,23 @@ namespace PhysioWeb.Controllers
             model.Password = hashed;
             var result = await _superAdminRepository.SaveAgency(model);
 
+            // 2) Create persistent notification
+            var notification = new Notification
+            {
+                Message = $"New agency added: {model.AgencyName}",
+                Url = $"/SuperAdmin/AgencyDetails", // optional
+                ForRole = "SuperAdmin",
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false
+            };
+
+
+            var response = await _superAdminRepository.SaveNotification(notification);
+
+            // 2. Send notification to SuperAdmin group
+            await _hubContext.Clients.Group("SuperAdmin")
+                .SendAsync("ReceiveNotification", $"New Agency Added: {model.AgencyName}");
+
             // ✅ Save logic here...
             return Json(new { success = true, message = "Agency saved successfully" });
         }
@@ -167,10 +187,13 @@ namespace PhysioWeb.Controllers
             string userId = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
 
             MenuMaster menuMaster = await _superAdminRepository.GetMenuList(role, userId);
-           
+
             return View(menuMaster);
         }
-
+        public async Task<ActionResult> GetNotifications() {
+            Notification Notification = await _superAdminRepository.GetNotifications();
+            return Json(Notification);
+        }
         #endregion
     }
 }

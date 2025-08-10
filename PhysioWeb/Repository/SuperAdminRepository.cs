@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Data;
+using System.Reflection;
 using PhysioWeb.Data;
 using PhysioWeb.Models;
 
@@ -89,6 +90,36 @@ namespace PhysioWeb.Repository
 
         }
 
+        public async Task<Notification> GetNotifications()
+        {
+            try
+            {
+                string[] parametersName = { };
+                object[] Values = { };
+
+                string Sp = "FMR_GetNotifications";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parametersName, Values);
+                Notification result = new Notification();
+                while (data.Read())
+                {
+                    result.NotiCount = Convert.ToInt32(data.GetValue(0));
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        result.Notifications.Add(Convert.ToString(data.GetValue(0)));
+                    }
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
         public async Task<bool> SaveAgency(AgencyDetails AgencyDetails)
         {
             try
@@ -141,6 +172,24 @@ namespace PhysioWeb.Repository
             {
                 // Optional: log error here
                 throw;
+            }
+        }
+
+        public async Task<bool> SaveNotification(Notification notification)
+        {
+            try
+            {
+                string[] parametersName = { "Message", "Url", "ForRole", "IsRead" };
+                object[] Values = { notification.Message, notification.Url, notification.ForRole, false };
+
+                string Sp = "FMR_SaveNotification";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
         }
     }
