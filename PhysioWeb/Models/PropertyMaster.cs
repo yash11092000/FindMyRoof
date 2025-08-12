@@ -56,6 +56,7 @@ namespace PhysioWeb.Models
         public string Floor { get; set; }
 
         public string PropertyCategory { get; set; }
+        public string CityText { get; set; }
 
         public List<DropDownSource> CountryList { get; set; }
         public List<DropDownSource> StateList { get; set; }
@@ -64,6 +65,7 @@ namespace PhysioWeb.Models
         public List<DropDownSource> AreaList { get; set; }
 
         public decimal SecurityDeposit { get; set; }
+        public string InActiveText { get; set; }
 
         public List<DropDownSource> FurnishingTypeList { get; set; }
         public List<DropDownSource> PropertyTypeList { get; set; }
@@ -94,7 +96,7 @@ namespace PhysioWeb.Models
             Images = new List<DropDownSource>();
         }
 
-        public PropertyMaster(IDataReader Idr)
+        public PropertyMaster(IDataReader Idr , int flag)
         {
             CountryList = new List<DropDownSource>();
             StateList = new List<DropDownSource>();
@@ -109,9 +111,56 @@ namespace PhysioWeb.Models
             Amenitie = new List<DropDownSource>();
             Videos = new List<DropDownSource>();
             Images = new List<DropDownSource>();
-            populateObject(this, Idr);
+            if (flag == 1) {
+                populateObject2(this, Idr);
+            }
+            else if (flag == 2) {
+                populateObjectList(this, Idr);
+            }
+            else
+            {
+                populateObject(this, Idr);
+            }
+        }
+        private void populateObjectList(PropertyMaster obj, IDataReader rdr)
+        {
+            TotalCount = rdr["TotalCount"] != DBNull.Value ? Convert.ToInt32(rdr["TotalCount"]) : 0;
+            UniquId = Convert.ToInt32(rdr["UniqueId"]);
+            Title = rdr["PropertyName"].ToString();
+            PropertyType = rdr["PropertyType"].ToString();
+            TransactionType = rdr["RentalType"].ToString();
+            CityText  = rdr["CityName"].ToString();
+            ContactPersonName = rdr["ContactPersonName"].ToString();
+            InActiveText = rdr["IsActive"].ToString();
+            CreatedBy = rdr["CreatedBy"].ToString();
         }
 
+        private void populateObject2(PropertyMaster obj, IDataReader rdr) 
+        {
+            if (!rdr.IsDBNull(rdr.GetOrdinal("SubAreaName")))
+            {
+                obj.SubArea = rdr.GetString(rdr.GetOrdinal("SubAreaName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("CityID")))
+            {
+                obj.City = rdr.GetString(rdr.GetOrdinal("CityID"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("StateID")))
+            {
+                obj.State = rdr.GetString(rdr.GetOrdinal("StateID"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("CountryID")))
+            {
+                obj.Country = rdr.GetString(rdr.GetOrdinal("CountryID"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PinCode")))
+            {
+                obj.PinCode = rdr.GetString(rdr.GetOrdinal("PinCode"));
+            }
+
+        }
         private void populateObject(PropertyMaster obj, IDataReader rdr)
         {
             if (!rdr.IsDBNull(rdr.GetOrdinal("UniquId")))
