@@ -636,6 +636,29 @@
 		});
 		}
 
+		$(document).on("change", "#Area", function () {
+			AreaID = $("#Area").val();
+			$.ajax({
+			type: "POST",
+			url: "/Master/GetAreaMasterData",
+			data: { AreaID: AreaID },
+			success: function (data) {
+				console.log(data)
+				// if (data != "") {
+				// 	OnSuccessOfEdit(data);
+
+				// } else {
+
+				// }
+			},
+			error: function (xhr, status, error) {
+
+				//console.error("Error fetching data for Edit:", error);
+				alert("An error occurred while fetching data.");
+			}
+		});
+		});
+
 	</script>
 
 }

@@ -915,10 +915,29 @@ namespace PhysioWeb.Repository
             }
         }
 
+        public async Task<PropertyMaster> GetAreaMasterData(int AreaID, string UserID)
+        {
+            try
+            {
+                string[] parameterNames = { "AreaID", "UserID" };
+                object[] parameterValues = { AreaID, UserID };
 
+                string Sp = "FMR_GetAreaMasterData";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
 
+                while (data.Read())
+                {
+                    PropertyMaster PropertyMaster = new PropertyMaster(data, 1);
+                    return PropertyMaster;
+                }
 
-
-
+                return null;
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

@@ -395,8 +395,6 @@ namespace PhysioWeb.Controllers
 
         }
 
-
-
         #endregion
 
         #region Furnishing Type Master
@@ -700,8 +698,24 @@ namespace PhysioWeb.Controllers
             return Json(areas.Select(a => a.Text).ToList());
         }
 
+        //GetAreaMasterData
+        [HttpPost]
+        public async Task<ActionResult> GetAreaMasterData(int AreaID)
+        {
+            try
+            {
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
 
+                var data = await _masterRepository.GetAreaMasterData(AreaID, UserID);
 
+                return Json(data);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
         #endregion
     }
 }

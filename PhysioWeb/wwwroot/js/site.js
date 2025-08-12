@@ -5,8 +5,7 @@ function EditData(ID, Controller, Action) {
         url: "/" + Controller + "/" + Action,
         data: { UniqueID: ID },
         success: function (data) {
-            console.log(data);
-
+           
             if (data != "") {
                 OnSuccessOfEdit(data);
                 

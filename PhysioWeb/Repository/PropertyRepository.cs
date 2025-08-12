@@ -24,7 +24,7 @@ namespace PhysioWeb.Repository
                 PropertyMaster Property;
                 while (data.Read())
                 {
-                    Property = new PropertyMaster(data);
+                    Property = new PropertyMaster(data, 0);
                     if (data.NextResult())
                     {
                         while (data.Read())

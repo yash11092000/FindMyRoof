@@ -94,7 +94,7 @@ namespace PhysioWeb.Models
             Images = new List<DropDownSource>();
         }
 
-        public PropertyMaster(IDataReader Idr)
+        public PropertyMaster(IDataReader Idr , int flag)
         {
             CountryList = new List<DropDownSource>();
             StateList = new List<DropDownSource>();
@@ -109,9 +109,40 @@ namespace PhysioWeb.Models
             Amenitie = new List<DropDownSource>();
             Videos = new List<DropDownSource>();
             Images = new List<DropDownSource>();
-            populateObject(this, Idr);
+            if (flag == 1) {
+                populateObject2(this, Idr);
+            }
+            else
+            {
+                populateObject(this, Idr);
+            }
         }
+        private void populateObject2(PropertyMaster obj, IDataReader rdr) 
+        {
+            if (!rdr.IsDBNull(rdr.GetOrdinal("SubArea")))
+            {
+                obj.SubArea = rdr.GetString(rdr.GetOrdinal("SubArea"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("City")))
+            {
+                obj.City = rdr.GetString(rdr.GetOrdinal("City"));
+            }
 
+            if (!rdr.IsDBNull(rdr.GetOrdinal("State")))
+            {
+                obj.State = rdr.GetString(rdr.GetOrdinal("State"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Country")))
+            {
+                obj.Country = rdr.GetString(rdr.GetOrdinal("Country"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PinCode")))
+            {
+                obj.PinCode = rdr.GetString(rdr.GetOrdinal("PinCode"));
+            }
+
+        }
         private void populateObject(PropertyMaster obj, IDataReader rdr)
         {
             if (!rdr.IsDBNull(rdr.GetOrdinal("UniquId")))
