@@ -36,6 +36,6 @@ namespace PhysioWeb.Repository
         Task<bool> SavePropertyMedia(DataTable mediaTable, int propertyId);
         Task<PropertyMaster> PropertyMasterDropDown(string AgencyID);
         Task<List<DropDownSource>> GetAreaList(string searchTerm, string AgencyID);
-    
+        Task<HomeDashboard> SearchProperties(string location, string propertyType, string rentalType, string propertyCategory, string amenities, string minPrice, string maxPrice);
     }
 }

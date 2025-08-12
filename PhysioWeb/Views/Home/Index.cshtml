@@ -362,13 +362,13 @@
 						<div class="col-6">
 							<div class="input-group">
 								<span class="input-group-text">₹</span>
-								<input type="number" class="form-control" placeholder="Min">
+								<input type="number" id="MinPrice" class="form-control" placeholder="Min" min="0">
 							</div>
 						</div>
 						<div class="col-6">
 							<div class="input-group">
 								<span class="input-group-text">₹</span>
-								<input type="number" class="form-control" placeholder="Max">
+								<input type="number" id="MaxPrice" class="form-control" placeholder="Max" min="0">
 							</div>
 						</div>
 					</div>
@@ -376,7 +376,7 @@
 
 				<!-- Submit Button -->
 				<div class="col-md-3 mx-auto text-center mt-3">
-					<button type="submit" class="btn btn-success w-100">
+					<button type="button" class="btn btn-success w-100" onclick="SearchProperty()">
 						<i class="bi bi-search"></i> Search
 					</button>
 				</div>
@@ -506,7 +506,6 @@
 	<script>
 
 
-
 		new Choices('#propertyType', {
 		  removeItemButton: true,
 		  duplicateItemsAllowed: false
@@ -517,13 +516,14 @@
 		new Choices('#PropertyCategory', { removeItemButton: true ,duplicateItemsAllowed: false});
 		new Choices('#RentalType', { removeItemButton: true ,duplicateItemsAllowed: false});
 
-				 $("#location").autocomplete({
-			source: function (request, response) {
+		$("#location").autocomplete({
+				source: function (request, response) {
 				$.ajax({
 					url: '/Master/GetAreas',
 					type: 'GET',
 					data: { searchTerm: request.term },
 					success: function (data) {
+						console.log(data);
 						response(data); // expects list of strings
 					},
 					error: function () {
@@ -564,6 +564,30 @@
 			}
 		});
 
+		function SearchProperty(){
+			var location = $("#location").val();
+			var PropertyType = $("#propertyType").val().toString();
+			var RentalType = $("#RentalType").val().toString();
+			var PropertyCategory = $("#PropertyCategory").val().toString();
+			var Amenities = $("#Amenities").val().toString();
+			var MinPrice = $("#MinPrice").val();
+			var MaxPrice = $("#MaxPrice").val();
 
+			// ✅ Send to Controller
+			$.ajax({
+				url: '/Home/SearchProperty',
+				type: 'POST',
+				data: {location,PropertyType,RentalType,PropertyCategory,Amenities,MinPrice,MaxPrice},
+				success: function (res) {
+					console.log(res);
+				},
+				error: function () {
+					notyf.error("Error while saving agency");
+				}
+			});
+
+
+
+		}
 	</script>
 }

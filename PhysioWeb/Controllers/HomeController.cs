@@ -6,7 +6,6 @@ using Microsoft.Win32;
 using PhysioWeb.Models;
 using PhysioWeb.Repository;
 using BCrypt.Net;
-using Microsoft.Win32;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Reflection;
@@ -19,12 +18,14 @@ namespace PhysioWeb.Controllers
     {
 
         private readonly IUserRepository _userRepository;
+        private readonly IMasterRepository _masterRepository;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, IUserRepository userRepository)
+        public HomeController(ILogger<HomeController> logger, IUserRepository userRepository, IMasterRepository masterRepository)
         {
             _logger = logger;
             _userRepository = userRepository;
+            _masterRepository = _masterRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -147,6 +148,15 @@ namespace PhysioWeb.Controllers
                 return Json(result);
             }
             return View();
+        }
+        #endregion
+
+
+        #region SearchProperty
+        public async Task<ActionResult> SearchProperty(string location, string PropertyType, string RentalType, string PropertyCategory, string Amenities, string MinPrice, string MaxPrice)
+        {
+            var result = _masterRepository.SearchProperties(location, PropertyType, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice); 
+            return View(result);
         }
         #endregion
 

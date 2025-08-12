@@ -1,6 +1,7 @@
 ﻿
 using System.Collections;
 using System.Data;
+using System.Runtime.Intrinsics.Arm;
 
 namespace PhysioWeb.Models
 {
@@ -17,7 +18,6 @@ namespace PhysioWeb.Models
         {
             PropertyDetails = new List<PropertyDetails>();
             PropertyCategoryList = new List<DropDownSource>();
-         
             PropertyTypeList = new List<DropDownSource>();
             FurnishingTypeList = new List<DropDownSource>();
             RentalTypeList = new List<DropDownSource>();
@@ -51,10 +51,73 @@ namespace PhysioWeb.Models
 
         public int ImageCount { get; set; }
 
-        public PropertyDetails(IDataReader Idr)
+        public decimal MinPrice { get; set; }
+        public decimal MaxPrice { get; set; }
+
+        public string PropertyType { get; set; }
+        public string Area { get; set; }
+
+        public PropertyDetails(IDataReader Idr, int flag = 0)
         {
-            populateObject(this, Idr);
+            if (flag == 0)
+            {
+                populateObject(this, Idr);
+            }
+            else if (flag == 1)
+            {
+                populateObjectAfterSearch(this, Idr);
+            }
         }
+
+        private void populateObjectAfterSearch(PropertyDetails obj, IDataReader rdr)
+        {
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyId")))
+            {
+                obj.PropertyId = rdr.GetInt32(rdr.GetOrdinal("PropertyId"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("BedRooms")))
+            {
+                obj.BedRooms = rdr.GetInt32(rdr.GetOrdinal("BedRooms"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("BathRooms")))
+            {
+                obj.BathRooms = rdr.GetInt32(rdr.GetOrdinal("BathRooms"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("MinPrice")))
+            {
+                obj.MinPrice = rdr.GetDecimal(rdr.GetOrdinal("MinPrice"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("MaxPrice")))
+            {
+                obj.MaxPrice = rdr.GetDecimal(rdr.GetOrdinal("MaxPrice"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertySize")))
+            {
+                obj.Sqrtft = rdr.GetDecimal(rdr.GetOrdinal("PropertySize"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Address")))
+            {
+                obj.Address = rdr.GetString(rdr.GetOrdinal("Address"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("LandMark")))
+            {
+                obj.LandMark = rdr.GetString(rdr.GetOrdinal("LandMark"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyName")))
+            {
+                obj.PropertyName = rdr.GetString(rdr.GetOrdinal("PropertyName"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyType")))
+            {
+                obj.PropertyType = rdr.GetString(rdr.GetOrdinal("PropertyType"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Area")))
+            {
+                obj.Area = rdr.GetString(rdr.GetOrdinal("Area"));
+            }
+        }
+
         private void populateObject(PropertyDetails obj, IDataReader rdr)
         {
             if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyId")))
