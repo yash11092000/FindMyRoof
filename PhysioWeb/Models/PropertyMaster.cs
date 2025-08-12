@@ -56,6 +56,7 @@ namespace PhysioWeb.Models
         public string Floor { get; set; }
 
         public string PropertyCategory { get; set; }
+        public string CityText { get; set; }
 
         public List<DropDownSource> CountryList { get; set; }
         public List<DropDownSource> StateList { get; set; }
@@ -64,6 +65,7 @@ namespace PhysioWeb.Models
         public List<DropDownSource> AreaList { get; set; }
 
         public decimal SecurityDeposit { get; set; }
+        public string InActiveText { get; set; }
 
         public List<DropDownSource> FurnishingTypeList { get; set; }
         public List<DropDownSource> PropertyTypeList { get; set; }
@@ -112,29 +114,45 @@ namespace PhysioWeb.Models
             if (flag == 1) {
                 populateObject2(this, Idr);
             }
+            else if (flag == 2) {
+                populateObjectList(this, Idr);
+            }
             else
             {
                 populateObject(this, Idr);
             }
         }
+        private void populateObjectList(PropertyMaster obj, IDataReader rdr)
+        {
+            TotalCount = rdr["TotalCount"] != DBNull.Value ? Convert.ToInt32(rdr["TotalCount"]) : 0;
+            UniquId = Convert.ToInt32(rdr["UniqueId"]);
+            Title = rdr["PropertyName"].ToString();
+            PropertyType = rdr["PropertyType"].ToString();
+            TransactionType = rdr["RentalType"].ToString();
+            CityText  = rdr["CityName"].ToString();
+            ContactPersonName = rdr["ContactPersonName"].ToString();
+            InActiveText = rdr["IsActive"].ToString();
+            CreatedBy = rdr["CreatedBy"].ToString();
+        }
+
         private void populateObject2(PropertyMaster obj, IDataReader rdr) 
         {
-            if (!rdr.IsDBNull(rdr.GetOrdinal("SubArea")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("SubAreaName")))
             {
-                obj.SubArea = rdr.GetString(rdr.GetOrdinal("SubArea"));
+                obj.SubArea = rdr.GetString(rdr.GetOrdinal("SubAreaName"));
             }
-            if (!rdr.IsDBNull(rdr.GetOrdinal("City")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("CityID")))
             {
-                obj.City = rdr.GetString(rdr.GetOrdinal("City"));
+                obj.City = rdr.GetString(rdr.GetOrdinal("CityID"));
             }
 
-            if (!rdr.IsDBNull(rdr.GetOrdinal("State")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("StateID")))
             {
-                obj.State = rdr.GetString(rdr.GetOrdinal("State"));
+                obj.State = rdr.GetString(rdr.GetOrdinal("StateID"));
             }
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Country")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("CountryID")))
             {
-                obj.Country = rdr.GetString(rdr.GetOrdinal("Country"));
+                obj.Country = rdr.GetString(rdr.GetOrdinal("CountryID"));
             }
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("PinCode")))

@@ -37,5 +37,6 @@ namespace PhysioWeb.Repository
         Task<PropertyMaster> PropertyMasterDropDown(string AgencyID);
         Task<List<DropDownSource>> GetAreaList(string searchTerm, string AgencyID);
         Task<PropertyMaster> GetAreaMasterData(int AreaID, string UserID);
+        Task<DataTableResult> ListPropertyMaster(DataTablePara dataTablePara);
     }
 }

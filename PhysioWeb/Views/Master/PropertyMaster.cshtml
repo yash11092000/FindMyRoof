@@ -136,6 +136,10 @@
 		}
 
 </style>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css" />
+
+
 <div class="">
 	<ul class="nav nav-tabs mb-3 mt-1" id="agencyMainTabs" role="tablist">
 		<li class="nav-item" role="presentation">
@@ -145,7 +149,7 @@
 		</li>
 		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#listSection" type="button" role="tab">
-				📋 Agency List
+				📋 Property List
 			</button>
 		</li>
 	</ul>
@@ -341,7 +345,7 @@
 
 							<div class="mb-3">
 								<label class="form-label fw-bold">Landmark</label>
-								<input type="text" class="form-control" name="Landmark" id="LandMark" placeholder="Nearby landmark">
+								<input type="text" class="form-control" name="Landmark" id="LandMark" placeholder="Add Schools, metros, hospitals nearby landmark">
 							</div>
 
 							<div class="row">
@@ -430,11 +434,13 @@
 					<thead>
 						<tr>
 							<th>Property Name</th>
-							<th>Address</th>
-							<th>Country</th>
-							<th>State</th>
+							<th>Property Type</th>
+							<th>Transaction Type</th>
 							<th>City</th>
-							<th>Sqtft</th>
+							<th>Contact Person Name</th>
+							<th>IsActive</th>
+							<th>Created By </th>
+							<th><i class="bi bi-eye text-primary fs-5" title="View"></i></th>
 							<th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
 							<th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
 						</tr>
@@ -446,7 +452,98 @@
 </div>
 
 @section Scripts {
+	<script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
 	<script>
+
+			$(document).ready(function () {
+
+											// Clone header row for filters
+		$('#TableList thead tr').clone(true).appendTo('#TableList thead');
+
+		$('#TableList thead tr:eq(1) th').each(function (i) {
+			if ($(this).find('i').length === 0) { // ✅ only add input if no icon
+				var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
+				$(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+			} else {
+				$(this).html('');
+			}
+		});
+
+		var TableList = $("#TableList").DataTable({
+			orderCellsTop: true,
+			processing: true,
+			serverSide: true,
+			order: [[0, "asc"]],
+			ajax: {
+				url: '/Master/ListPropertyMaster', // ✅ Update to your actual action
+				type: 'POST',
+			},
+			columns: [
+				{ data: 'title' },                // Property Name
+				{ data: 'propertyType' },         // Property Type
+				{ data: 'transactionType' },      // Transaction Type
+				{ data: 'cityText' },              // City
+				{ data: 'contactPersonName' },    // Contact Person Name
+				{ data: 'inActiveText' },         // Is Active
+				{ data: 'createdBy' },            // Created By
+
+				// View Icon Column
+				{
+					data: null,
+					render: function (data, type, row) {
+						let para = `'${row.uniquId}', 'Master', 'ViewProperty'`;
+						return `<a href="javascript:void(0)" onclick="ViewData(${para})">
+									<i class="bi bi-eye text-primary fs-5" title="View"></i>
+								</a>`;
+					},
+					orderable: false,
+					searchable: false
+				},
+
+				// Edit Icon Column
+				{
+					data: null,
+					render: function (data, type, row) {
+						let para = `'${row.uniquId}', 'Master', 'EditProperty'`;
+						return `<a href="javascript:void(0)" onclick="EditData(${para})">
+									<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
+								</a>`;
+					},
+					orderable: false,
+					searchable: false
+				},
+
+				// Delete Icon Column
+				{
+					data: null,
+					render: function (data, type, row) {
+						let para = `'${row.uniquId}', 'Master', 'DeleteProperty'`;
+						return `<a href="javascript:void(0)" onclick="DeleteData(${para})">
+									<i class="bi bi-trash text-danger fs-5" title="Delete"></i>
+								</a>`;
+					},
+					orderable: false,
+					searchable: false
+				}
+			],
+			initComplete: function () {
+				var table = this.api();
+				$('#TableList thead tr:eq(1) th').each(function (i) {
+					$('input', this).on('keyup change', function () {
+						if (table.column(i).search() !== this.value) {
+							table
+								.column(i)
+								.search(this.value)
+								.draw();
+						}
+					});
+				});
+			}
+		});
+
+
+							});
+
 		new Choices('#Amenities', {
 			removeItemButton: true,
 			placeholder: true,
@@ -741,12 +838,16 @@
 			data: { AreaID: AreaID },
 			success: function (data) {
 				console.log(data)
-				// if (data != "") {
-				// 	OnSuccessOfEdit(data);
+				 if (data != "") {
+					//OnSuccessOfEdit(data);
+					$("#SubArea").val(data.subArea);
+					$("#PinCode").val(data.pinCode);
+					$("#Country").val(data.country);
+					$("#State").val(data.state);
+					$("#City").val(data.city);
+				 } else {
 
-				// } else {
-
-				// }
+				 }
 			},
 			error: function (xhr, status, error) {
 
