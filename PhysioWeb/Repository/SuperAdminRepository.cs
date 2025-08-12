@@ -15,6 +15,48 @@ namespace PhysioWeb.Repository
 
         }
 
+        public async Task<bool> DeleteAgencyDetails(AgencyDetails AgencyDetails)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { AgencyDetails.UniquId, AgencyDetails.UserID };
+
+                string Sp = "FMR_DeleteAgencyDetails";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<AgencyDetails> EditAgencyDetails(int uniqueID, string? userID)
+        {
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { uniqueID, userID };
+
+                string Sp = "FMR_EditPropertyType";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    AgencyDetails AgencyDetails = new AgencyDetails(data, 1);
+                    return AgencyDetails;
+                }
+                return null;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public async Task<DataTableResult> GetAllAgencies(DataTablePara dataTablePara)
         {
             try
@@ -131,7 +173,7 @@ namespace PhysioWeb.Repository
                 "LicenseIssueDate", "LicenseExpiryDate", "PAN", "GST", "IsActive",
                 "ReraCertificateFilePath", "ReraCertificateFileName",
                 "AgencyLicenseFilePath", "AgencyLicenseFileName",
-                "AddressProofFilePath", "AddressProofFileName","UserName","Password"
+                "AddressProofFilePath", "AddressProofFileName","UserName","Password","CreatedBy"
                 };
                 object[] Values = {
                 AgencyDetails.UniquId,
@@ -163,6 +205,7 @@ namespace PhysioWeb.Repository
                 AgencyDetails.AddressProofFileName,
                 AgencyDetails.UserName,
                 AgencyDetails.Password,
+                AgencyDetails.CreatedBy,
             };
                 string Sp = "FMR_SaveAgencyDetails";
                 int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);

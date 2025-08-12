@@ -246,7 +246,7 @@
 						</div>
 						<div class="form-check mb-3">
 							<input class="form-check-input" type="checkbox" id="IsAgencyRegistered">
-							<label class="form-check-label">Is Agency Registered?</label>
+							<label class="form-check-label" for="IsAgencyRegistered">Is Agency Registered?</label>
 						</div>
 						<div class="mb-3">
 							<label class="form-label fw-bold">Agency Logo</label>
@@ -388,15 +388,15 @@
 	<div class="tab-pane fade" id="listSection" role="tabpanel">
 		<div class="card shadow-sm p-3">
 			<h5>All Agencies</h5>
-			<table id="AgencyTable" class="table table-bordered table-striped w-100">
+			<table id="TableList" class="table table-bordered table-striped w-100">
 				<thead>
 					<tr>
 						<th>Agency Name</th>
 						<th>City</th>
 						<th>Status</th>
 						<th>Created By</th>
-						<th>Edit</th>
-						<th>Delete</th>
+						<th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
+						<th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
 					</tr>
 				</thead>
 			</table>
@@ -413,19 +413,18 @@
 		$(document).ready(function () {
 
 			// ✅ Clone header for search fields
-			$('#AgencyTable thead tr').clone(true).appendTo('#AgencyTable thead');
+			$('#TableList thead tr').clone(true).appendTo('#TableList thead');
 
-			$('#AgencyTable thead tr:eq(1) th').each(function (i) {
+			$('#TableList thead tr:eq(1) th').each(function (i) {
 				if ($(this).find('i').length === 0) {
-					var title = $('#AgencyTable thead tr:eq(0) th').eq(i).text().trim();
+					var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
 					$(this).html('<input class="form-control form-control-sm" type="text" placeholder="Search ' + title + '" />');
 				} else {
 					$(this).html('');
 				}
 			});
-
 			// ✅ Initialize DataTable
-			var agencyTable = $("#AgencyTable").DataTable({
+			var agencyTable = $("#TableList").DataTable({
 				orderCellsTop: true,
 				processing: true,
 				serverSide: true,
@@ -442,7 +441,7 @@
 					{
 							data: null,
 							render: function (data, type, row) {
-								let para = `'${row.uniquId}', 'Master', 'EditPropertyCategory'`;
+								let para = `'${row.uniquId}', 'Master', 'EditAgencyDetails'`;
 								return `<a href="javascript:void(0)" onclick="EditData(${para})">
 											<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
 										</a>`;
@@ -454,7 +453,7 @@
 								{
 							data: null,
 							render: function (data, type, row) {
-								 let para = `'${row.uniquId}', 'Master', 'DeletePropertyCategory'`;
+								 let para = `'${row.uniquId}', 'SuperAdmin', 'DeleteAgencyDetails'`;
 								return `<a href="javascript:void(0)" onclick="DeleteData(${para})">
 											<i class="bi bi-trash text-danger fs-5" title="Delete"></i>
 										</a>`;
@@ -464,7 +463,7 @@
 				],
 				initComplete: function () {
 					var table = this.api();
-					$('#AgencyTable thead tr:eq(1) th').each(function (i) {
+					$('#TableList thead tr:eq(1) th').each(function (i) {
 						$('input', this).on('keyup change', function () {
 							if (table.column(i).search() !== this.value) {
 								table.column(i).search(this.value).draw();
@@ -477,7 +476,7 @@
 		});
 
 
-			   flatpickr("#LicenseIssueDate", {
+		flatpickr("#LicenseIssueDate", {
 		  dateFormat: "d/m/Y",  // Matches SQL datetime format
 		  allowInput: true
 		});
@@ -670,6 +669,8 @@
 
 			return true;
 		}
-
+		function OnSuccessOfDelete(){
+					notyf.success("Agency Deleted");
+				}
 	</script>
 }

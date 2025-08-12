@@ -14,12 +14,14 @@ namespace PhysioWeb.Controllers
     public class SuperAdminController : Controller
     {
         private readonly ISuperAdminRepository _superAdminRepository;
+        private readonly FileUploadService _fileUploadService;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-        public SuperAdminController(ISuperAdminRepository superAdminRepository, IHubContext<NotificationHub> hubContext)
+        public SuperAdminController(ISuperAdminRepository superAdminRepository, IHubContext<NotificationHub> hubContext, FileUploadService fileUploadService)
         {
             _superAdminRepository = superAdminRepository;
             _hubContext = hubContext;
+            _fileUploadService = fileUploadService;
 
         }
 
@@ -31,110 +33,62 @@ namespace PhysioWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveAgency(AgencyDetails model)
         {
-            // model.AgencyLogo, model.ReraCertificate, etc. will be filled automatically
             if (model == null)
                 return Json(new { success = false, message = "Invalid request" });
-
-            string basePath = Path.Combine(Directory.GetCurrentDirectory(), "SecureUploads", model.AgencyName);
-            if (!Directory.Exists(basePath))
-                Directory.CreateDirectory(basePath);
-
-
-            //save Agency Logo
-            if (model.AgencyLogo != null)
+            try
             {
-                string logoDir = Path.Combine(basePath, "AgencyLogo");
-                if (!Directory.Exists(logoDir)) Directory.CreateDirectory(logoDir);
-
-                string fileName = Guid.NewGuid() + Path.GetExtension(model.AgencyLogo.FileName);
-                string filePath = Path.Combine(logoDir, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                if (model.AgencyLogo != null)
                 {
-                    await model.AgencyLogo.CopyToAsync(stream);
+                    model.AgencyLogoFilePath = await _fileUploadService.UploadFile(
+                        model.AgencyLogo,
+                        model.AgencyName,
+                        "AgencyLogo");
                 }
-
-                // Save filePath to DB (not the file itself)
-                model.AgencyLogoFileName = fileName;
-                model.AgencyLogoFilePath = filePath;
-            }
-
-            // ✅ Save RERA Certificate
-            if (model.ReraCertificate != null)
-            {
-                string reraDir = Path.Combine(basePath, "ReraCertificates");
-                if (!Directory.Exists(reraDir)) Directory.CreateDirectory(reraDir);
-
-                string fileName = Guid.NewGuid() + Path.GetExtension(model.ReraCertificate.FileName);
-                string filePath = Path.Combine(reraDir, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                if (model.ReraCertificate != null)
                 {
-                    await model.ReraCertificate.CopyToAsync(stream);
+                    model.ReraCertificateFilePath = await _fileUploadService.UploadFile(
+                        model.ReraCertificate,
+                        model.AgencyName,
+                        "ReraCertificates");
                 }
-
-                model.ReraCertificateFileName = fileName;
-                model.ReraCertificateFilePath = filePath;
-            }
-
-            // ✅ Save  Agency License
-            if (model.AgencyLicense != null)
-            {
-                string reraDir = Path.Combine(basePath, "AgencyLicense");
-                if (!Directory.Exists(reraDir)) Directory.CreateDirectory(reraDir);
-
-                string fileName = Guid.NewGuid() + Path.GetExtension(model.AgencyLicense.FileName);
-                string filePath = Path.Combine(reraDir, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                if (model.AgencyLicense != null)
                 {
-                    await model.AgencyLicense.CopyToAsync(stream);
+                    model.AgencyLicenseFilePath = await _fileUploadService.UploadFile(
+                        model.AgencyLicense,
+                        model.AgencyName,
+                        "AgencyLicense");
                 }
-
-                model.AgencyLicenseFileName = fileName;
-                model.AgencyLicenseFilePath = filePath;
-            }
-
-            // ✅ Save Address Proof
-            if (model.AddressProof != null)
-            {
-                string proofDir = Path.Combine(basePath, "AddressProofs");
-                if (!Directory.Exists(proofDir)) Directory.CreateDirectory(proofDir);
-
-                string fileName = Guid.NewGuid() + Path.GetExtension(model.AddressProof.FileName);
-                string filePath = Path.Combine(proofDir, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                if (model.AddressProof != null)
                 {
-                    await model.AddressProof.CopyToAsync(stream);
+                    model.AddressProofFilePath = await _fileUploadService.UploadFile(
+                        model.AddressProof,
+                        model.AgencyName,
+                        "AddressProofs");
                 }
+                string hashed = BCrypt.Net.BCrypt.HashPassword(model.Password);
+                model.Password = hashed;
+                model.CreatedBy = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var result = await _superAdminRepository.SaveAgency(model);
 
-                model.AddressProofFileName = fileName;
-                model.AddressProofFilePath = filePath;
+                var notification = new Notification
+                {
+                    Message = $"New agency added: {model.AgencyName}",
+                    Url = $"/SuperAdmin/AgencyDetails",
+                    ForRole = "SuperAdmin",
+                    CreatedAt = DateTime.UtcNow,
+                    IsRead = false
+                };
+                var response = await _superAdminRepository.SaveNotification(notification);
+                await _hubContext.Clients.Group("SuperAdmin")
+                    .SendAsync("ReceiveNotification", $"New Agency Added: {model.AgencyName}");
+
+                return Json(new { success = true, message = "Agency saved successfully" });
             }
-            string hashed = BCrypt.Net.BCrypt.HashPassword(model.Password);
-            model.Password = hashed;
-            var result = await _superAdminRepository.SaveAgency(model);
-
-            // 2) Create persistent notification
-            var notification = new Notification
+            catch (Exception e)
             {
-                Message = $"New agency added: {model.AgencyName}",
-                Url = $"/SuperAdmin/AgencyDetails", // optional
-                ForRole = "SuperAdmin",
-                CreatedAt = DateTime.UtcNow,
-                IsRead = false
-            };
 
-
-            var response = await _superAdminRepository.SaveNotification(notification);
-
-            // 2. Send notification to SuperAdmin group
-            await _hubContext.Clients.Group("SuperAdmin")
-                .SendAsync("ReceiveNotification", $"New Agency Added: {model.AgencyName}");
-
-            // ✅ Save logic here...
-            return Json(new { success = true, message = "Agency saved successfully" });
+            }
+            return Json(new { success = true, message = "Agency Save Unsuccessfull" });
         }
 
         [HttpPost]
@@ -148,11 +102,9 @@ namespace PhysioWeb.Controllers
                 iDisplayStart = Convert.ToInt32(form["start"]),
                 iDisplayLength = Convert.ToInt32(form["length"]),
                 iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
-                sSortDir_0 = form["order[0][dir"],
+                sSortDir_0 = form["order[0][dir]"],
                 sSearch = form["search[value]"]
             };
-
-            // ✅ Map column filters dynamically (for up to 30 columns)
             for (int i = 0; i < 30; i++)
             {
                 string key = $"columns[{i}][search][value]";
@@ -163,11 +115,7 @@ namespace PhysioWeb.Controllers
                         ?.SetValue(dataTablePara, Request.Form[key].ToString());
                 }
             }
-
-            // ✅ Get data from Repository
             var result = await _superAdminRepository.GetAllAgencies(dataTablePara);
-
-            // ✅ Return JSON response in DataTable format
             return Json(new
             {
                 draw = form["draw"],
@@ -175,6 +123,35 @@ namespace PhysioWeb.Controllers
                 recordsFiltered = result.iTotalDisplayRecords,
                 data = result.aaData
             });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteAgencyDetails(int UniqueID)
+        {
+            var AgencyDetails = new AgencyDetails
+            {
+                UniquId = UniqueID
+            };
+            AgencyDetails.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            var result = await _superAdminRepository.DeleteAgencyDetails(AgencyDetails);
+            return Json(new { success = result });
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> EditAgencyDetails(int UniqueID)
+        {
+            try
+            {
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _superAdminRepository.EditAgencyDetails(UniqueID, UserID);
+                return Json(data);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         #endregion
@@ -190,7 +167,8 @@ namespace PhysioWeb.Controllers
 
             return View(menuMaster);
         }
-        public async Task<ActionResult> GetNotifications() {
+        public async Task<ActionResult> GetNotifications()
+        {
             Notification Notification = await _superAdminRepository.GetNotifications();
             return Json(Notification);
         }
