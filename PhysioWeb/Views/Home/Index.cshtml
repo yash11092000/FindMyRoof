@@ -4,6 +4,11 @@
 @{
 	ViewData["Title"] = "Home Page";
 }
+<!-- Splide CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@splidejs/splide@4.1.4/dist/css/splide.min.css">
+
+<!-- Font Awesome for icons (if not already included) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 @* <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> *@
 <style>
 	body {
@@ -141,133 +146,167 @@
 		transition: all 0.2s;
 	}
 
-		.favorite-btn:hover, .favorite-btn.active {
-			color: var(--secondary);
-			background: white;
+	/* Modern Card Styling */
+	.card {
+		border-radius: 12px !important;
+		transition: all 0.3s ease;
+		overflow: hidden;
+	}
+
+	.card-img-container {
+		height: 220px;
+		position: relative;
+	}
+
+	.card-img-top {
+		object-fit: cover;
+		transition: transform 0.5s ease;
+	}
+
+	.card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+	}
+
+		.card:hover .card-img-top {
+			transform: scale(1.05);
 		}
 
-	.photo-count {
-		position: absolute;
-		bottom: 1rem;
-		right: 1rem;
-		background: rgba(0, 0, 0, 0.6);
-		color: white;
-		padding: 0.25rem 0.75rem;
-		border-radius: 20px;
-		font-size: 0.75rem;
+	.shadow-hover {
+		box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 	}
 
-	.price {
-		font-size: 1.5rem;
-		color: var(--primary);
-		font-weight: 700;
+	/* Splide Customizations */
+	.splide {
+		padding: 0 2rem;
 	}
 
-	.address {
-		color: var(--dark);
-		line-height: 1.4;
+	.splide__arrows {
+		z-index: 1;
 	}
 
-	.highlights {
-		color: #666;
-		font-size: 0.9rem;
-	}
-
-	.detail-item {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		font-size: 0.9rem;
-	}
-
-		.detail-item i {
-			color: var(--primary);
-			font-size: 1.1rem;
-		}
-
-	.listed-date {
-		font-size: 0.75rem;
-		color: #999;
-	}
-
-	/* Custom carousel controls */
-	.carousel-control-prev, .carousel-control-next {
-		width: 5%;
-		background: rgba(0,0,0,0.2);
-		border-radius: 50%;
-		height: 50px;
-		top: 50%;
-		transform: translateY(-50%);
+	.splide__arrow {
+		width: 40px;
+		height: 40px;
 		opacity: 1;
-		margin: 0 15px;
+		background: white;
+		border: none;
+		transition: all 0.3s ease;
 	}
 
-		.carousel-control-prev:hover, .carousel-control-next:hover {
-			background: rgba(0,0,0,0.4);
+		.splide__arrow:hover {
+			background: #f8f9fa !important;
+			/* transform: scale(1.1); */
+			border: 1px solid lightblue;
 		}
 
-	.top-controls .btn {
-		width: 36px;
-		height: 36px;
-		padding: 0;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
+		.splide__arrow svg {
+			fill: #333;
+		}
+
+	.splide__arrow--prev {
+		left: auto;
+		right: 60px;
 	}
+
+	.splide__arrow--next {
+		right: 0;
+	}
+
+	/* Badge styling */
+	.badge {
+		font-size: 0.75rem;
+		padding: 0.35em 0.65em;
+		font-weight: 500;
+	}
+
 	/* Responsive adjustments */
 	@@media (max-width: 768px) {
-		.property-card {
-			margin: 0 5px;
+		.splide {
+			padding: 0 1rem;
 		}
 
-		.carousel-control-prev, .carousel-control-next {
-			display: none;
+		.card-img-container {
+			height: 180px;
+		}
+
+		.splide__arrow {
+			width: 36px;
+			height: 36px;
 		}
 	}
 
-	select[multiple] {
-		min-height: 120px;
+	@@media (max-width: 576px) {
+		.splide {
+			padding: 0 0.5rem;
+		}
+
+		.card-img-container {
+			height: 160px;
+		}
 	}
 
-	/* Ensure horizontal scrolling on all screens */
-	.carousel-inner {
-		overflow-x: auto;
-		white-space: nowrap;
+	/* Search Form Styling */
+	.search-form {
+		position: relative;
+		z-index: 1;
 	}
 
-	.carousel-item .row {
-		display: flex;
-		flex-wrap: nowrap;
-	}
+		.search-form .form-control,
+		.search-form .form-select,
+		.search-form .select2-selection {
+			border-radius: 8px !important;
+			padding: 12px 15px;
+			border: 1px solid #e0e0e0;
+			transition: all 0.3s ease;
+		}
 
-	.carousel-item .col-10 {
-		display: inline-block;
-		float: none;
-		white-space: normal;
-	}
+			.search-form .form-control:focus,
+			.search-form .form-select:focus,
+			.search-form .select2-selection:focus {
+				border-color: #28a745;
+				box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.15);
+			}
 
-	/* Hide scrollbar */
-	.carousel-inner::-webkit-scrollbar {
-		display: none;
-	}
+		.search-form .input-group-text {
+			border-radius: 8px 0 0 8px !important;
+			border-right: none;
+			background-color: #f8f9fa;
+		}
 
-	/* Card styling */
-	.card {
-		min-width: 250px;
-		transition: transform 0.3s;
-	}
+		.search-form .border-start-0 {
+			border-left: none !important;
+			border-radius: 0 8px 8px 0 !important;
+		}
 
-		.card:hover {
-			transform: translateY(-5px);
+		.search-form .select2-selection {
+			min-height: 46px;
+			display: flex !important;
+			align-items: center;
+		}
+
+		.search-form .select2-selection--multiple .select2-selection__choice {
+			background-color: #e8f5e9;
+			border-color: #c8e6c9;
+			color: #2e7d32;
+			border-radius: 4px;
+		}
+
+		.search-form .select2-selection--multiple .select2-selection__choice__remove {
+			color: #2e7d32;
+			margin-right: 4px;
 		}
 
 	/* Responsive adjustments */
-	@@media (min-width: 576px) {
-		.carousel-inner {
-			overflow-x: hidden;
+	@@media (max-width: 768px) {
+		.search-form .col-md-3, .search-form .col-md-6 {
+			margin-bottom: 1rem;
+		}
+
+		.search-form .btn {
+			padding: 10px 20px;
 		}
 	}
-
 </style>
 
 
@@ -383,67 +422,92 @@
 			</form>
 		</div>
 	</section>
-
 </div>
 
-<div class="container-fluid">
-	<div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
-		<!-- Custom controls -->
-		<div class="d-flex justify-content-end mb-3">
-			<button class="btn btn-sm btn-outline-dark me-2" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+
+<div class="container-fluid px-0">
+	<!-- Splide Carousel with custom arrow position -->
+	<div id="propertyCarousel" class="splide position-relative">
+		<!-- Custom arrows container -->
+		<div class="splide__arrows position-absolute top-0 end-0 mt-3 me-4">
+			<button class="splide__arrow splide__arrow--prev bg-white text-dark rounded-circle shadow-sm">
 				<i class="fas fa-chevron-left"></i>
 			</button>
-			<button class="btn btn-sm btn-outline-dark" data-bs-target="#propertyCarousel" data-bs-slide="next">
+			<button class="splide__arrow splide__arrow--next bg-white text-dark rounded-circle shadow-sm ms-2">
 				<i class="fas fa-chevron-right"></i>
 			</button>
 		</div>
 
-		<div class="carousel-inner">
-			@{
-				int itemsPerSlide = 4; // Number of cards to show per slide
-				int totalItems = Model.PropertyDetails.Count;
-				int totalSlides = (int)Math.Ceiling((double)totalItems / itemsPerSlide);
-				int propertyIndex = 0;
-			}
+		<div class="splide__track">
+			<div class="splide__list">
+				@foreach (var prop in Model.PropertyDetails)
+				{
+					<div class="splide__slide px-2">
+						<div class="card h-100 border-0 shadow-hover">
+							<!-- Badge for status -->
+							<div class="position-absolute top-0 start-0 mt-3 ms-3">
+								@* <span class="badge @(prop.Status == "Sale" ? "bg-success" : "bg-primary")">
+									@(prop.Status == "Sale" ? "For Sale" : "For Rent")
+								</span> *@
+							</div>
 
-			@for (int slide = 0; slide < totalSlides; slide++)
-			{
-				<div class="carousel-item @(slide == 0 ? "active" : "")">
-					<div class="row flex-nowrap g-3">
-						@for (int j = 0; j < itemsPerSlide && propertyIndex < totalItems; j++, propertyIndex++)
-						{
-							var prop = Model.PropertyDetails[propertyIndex];
-							<div class="col-10 col-sm-8 col-md-6 col-lg-4 col-xl-3">
-								<div class="card h-100 border-0 shadow-sm">
-									<img src="/secure-images/@prop.PropertyImg" class="card-img-top" alt="@prop.PropertyName">
-									<div class="card-body">
-										@* <span class="badge @(prop.Status == "Sale" ? "bg-success" : "bg-primary") mb-2">
-											@(prop.Status == "Sale" ? "For Sale" : "For Rent")
-										</span> *@
-										<h5 class="card-title">@prop.PropertyName</h5>
-										<p class="text-muted"><i class="fas fa-map-marker-alt"></i> @prop.Address</p>
-										<div class="d-flex justify-content-between text-muted mb-3">
-											<span><i class="fas fa-bed"></i> @prop.BedRooms Beds</span>
-											<span><i class="fas fa-bath"></i> @prop.BathRooms Baths</span>
-											<span><i class="fas fa-ruler-combined"></i> @prop.Sqrtft sqft</span>
-										</div>
-										<h4 class="text-primary">₹@prop.Price</h4>
+							<!-- Property Image -->
+							<div class="card-img-container rounded-top overflow-hidden">
+								<img src="/secure-images/@prop.PropertyImg"
+									 class="card-img-top h-100 w-100"
+									 alt="@prop.PropertyName"
+									 loading="lazy">
+							</div>
+
+							<!-- Card Body -->
+							<div class="card-body">
+								<div class="d-flex justify-content-between align-items-start mb-2">
+									<h5 class="card-title mb-0">@prop.PropertyName</h5>
+									<div class="favorite-icon">
+										<i class="far fa-heart text-muted"></i>
 									</div>
-									<div class="card-footer bg-white border-0">
-										<a href="/PropertyDetails/Property?PropertyId=@prop.PropertyId"
-										   class="btn btn-primary w-100">View Details</a>
+								</div>
+
+								<p class="text-muted mb-3">
+									<i class="fas fa-map-marker-alt text-primary me-1"></i>
+									@prop.Address
+								</p>
+
+								<div class="property-features d-flex justify-content-between text-muted mb-3">
+									<span class="d-flex align-items-center">
+										<i class="fas fa-bed me-1"></i> @prop.BedRooms
+									</span>
+									<span class="d-flex align-items-center">
+										<i class="fas fa-bath me-1"></i> @prop.BathRooms
+									</span>
+									<span class="d-flex align-items-center">
+										<i class="fas fa-ruler-combined me-1"></i> @prop.Sqrtft sqft
+									</span>
+								</div>
+
+								<div class="d-flex justify-content-between align-items-center">
+									<h4 class="text-primary mb-0">₹@prop.Price</h4>
+									<div class="rating">
+										<i class="fas fa-star text-warning"></i>
+										<span class="ms-1">4.8</span>
 									</div>
 								</div>
 							</div>
-						}
+
+							<!-- Card Footer -->
+							<div class="card-footer bg-transparent border-0 pt-0">
+								<a href="/PropertyDetails/Property?PropertyId=@prop.PropertyId"
+								   class="btn btn-primary w-100 rounded-pill">
+									View Details <i class="fas fa-arrow-right ms-2"></i>
+								</a>
+							</div>
+						</div>
 					</div>
-				</div>
-			}
+				}
+			</div>
 		</div>
 	</div>
-
 </div>
-
 
 <div class="container">
 	<section class="py-5 bg-light" id="why-us">
@@ -503,9 +567,31 @@
 
 
 @section Scripts {
+	<script src="https://cdn.jsdelivr.net/npm/@@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+
 	<script>
 
-
+			document.addEventListener('DOMContentLoaded', function() {
+			// Initialize Splide
+			new Splide('#propertyCarousel', {
+				type: 'slide',
+				perPage: 4, // Default number of visible slides
+				perMove: 1,
+				gap: '1rem', // Space between slides
+				arrows: true,
+				pagination: false,
+				drag: 'free',
+				snap: true,
+				progress: true,
+				breakpoints: {
+					1400: { perPage: 4 }, // XL screens
+					1200: { perPage: 3 }, // LG screens
+					992: { perPage: 2 },  // MD screens
+					768: { perPage: 2 },  // SM screens
+					576: { perPage: 1 }   // XS screens
+				}
+			}).mount();
+		});
 		new Choices('#propertyType', {
 		  removeItemButton: true,
 		  duplicateItemsAllowed: false
@@ -532,36 +618,6 @@
 				});
 			},
 			minLength: 1
-		});
-
-			 document.addEventListener('DOMContentLoaded', function() {
-			const carousel = new bootstrap.Carousel(document.getElementById('propertyCarousel'), {
-				interval: false,
-				wrap: false
-			});
-
-			// Enable touch swiping
-			const carouselInner = document.querySelector('.carousel-inner');
-			let touchStartX = 0;
-			let touchEndX = 0;
-
-			carouselInner.addEventListener('touchstart', e => {
-				touchStartX = e.changedTouches[0].screenX;
-			}, {passive: true});
-
-			carouselInner.addEventListener('touchend', e => {
-				touchEndX = e.changedTouches[0].screenX;
-				handleSwipe();
-			}, {passive: true});
-
-			function handleSwipe() {
-				if (touchEndX < touchStartX - 50) {
-					carousel.next();
-				}
-				if (touchEndX > touchStartX + 50) {
-					carousel.prev();
-				}
-			}
 		});
 
 		function SearchProperty(){
