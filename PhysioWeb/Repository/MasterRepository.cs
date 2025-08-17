@@ -772,12 +772,9 @@ namespace PhysioWeb.Repository
         }
 
         public async Task<int> SaveProperty(PropertyMaster propertyMaster)
-
         {
             try
             {
-
-
                 string[] parameterNames = { "UniquID", "PropertyName", "Description",
                     "PropertyType", "Bedrooms", "Bathrooms", "CarpetArea", "BuiltUpArea",
                     "Address", "City", "State", "PinCode", "MinPrice", "MaxPrice",
@@ -1005,6 +1002,48 @@ namespace PhysioWeb.Repository
                 }
                 return home;
 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<bool> DeleteProperty(PropertyMaster PropertyMaster)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { PropertyMaster.UniquId, PropertyMaster.UserID };
+
+                string Sp = "FMR_DeletePropertyMaster";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<PropertyMaster> EditProperty(int UniqueID, string UserID)
+        {
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { UniqueID, UserID };
+
+                string Sp = "FMR_EditPropertyMaster";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    PropertyMaster PropertyMaster = new PropertyMaster(data, 1);
+                    return PropertyMaster;
+                }
+                return null;
+
+                //bind 
             }
             catch (Exception e)
             {

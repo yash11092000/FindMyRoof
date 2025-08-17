@@ -436,6 +436,36 @@ namespace PhysioWeb.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<ActionResult> DeleteProperty(int UniqueID)
+        {
+            var PropertyMaster = new PropertyMaster
+            {
+                UniquId = UniqueID
+            };
+            PropertyMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            var result = await _masterRepository.DeleteProperty(PropertyMaster);
+            return Json(new { success = result });
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> EditProperty(int UniqueID)
+        {
+            try
+            {
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _masterRepository.EditProperty(UniqueID, UserID);
+
+                return Json(data);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
         #endregion
 
         #region Furnishing Type Master

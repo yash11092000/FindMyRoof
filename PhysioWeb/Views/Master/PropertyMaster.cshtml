@@ -172,16 +172,27 @@
 					<li class="step" data-target="#step4"><span>4</span> Review</li>
 				</ul>
 
-
 				<!-- Form -->
 				<form id="propertyForm" enctype="multipart/form-data">
 					<div class="tab-content">
 						<input type="text" value="0" id="UniquId" name="UniquId" hidden />
 						<!-- Step 1 -->
 						<div class="tab-pane fade show active" id="step1">
-							<div class="mb-3">
-								<label class="form-label fw-bold">Property Title</label>
-								<input type="text" class="form-control" name="Title" id="Title" placeholder="Enter property title">
+							<div class="row">
+								<div class="col-md-8 mb-3">
+									<div class="mb-3">
+										<label class="form-label fw-bold">Property Title</label>
+										<input type="text" class="form-control" name="Title" id="Title" placeholder="Enter property title">
+									</div>
+								</div>
+								<div class="col-md-2 d-flex" style="align-items:center">
+									<input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
+									<label class="form-check-label" for="IsActive">Is Active ?</label>
+								</div>
+								<div class="col-md-2 d-flex" style="align-items:center">
+									<input class="form-check-input" type="checkbox" id="IsNegotiable" name="IsNegotiable" value="true" checked />
+									<label class="form-check-label" for="IsNegotiable">Is Negotiable ?</label>
+								</div>
 							</div>
 
 							<div class="row">
@@ -231,10 +242,7 @@
 									</select>
 								</div>
 
-								<div class="col-md-3 d-flex" style="align-items:center">
-									<input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
-									<label class="form-check-label" for="IsActive">Is Active?</label>
-								</div>
+								
 							</div>
 
 							<div class="row">
@@ -273,7 +281,10 @@
 									<input type="text" class="form-control" id="ContactPersonAlternatePhone" name="ContactPersonAlternatePhone" placeholder="Enter Alternate No">
 								</div>
 							</div>
-
+							<div class="col-md-4 mb-3">
+								<label class="form-label fw-bold">Vastu</label>
+								<input type="number" class="form-control" id="Vastu" name="Vastu" placeholder="Enter Vastu Direction">
+							</div>
 							<div class="mb-3">
 								<label class="form-label fw-bold">Description</label>
 								<textarea class="form-control" name="Description" id="Description" rows="3" placeholder="Enter property description"></textarea>
@@ -754,6 +765,9 @@
 					if (res.success) {
 						notyf.success("Property details saved!");
 						InsertImagesVideos(res.propertyId);
+
+						$("#TableList").DataTable().ajax.reload(null, false);
+						ClearData();
 					} else {
 						notyf.error(res.message || "Failed to save property");
 					}
@@ -839,14 +853,17 @@
 			success: function (data) {
 				console.log(data)
 				 if (data != "") {
-					//OnSuccessOfEdit(data);
 					$("#SubArea").val(data.subArea);
 					$("#PinCode").val(data.pinCode);
 					$("#Country").val(data.country);
 					$("#State").val(data.state);
 					$("#City").val(data.city);
 				 } else {
-
+					 $("#SubArea").val("");
+					$("#PinCode").val("");
+					$("#Country").val("");
+					$("#State").val("");
+					$("#City").val("");
 				 }
 			},
 			error: function (xhr, status, error) {
@@ -856,6 +873,21 @@
 			}
 		});
 		});
+
+		 function OnSuccessOfDelete() {
+			notyf.success("Property Deleted");
+		}
+
+		  function ClearData() {
+				$("#UniquId").val("");
+				$("#IsActive").prop("checked", true);
+				$("#Amenities").val("");
+			}
+			 function OnSuccessOfEdit(data) {
+				$("#UniquId").val(data.uniquId);
+			   $("#IsActive").prop("checked", data.isActive);
+
+			}
 
 	</script>
 

@@ -155,7 +155,7 @@ namespace PhysioWeb.Controllers
         #region SearchProperty
         public async Task<ActionResult> SearchProperty(string location, string PropertyType, string RentalType, string PropertyCategory, string Amenities, string MinPrice, string MaxPrice)
         {
-            var result = _masterRepository.SearchProperties(location, PropertyType, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice); 
+            var result = _masterRepository.SearchProperties(location, PropertyType, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice);
             return View(result);
         }
         #endregion
@@ -164,31 +164,35 @@ namespace PhysioWeb.Controllers
         public IActionResult GetSecureImage(string filePath)
         {
             // Combine with secure-images directory
-            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "secure-images", filePath);
-
-            // Security check - prevent directory traversal
-            fullPath = Path.GetFullPath(fullPath);
-            if (!fullPath.StartsWith(Path.Combine(Directory.GetCurrentDirectory(), "secure-images")))
+            if (filePath != null)
             {
-                return BadRequest("Invalid file path");
+                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "secure-images", filePath);
+
+                // Security check - prevent directory traversal
+                fullPath = Path.GetFullPath(fullPath);
+                if (!fullPath.StartsWith(Path.Combine(Directory.GetCurrentDirectory(), "secure-images")))
+                {
+                    return BadRequest("Invalid file path");
+                }
+
+                if (!System.IO.File.Exists(fullPath))
+                    return NotFound();
+
+                // Get proper content type based on file extension
+                var contentType = GetContentType(fullPath);
+
+                // Special handling for video files
+                if (contentType.StartsWith("video/"))
+                {
+                    // Enable range requests for video streaming
+                    var fileStream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    return File(fileStream, contentType, enableRangeProcessing: true);
+                }
+
+                // Standard handling for images
+                return PhysicalFile(fullPath, contentType);
             }
-
-            if (!System.IO.File.Exists(fullPath))
-                return NotFound();
-
-            // Get proper content type based on file extension
-            var contentType = GetContentType(fullPath);
-
-            // Special handling for video files
-            if (contentType.StartsWith("video/"))
-            {
-                // Enable range requests for video streaming
-                var fileStream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                return File(fileStream, contentType, enableRangeProcessing: true);
-            }
-
-            // Standard handling for images
-            return PhysicalFile(fullPath, contentType);
+            return null;
         }
 
         private string GetContentType(string path)
