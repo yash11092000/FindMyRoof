@@ -181,36 +181,32 @@
 							<div class="row">
 								<div class="col-md-8 mb-3">
 									<div class="mb-3">
-										<label class="form-label fw-bold">Property Title</label>
+										<label class="form-label fw-bold">
+											Property Title<span style="color: red;">*</span>
+										</label>
 										<input type="text" class="form-control" name="Title" id="Title" placeholder="Enter property title">
 									</div>
 								</div>
 								<div class="col-md-2 d-flex" style="align-items:center">
 									<input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
-									<label class="form-check-label" for="IsActive">Is Active ?</label>
+									<label class="form-check-label fw-bold" for="IsActive"> Is Active ?</label>
 								</div>
-								<div class="col-md-2 d-flex" style="align-items:center">
-									<input class="form-check-input" type="checkbox" id="IsNegotiable" name="IsNegotiable" value="true" checked />
-									<label class="form-check-label" for="IsNegotiable">Is Negotiable ?</label>
-								</div>
+
 							</div>
 
 							<div class="row">
 								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Property Type</label>
+									<label class="form-label fw-bold">Property Type<span style="color: red;">*</span></label>
 									<select class="form-select" name="PropertyType" id="PropertyType">
 										<option value="">Select Property Type</option>
-
 										@foreach (var item in Model.PropertyTypeList)
 										{
 											<option value="@item.Value">@item.Text</option>
 										}
-
 									</select>
 								</div>
-
 								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Transaction Type</label>
+									<label class="form-label fw-bold">Transaction Type<span style="color: red;">*</span></label>
 									<select class="form-select" name="Availability" id="Availability">
 										<option value="">Select Transaction Type</option>
 										@foreach (var item in Model.RentalTypeList)
@@ -221,7 +217,7 @@
 								</div>
 
 								<div class="col-md-2 mb-3">
-									<label class="form-label fw-bold">Bedrooms</label>
+									<label class="form-label fw-bold">Bedrooms<span style="color: red;">*</span></label>
 									<select class="form-select" name="Bedrooms" id="Bedrooms">
 										<option value="1">Select Bedrooms</option>
 										@foreach (var item in Model.BedRoomList)
@@ -241,18 +237,16 @@
 										<option value="4">4+</option>
 									</select>
 								</div>
-
-								
 							</div>
 
 							<div class="row">
 								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Property Size (sq. ft.)</label>
+									<label class="form-label fw-bold">Property Size (sq. ft.)<span style="color: red;">*</span></label>
 									<input type="number" class="form-control" id="CarpetArea" name="CarpetArea" placeholder="Enter area">
 								</div>
 
 								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Furnishing Type</label>
+									<label class="form-label fw-bold">Furnishing Type<span style="color: red;">*</span></label>
 									<select class="form-select" name="Furnishing" id="FurnishingStatus">
 										<option value="">Select Furnishing Type</option>
 										@foreach (var item in Model.FurnishingTypeList)
@@ -261,18 +255,50 @@
 										}
 									</select>
 								</div>
-								<div class="col-md-4 mb-3">
+								<div class="col-md-2 mb-3">
 									<label class="form-label fw-bold">Floor</label>
 									<input type="text" class="form-control" id="Floor" name="Floor" placeholder="Enter Floor">
 								</div>
+								<div class="col-md-2 mb-3">
+									<label class="form-label fw-bold">Total Floor</label>
+									<input type="text" class="form-control" id="TotalFloorBuilding" name="TotalFloorBuilding" placeholder="Enter Total Floor">
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 mb-3">
+									<label class="form-label fw-bold">Vastu</label>
+									<input type="text" class="form-control" id="Vastu" name="Vastu" placeholder="Enter Vastu Direction">
+								</div>
 
 								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Contact Person Name</label>
+									<label class="form-label fw-bold">Preferred Buyer Type</label>
+									<select class="form-select" name="PreferedBuyerType" id="PreferedBuyerType">
+										<option value="">-- Select Buyer Type --</option>
+										<option value="1">Family</option>
+										<option value="2">Only Veg</option>
+										<option value="3">Bachelor</option>
+										<option value="4">Pet Allowed</option>
+									</select>
+								</div>
+								<div class="col-md-4 mb-3">
+									<label class="form-label fw-bold">Year Of Construction</label>
+									<input type="text" class="form-control" id="YearOfConstruction" name="YearOfConstruction" placeholder="Enter Year of construction">
+								</div>
+
+							</div>
+
+							<div class="mb-3">
+								<label class="form-label fw-bold">Description</label>
+								<textarea class="form-control" name="Description" id="Description" rows="3" placeholder="Enter property description"></textarea>
+							</div>
+							<div class="row">
+								<div class="col-md-4 mb-3">
+									<label class="form-label fw-bold">Contact Person Name<span style="color: red;">*</span></label>
 									<input type="text" class="form-control" id="ContactPersonName" name="ContactPersonName" placeholder="Enter Contact Person Name">
 								</div>
 
 								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Contact No</label>
+									<label class="form-label fw-bold">Contact No<span style="color: red;">*</span></label>
 									<input type="tel" class="form-control" id="ContactPersonNo" name="ContactPersonNo" placeholder="Enter Contact No">
 								</div>
 
@@ -280,16 +306,8 @@
 									<label class="form-label fw-bold">Alternate No</label>
 									<input type="text" class="form-control" id="ContactPersonAlternatePhone" name="ContactPersonAlternatePhone" placeholder="Enter Alternate No">
 								</div>
-							</div>
-							<div class="col-md-4 mb-3">
-								<label class="form-label fw-bold">Vastu</label>
-								<input type="number" class="form-control" id="Vastu" name="Vastu" placeholder="Enter Vastu Direction">
-							</div>
-							<div class="mb-3">
-								<label class="form-label fw-bold">Description</label>
-								<textarea class="form-control" name="Description" id="Description" rows="3" placeholder="Enter property description"></textarea>
-							</div>
 
+							</div>
 							<button type="button" class="btn btn-success next-step">Next</button>
 						</div>
 
@@ -298,7 +316,7 @@
 						<div class="tab-pane fade" id="step2">
 							<div class="row">
 								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Area</label>
+									<label class="form-label fw-bold">Area <span style="color: red;">*</span></label>
 									<select class="form-select" name="Area" id="Area">
 										<option value="">Select Area</option>
 										@foreach (var item in Model.AreaList)
@@ -312,7 +330,7 @@
 									<input type="text" class="form-control" name="SubArea" id="SubArea" placeholder="Enter SubArea">
 								</div>
 								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Pincode</label>
+									<label class="form-label fw-bold">Pincode<span style="color: red;">*</span></label>
 									<input type="text" class="form-control" name="PinCode" id="PinCode" placeholder="Enter Pincode">
 								</div>
 								<div class="col-md-4 mb-3">
@@ -348,37 +366,61 @@
 
 
 							</div>
-
-							<div class="mb-3">
-								<label class="form-label fw-bold">Address</label>
-								<input type="text" class="form-control" name="Address" id="Address" placeholder="Enter full address">
-							</div>
-
-							<div class="mb-3">
-								<label class="form-label fw-bold">Landmark</label>
-								<input type="text" class="form-control" name="Landmark" id="LandMark" placeholder="Add Schools, metros, hospitals nearby landmark">
-							</div>
-
 							<div class="row">
 								<div class="col-md-6 mb-3">
-									<label class="form-label fw-bold">Price Range (₹)</label>
-									<div class="row g-1">
-										<div class="col-6">
-											<div class="input-group">
-												<span class="input-group-text">₹</span>
-												<input type="number" class="form-control" name="PriceMin" id="BudgetMin" placeholder="Min">
-											</div>
-										</div>
-										<div class="col-6">
-											<div class="input-group">
-												<span class="input-group-text">₹</span>
-												<input type="number" class="form-control" name="PriceMax" id="BudgetMax" placeholder="Max">
-											</div>
-										</div>
-									</div>
+									<label class="form-label fw-bold">Address</label>
+									<input type="text" class="form-control" name="Address" id="Address" placeholder="Enter full address">
+								</div>
+
+								<div class=" col-md-6 mb-3">
+									<label class="form-label fw-bold">Landmark</label>
+									<input type="text" class="form-control" name="Landmark" id="LandMark" placeholder="Add Schools, metros, hospitals nearby landmark">
 								</div>
 							</div>
 
+							<div class="row mb-3">
+								<div class="col-md-3">
+									<label class="form-label fw-bold">Actual Price</label>
+									<div class="input-group">
+										<span class="input-group-text">₹</span>
+										<input type="number" class="form-control" name="BudgetMax" id="BudgetMax" placeholder="Enter amount">
+										<select id="AmountUnitMinPrice" class="form-select" style="max-width: 100px;  background-color: #a9a9a96b;">
+											<option value="1">Cr</option>
+											<option value="2">Lac</option>
+											<option value="3">K</option>
+											<option value="4">Rs</option>
+										</select>
+									</div>
+									<span id="displayMaxBudget" class="text-success fw-bold"></span>
+								</div>
+
+								<div class="col-md-2 mt-3">
+									<div class="form-check pt-4">
+										<input class="form-check-input" type="checkbox" id="IsNegotiable" name="IsNegotiable" value="true" checked />
+										<label class="form-check-label" for="IsNegotiable">Negotiable</label>
+									</div>
+								</div>
+
+								<div class="col-md-3 negotiableprice fw-bold" style="display: none;">
+									<label class="form-label">Negotiable Price</label>
+									<div class="input-group">
+										<span class="input-group-text">₹</span>
+										<input type="number" class="form-control" name="PriceMin" id="BudgetMin" placeholder="Enter amount">
+										<select id="AmountUnitMaxPrice" class="form-select" style="max-width: 100px; background-color: #a9a9a96b;">
+											<option value="1">Cr</option>
+											<option value="2">Lac</option>
+											<option value="3">K</option>
+											<option value="4">Rs</option>
+										</select>
+									</div>
+									<span id="displayMinBudget" class="text-success fw-bold"></span>
+
+								</div>
+
+							</div>
+
+							<input type="hidden" id="ConvertedActualPrice" value="0" name="ConvertedActualPrice" />
+							<input type="hidden" id="ConvertedNegotiablePrice" value="0" name="ConvertedNegotiablePrice" />
 							<button type="button" class="btn btn-light prev-step">Back</button>
 							<button type="button" class="btn btn-success next-step">Next</button>
 						</div>
@@ -467,7 +509,11 @@
 	<script>
 
 			$(document).ready(function () {
-
+				if ($("#IsNegotiable").is(":checked")) {
+			$(".negotiableprice").show();
+		} else {
+			$(".negotiableprice").hide();
+		}
 											// Clone header row for filters
 		$('#TableList thead tr').clone(true).appendTo('#TableList thead');
 
@@ -749,7 +795,9 @@
 				BudgetMax: $("#BudgetMax").val(),
 				Amenities: $("#Amenities").val().toString(),
 				//PossessionDate: $("#PossessionDate").val(),
-				IsActive: $("#IsActive").is(":checked")
+				IsActive: $("#IsActive").is(":checked"),
+				Vastu : $("#Vastu").val(),
+				YearOfConstruction : $("#YearOfConstruction").val()
 			};
 
 			// ✅ Create FormData
@@ -888,6 +936,147 @@
 			   $("#IsActive").prop("checked", data.isActive);
 
 			}
+		$(document).on("change", "#IsNegotiable", function () {
+			if ($(this).is(":checked")) {
+				$(".negotiableprice").show();
+			} else {
+				$(".negotiableprice").hide();
+			}
+		});
+
+
+			function convertValue(amount, unit) {
+			let multiplier = 1;
+
+			switch (unit) {
+				case "1": // Cr
+					multiplier = 10000000;
+					break;
+				case "2": // Lac
+					multiplier = 100000;
+					break;
+				case "3": // K
+					multiplier = 1000;
+					break;
+				case "4": // Rs
+					multiplier = 1;
+					break;
+			}
+
+			return amount * multiplier;
+		}
+
+		// Convert Actual Price
+		function convertActualPrice() {
+			let price = parseFloat($("#BudgetMax").val()) || 0;
+			let unit = $("#AmountUnitMinPrice").val();
+			let converted = convertValue(price, unit);
+			let formatted = formatIndianNumber(converted);
+
+			$("#ConvertedActualPrice").val(converted);
+					$("#displayMaxBudget").text(`₹ ${formatted}`);
+
+			console.log("Converted Actual Price:", formatted);
+		}
+
+		// Convert Negotiable Price
+		function convertNegotiablePrice() {
+			let price = parseFloat($("#BudgetMin").val()) || 0;
+			let unit = $("#AmountUnitMaxPrice").val();
+			let converted = convertValue(price, unit);
+			let formatted = formatIndianNumber(converted);
+
+			$("#ConvertedNegotiablePrice").val(converted);
+
+		$("#displayMinBudget").text(`₹ ${formatted}`);
+					console.log("Converted Negotiable Price:", formatted);
+		}
+
+		// Trigger conversion when user types or changes dropdown
+		$(document).on("keyup change", "#BudgetMax, #AmountUnitMinPrice", convertActualPrice);
+		$(document).on("keyup change", "#BudgetMin, #AmountUnitMaxPrice", convertNegotiablePrice);
+
+		// Negotiable checkbox toggle
+		$(document).on("change", "#IsNegotiable", function () {
+			if ($(this).is(":checked")) {
+				$(".negotiableprice").show();
+			} else {
+				$(".negotiableprice").hide();
+				$("#ConvertedNegotiablePrice").val(0); // reset if hidden
+			}
+		});
+
+		function formatIndianNumber(num) {
+			if (isNaN(num)) return "0";
+
+			// Convert to string and split into parts
+			let numStr = num.toString();
+			let parts = numStr.split('.');
+			let wholeNumber = parts[0];
+			let decimal = parts.length > 1 ? '.' + parts[1] : '';
+
+			// Format the whole number part
+			let lastThree = wholeNumber.substring(wholeNumber.length - 3);
+			let otherNumbers = wholeNumber.substring(0, wholeNumber.length - 3);
+
+			if (otherNumbers !== '') {
+				lastThree = ',' + lastThree;
+			}
+
+			let result = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + decimal;
+
+			return result.replace(/^,/, '');
+		}
+
+		function validatePropertyMaster() {
+			const requiredFields = [
+				{ id: "#Title", msg: "Please enter Title" },
+				{ id: "#PropertyType", msg: "Please select Property Type" },
+				{ id: "#Availability", msg: "Please select Transaction Type" },
+				{ id: "#Bedrooms", msg: "Please enter number of Bedrooms" },
+				// { id: "#Bathrooms", msg: "Please enter number of Bathrooms" },
+				{ id: "#CarpetArea", msg: "Please enter Property Size (sq. ft.)" },
+				{ id: "#FurnishingStatus", msg: "Please select Furnishing Type" },
+				// { id: "#Floor", msg: "Please enter Floor" },
+				{ id: "#ContactPersonName", msg: "Please enter Contact Person Name" },
+				{ id: "#ContactPersonNo", msg: "Please enter Contact Person Number" },
+				{ id: "#Description", msg: "Please enter Description" },
+				{ id: "#Area", msg: "Please select Area" },
+				{ id: "#SubArea", msg: "Please select Sub Area" },
+				{ id: "#PinCode", msg: "Please enter Pin Code" },
+				{ id: "#Country", msg: "Please select Country" },
+				{ id: "#State", msg: "Please select State" },
+				{ id: "#City", msg: "Please select City" },
+				{ id: "#Address", msg: "Please enter Address" },
+				{ id: "#BudgetMax", msg: "Please enter Actual Price" },
+				{ id: "#AmountUnitMinPrice", msg: "Please select Price Unit" }
+			];
+
+			// ✅ Loop through required fields
+			for (let field of requiredFields) {
+				if (!$(field.id).val() || $(field.id).val().trim() === "") {
+					notyf.error(field.msg);
+					$(field.id).focus();
+					return false;
+				}
+			}
+
+			// ✅ Extra: check Negotiable Price if checkbox is checked
+			if ($("#IsNegotiable").is(":checked")) {
+				if (!$("#BudgetMin").val() || $("#BudgetMin").val().trim() === "") {
+					notyf.error("Please enter Negotiable Price");
+					$("#BudgetMin").focus();
+					return false;
+				}
+				if (!$("#AmountUnitMaxPrice").val()) {
+					notyf.error("Please select Negotiable Price Unit");
+					$("#AmountUnitMaxPrice").focus();
+					return false;
+				}
+			}
+
+			return true; // ✅ Passed all validations
+		}
 
 	</script>
 

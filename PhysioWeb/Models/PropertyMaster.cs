@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Runtime.Intrinsics.Arm;
 using Microsoft.Identity.Client;
 
@@ -75,6 +76,15 @@ namespace PhysioWeb.Models
 
         public List<DropDownSource> Amenitie { get; set; }
 
+        public string Vastu { get; set; }
+        public int YearOfConstruction { get; set; }
+        public int TotalFloorBuilding { get; set; }
+        public List<DropDownSource> Preferedbuyertype { get; set; }
+        public List<DropDownSource> AmountUnit { get; set; }
+
+        public string DisplayMaxPrice { get; set; }
+
+        public string DisplayMinPrice { get; set; }
         public PropertyMaster()
         {
             CountryList = new List<DropDownSource>();
@@ -88,11 +98,13 @@ namespace PhysioWeb.Models
             BedRoomList = new List<DropDownSource>();
             AmenityList = new List<DropDownSource>();
             Amenitie = new List<DropDownSource>();
+            Preferedbuyertype = new List<DropDownSource>();
             Videos = new List<DropDownSource>();
             Images = new List<DropDownSource>();
+            AmountUnit = new List<DropDownSource>();
         }
 
-        public PropertyMaster(IDataReader Idr , int flag)
+        public PropertyMaster(IDataReader Idr, int flag)
         {
             CountryList = new List<DropDownSource>();
             StateList = new List<DropDownSource>();
@@ -105,12 +117,16 @@ namespace PhysioWeb.Models
             BedRoomList = new List<DropDownSource>();
             AmenityList = new List<DropDownSource>();
             Amenitie = new List<DropDownSource>();
+            Preferedbuyertype = new List<DropDownSource>();
             Videos = new List<DropDownSource>();
             Images = new List<DropDownSource>();
-            if (flag == 1) {
+            AmountUnit = new List<DropDownSource>();
+            if (flag == 1)
+            {
                 populateObject2(this, Idr);
             }
-            else if (flag == 2) {
+            else if (flag == 2)
+            {
                 populateObjectList(this, Idr);
             }
             else if (flag == 3)
@@ -129,13 +145,13 @@ namespace PhysioWeb.Models
             Title = rdr["PropertyName"].ToString();
             PropertyType = rdr["PropertyType"].ToString();
             TransactionType = rdr["RentalType"].ToString();
-            CityText  = rdr["CityName"].ToString();
+            CityText = rdr["CityName"].ToString();
             ContactPersonName = rdr["ContactPersonName"].ToString();
             InActiveText = rdr["IsActive"].ToString();
             CreatedBy = rdr["CreatedBy"].ToString();
         }
 
-        private void populateObject2(PropertyMaster obj, IDataReader rdr) 
+        private void populateObject2(PropertyMaster obj, IDataReader rdr)
         {
             if (!rdr.IsDBNull(rdr.GetOrdinal("SubAreaName")))
             {
@@ -316,7 +332,7 @@ namespace PhysioWeb.Models
             //}
         }
 
-        private void populateObjectEdit(PropertyMaster obj, IDataReader rdr) 
+        private void populateObjectEdit(PropertyMaster obj, IDataReader rdr)
         {
             if (!rdr.IsDBNull(rdr.GetOrdinal("UniquId")))
             {
