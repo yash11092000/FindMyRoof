@@ -253,6 +253,14 @@
 		}
 	}
 
+
+	/* newly added */
+
+	.ratio-9x16 {
+		--bs-aspect-ratio: calc(16 / 9 * 100%); /* 177.77% */
+	}
+
+	
 </style>
 
 <!-- Property Header -->
@@ -459,14 +467,15 @@
 
 <!-- Video Modal -->
 <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-xl">
+	<div class="modal-dialog modal-dialog-centered" style="max-width:500px;">
+		<!-- optional max-width -->
 		<div class="modal-content border-0">
 			<div class="modal-header border-0">
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body p-0">
-				<div class="ratio ratio-16x9">
-					<video id="propertyVideo" controls class="w-100 h-100">
+				<div class="ratio ratio-9x16">
+					<video id="propertyVideo" controls class="w-100 h-100" style="object-fit:cover;">
 						<source src="" type="video/mp4">
 						Your browser does not support the video tag.
 					</video>
@@ -475,6 +484,7 @@
 		</div>
 	</div>
 </div>
+
 
 <!-- Share Modal -->
 <div class="modal fade" id="shareModal" tabindex="-1" aria-hidden="true">
