@@ -628,19 +628,9 @@
 			var Amenities = $("#Amenities").val().toString();
 			var MinPrice = $("#MinPrice").val();
 			var MaxPrice = $("#MaxPrice").val();
+			window.location.href = `/Home/SearchProperty?location=${location}&PropertyType=${PropertyType}&RentalType=${RentalType}&PropertyCategory=${PropertyCategory}&Amenities=${Amenities}&MinPrice=${MinPrice}&MaxPrice=${MaxPrice}`;
 
-			// ✅ Send to Controller
-			$.ajax({
-				url: '/Home/SearchProperty',
-				type: 'POST',
-				data: {location,PropertyType,RentalType,PropertyCategory,Amenities,MinPrice,MaxPrice},
-				success: function (res) {
-					console.log(res);
-				},
-				error: function () {
-					notyf.error("Error while saving agency");
-				}
-			});
+
 
 
 

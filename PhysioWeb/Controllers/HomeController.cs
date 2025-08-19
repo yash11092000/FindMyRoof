@@ -25,7 +25,7 @@ namespace PhysioWeb.Controllers
         {
             _logger = logger;
             _userRepository = userRepository;
-            _masterRepository = _masterRepository;
+            _masterRepository = masterRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -153,15 +153,28 @@ namespace PhysioWeb.Controllers
 
 
         #region SearchProperty
-        public async Task<ActionResult> SearchProperty(string location, string PropertyType, string RentalType, string PropertyCategory, string Amenities, string MinPrice, string MaxPrice)
+        public async Task<ActionResult> SearchProperty(string location = "", string PropertyType = "", string RentalType = "", string PropertyCategory = "", string Amenities = "", string MinPrice = "", string MaxPrice = "", int PageNo = 1, int PageSize = 6)
         {
-            var result = _masterRepository.SearchProperties(location, PropertyType, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice);
+            var result = await _masterRepository.SearchProperties(location, PropertyType, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice, PageNo, PageSize);
             return View(result);
+        }
+
+        public async Task<ActionResult> LoadProperties(int PageNo = 1, int PageSize = 6)
+        {
+            string location = null;
+            string PropertyType = null;
+            string RentalType = null;
+            string PropertyCategory = null;
+            string Amenities = null;
+            string MinPrice = null;
+            string MaxPrice = null;
+            var result = await _masterRepository.SearchProperties(location, PropertyType, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice, PageNo, PageSize);
+            return PartialView("_PropertyListPartial", result);
         }
         #endregion
 
         [Route("secure-images/{*filePath}")]
-        public IActionResult GetSecureImage(string filePath)
+        public IActionResult GetSecureImage(string filePath = "")
         {
             // Combine with secure-images directory
             if (filePath != null)
