@@ -996,19 +996,27 @@ namespace PhysioWeb.Repository
             }
         }
 
-        public async Task<HomeDashboard> SearchProperties(string location, string propertyType, string rentalType, string propertyCategory, string amenities, string minPrice, string maxPrice)
+        public async Task<HomeDashboard> SearchProperties(string location, string propertyType, string rentalType, string propertyCategory, string amenities, string minPrice, string maxPrice, int pageNo, int pageSize)
         {
             try
             {
-                string[] parametersName = { "Location", "PropertyType", "RentalType", "PropertyCategory", "Amenities", "MinPrice", "MaxPrice" };
-                object[] Values = { location, propertyType, rentalType, propertyCategory, amenities, minPrice, maxPrice };
+                string[] parametersName = { "Location", "PropertyType", "RentalType", "PropertyCategory", "Amenities", "MinPrice", "MaxPrice", "PageNo", "PageSize" };
+                object[] Values = { location, propertyType, rentalType, propertyCategory, amenities, minPrice, maxPrice, pageNo, pageSize };
 
-                string Sp = "FMR_GetDashboardData";
+                string Sp = "FMR_SearchProperties";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parametersName, Values);
                 HomeDashboard home = new HomeDashboard();
                 while (data.Read())
                 {
                     home.PropertyDetails.Add(new PropertyDetails(data, 1));
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        home.TotalCount = Convert.ToInt32(data[0]);
+                        home.CurrentPage = pageNo;
+                    }
                 }
                 return home;
 

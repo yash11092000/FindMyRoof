@@ -38,7 +38,7 @@ namespace PhysioWeb.Repository
         Task<List<DropDownSource>> GetAreaList(string searchTerm, string AgencyID);
         Task<PropertyMaster> GetAreaMasterData(int AreaID, string UserID);
         Task<DataTableResult> ListPropertyMaster(DataTablePara dataTablePara);
-        Task<HomeDashboard> SearchProperties(string location, string propertyType, string rentalType, string propertyCategory, string amenities, string minPrice, string maxPrice);
+        Task<HomeDashboard> SearchProperties(string location, string propertyType, string rentalType, string propertyCategory, string amenities, string minPrice, string maxPrice, int pageNo, int pageSize);
         Task<bool> DeleteProperty(PropertyMaster PropertyMaster);
         Task<PropertyMaster> EditProperty(int UniqueID, string UserID);
     }

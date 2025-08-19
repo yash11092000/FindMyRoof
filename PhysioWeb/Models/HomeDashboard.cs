@@ -14,6 +14,9 @@ namespace PhysioWeb.Models
         public List<DropDownSource> RentalTypeList { get; set; }
         public List<DropDownSource> BedroomList { get; set; }
         public List<DropDownSource> AmenityList { get; set; }
+
+        public int TotalCount { get; set; }
+        public int CurrentPage{ get; set; }
         public HomeDashboard()
         {
             PropertyDetails = new List<PropertyDetails>();
@@ -71,9 +74,13 @@ namespace PhysioWeb.Models
 
         private void populateObjectAfterSearch(PropertyDetails obj, IDataReader rdr)
         {
-            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyId")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("UniquId")))
             {
-                obj.PropertyId = rdr.GetInt32(rdr.GetOrdinal("PropertyId"));
+                obj.PropertyId = rdr.GetInt32(rdr.GetOrdinal("UniquId"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyName")))
+            {
+                obj.PropertyName = rdr.GetString(rdr.GetOrdinal("PropertyName"));
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("BedRooms")))
             {
@@ -87,14 +94,13 @@ namespace PhysioWeb.Models
             {
                 obj.MinPrice = rdr.GetDecimal(rdr.GetOrdinal("MinPrice"));
             }
-
             if (!rdr.IsDBNull(rdr.GetOrdinal("MaxPrice")))
             {
                 obj.MaxPrice = rdr.GetDecimal(rdr.GetOrdinal("MaxPrice"));
             }
-            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertySize")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("CarpetArea")))
             {
-                obj.Sqrtft = rdr.GetDecimal(rdr.GetOrdinal("PropertySize"));
+                obj.Sqrtft = rdr.GetDecimal(rdr.GetOrdinal("CarpetArea"));
             }
             if (!rdr.IsDBNull(rdr.GetOrdinal("Address")))
             {
@@ -104,10 +110,6 @@ namespace PhysioWeb.Models
             {
                 obj.LandMark = rdr.GetString(rdr.GetOrdinal("LandMark"));
             }
-            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyName")))
-            {
-                obj.PropertyName = rdr.GetString(rdr.GetOrdinal("PropertyName"));
-            }
             if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyType")))
             {
                 obj.PropertyType = rdr.GetString(rdr.GetOrdinal("PropertyType"));
@@ -115,6 +117,10 @@ namespace PhysioWeb.Models
             if (!rdr.IsDBNull(rdr.GetOrdinal("Area")))
             {
                 obj.Area = rdr.GetString(rdr.GetOrdinal("Area"));
+            } 
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyImage")))
+            {
+                obj.PropertyImg = rdr.GetString(rdr.GetOrdinal("PropertyImage"));
             }
         }
 

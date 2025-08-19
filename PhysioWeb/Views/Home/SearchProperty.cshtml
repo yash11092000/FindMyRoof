@@ -1,0 +1,70 @@
+﻿@model PhysioWeb.Models.HomeDashboard
+
+@{
+	ViewData["Title"] = "Property Search";
+}
+
+<style>
+	.property-card {
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+		.property-card:hover {
+			transform: translateY(-8px);
+			box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+		}
+</style>
+
+<div class="container my-2">
+	<!-- Property container -->
+	<div id="propertyContainer">
+		@await Html.PartialAsync("_PropertyListPartial", Model)
+
+		<div class="container">
+			<nav>
+				<ul class="pagination justify-content-center" id="pagination">
+					@{
+						int totalPageCount = (int)Math.Ceiling((decimal)Model.TotalCount / 6);
+						for (int i = 1; i <= totalPageCount; i++)
+						{
+							<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+								<a class="page-link-ajax bg-success" href="#" data-page="@i">@i</a>
+							</li>
+						}
+					}
+				</ul>
+			</nav>
+		</div>
+	</div>
+
+	<!-- Pagination -->
+
+</div>
+
+@section Scripts {
+	<script>
+			$(document).on("click", ".page-link-ajax", function (e) {
+			e.preventDefault();
+
+			var page = $(this).data("page");
+			var pageSize = 6;
+
+			$.ajax({
+				url: '/Master/LoadProperties',
+				type: 'GET',
+				data: { PageNo: page,pageSize : pageSize},
+				success: function (result) {
+					// Replace properties
+					$("#propertyContainer").html(result);
+
+					// Update pagination active class
+					$("#pagination li").removeClass("active");
+					$("#pagination li").eq(page - 1).addClass("active");
+				},
+				error: function () {
+					alert("Error loading properties.");
+				}
+			});
+		});
+	</script>
+}
