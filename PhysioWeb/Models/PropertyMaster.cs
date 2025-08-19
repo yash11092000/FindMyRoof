@@ -85,6 +85,11 @@ namespace PhysioWeb.Models
         public string DisplayMaxPrice { get; set; }
 
         public string DisplayMinPrice { get; set; }
+        public string PreferedBuyerType { get; set; }
+        public string AmountUnitMinPrice { get; set; }
+        public string AmountUnitMaxPrice { get; set; }
+        public decimal ConvertedActualPrice { get; set; }
+        public decimal ConvertedNegotiablePrice { get; set; }
         public PropertyMaster()
         {
             CountryList = new List<DropDownSource>();

@@ -206,6 +206,16 @@
 									</select>
 								</div>
 								<div class="col-md-4 mb-3">
+									<label class="form-label fw-bold">Property Category<span style="color: red;">*</span></label>
+									<select class="form-select" name="PropertyCategory" id="PropertyCategory">
+										<option value="">Select Property Category</option>
+										@foreach (var item in Model.PropertyCategoryList)
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
+									</select>
+								</div>
+								<div class="col-md-4 mb-3">
 									<label class="form-label fw-bold">Transaction Type<span style="color: red;">*</span></label>
 									<select class="form-select" name="Availability" id="Availability">
 										<option value="">Select Transaction Type</option>
@@ -237,12 +247,17 @@
 										<option value="4">4+</option>
 									</select>
 								</div>
-							</div>
-
-							<div class="row">
 								<div class="col-md-4 mb-3">
 									<label class="form-label fw-bold">Property Size (sq. ft.)<span style="color: red;">*</span></label>
 									<input type="number" class="form-control" id="CarpetArea" name="CarpetArea" placeholder="Enter area">
+								</div>
+								<div class="col-md-2 mb-3">
+									<label class="form-label fw-bold">Floor</label>
+									<input type="text" class="form-control" id="Floor" name="Floor" placeholder="Enter Floor">
+								</div>
+								<div class="col-md-2 mb-3">
+									<label class="form-label fw-bold">Total Floor</label>
+									<input type="text" class="form-control" id="TotalFloorBuilding" name="TotalFloorBuilding" placeholder="Enter Total Floor">
 								</div>
 
 								<div class="col-md-4 mb-3">
@@ -255,31 +270,24 @@
 										}
 									</select>
 								</div>
-								<div class="col-md-2 mb-3">
-									<label class="form-label fw-bold">Floor</label>
-									<input type="text" class="form-control" id="Floor" name="Floor" placeholder="Enter Floor">
-								</div>
-								<div class="col-md-2 mb-3">
-									<label class="form-label fw-bold">Total Floor</label>
-									<input type="text" class="form-control" id="TotalFloorBuilding" name="TotalFloorBuilding" placeholder="Enter Total Floor">
-								</div>
-							</div>
-							<div class="row">
 								<div class="col-md-4 mb-3">
 									<label class="form-label fw-bold">Vastu</label>
 									<input type="text" class="form-control" id="Vastu" name="Vastu" placeholder="Enter Vastu Direction">
 								</div>
-
 								<div class="col-md-4 mb-3">
 									<label class="form-label fw-bold">Preferred Buyer Type</label>
 									<select class="form-select" name="PreferedBuyerType" id="PreferedBuyerType">
-										<option value="">-- Select Buyer Type --</option>
+										<option value="">Select Buyer Type</option>
 										<option value="1">Family</option>
 										<option value="2">Only Veg</option>
 										<option value="3">Bachelor</option>
 										<option value="4">Pet Allowed</option>
 									</select>
 								</div>
+							</div>
+
+							<div class="row">
+							
 								<div class="col-md-4 mb-3">
 									<label class="form-label fw-bold">Year Of Construction</label>
 									<input type="text" class="form-control" id="YearOfConstruction" name="YearOfConstruction" placeholder="Enter Year of construction">
@@ -384,7 +392,7 @@
 									<div class="input-group">
 										<span class="input-group-text">₹</span>
 										<input type="number" class="form-control" name="BudgetMax" id="BudgetMax" placeholder="Enter amount">
-										<select id="AmountUnitMinPrice" class="form-select" style="max-width: 100px;  background-color: #a9a9a96b;">
+										<select id="AmountUnitMaxPrice" class="form-select" style="max-width: 100px;  background-color: #a9a9a96b;">
 											<option value="1">Cr</option>
 											<option value="2">Lac</option>
 											<option value="3">K</option>
@@ -406,7 +414,7 @@
 									<div class="input-group">
 										<span class="input-group-text">₹</span>
 										<input type="number" class="form-control" name="PriceMin" id="BudgetMin" placeholder="Enter amount">
-										<select id="AmountUnitMaxPrice" class="form-select" style="max-width: 100px; background-color: #a9a9a96b;">
+										<select id="AmountUnitMinPrice" class="form-select" style="max-width: 100px; background-color: #a9a9a96b;">
 											<option value="1">Cr</option>
 											<option value="2">Lac</option>
 											<option value="3">K</option>
@@ -797,7 +805,16 @@
 				//PossessionDate: $("#PossessionDate").val(),
 				IsActive: $("#IsActive").is(":checked"),
 				Vastu : $("#Vastu").val(),
-				YearOfConstruction : $("#YearOfConstruction").val()
+				YearOfConstruction : $("#YearOfConstruction").val(),
+				PropertyCategory : $("#PropertyCategory").val(),
+				PreferedBuyerType :$("#PreferedBuyerType").val(),
+				AmountUnitMinPrice :$("#AmountUnitMinPrice").val(),
+				AmountUnitMaxPrice :$("#AmountUnitMaxPrice").val(),
+				ConvertedActualPrice : $("#ConvertedActualPrice").val(),
+				ConvertedNegotiablePrice : $("#ConvertedNegotiablePrice").val(),
+				TotalFloorBuilding : $("#TotalFloorBuilding").val(),
+				IsNegotiable : $("#IsNegotiable").is(":checked"),
+
 			};
 
 			// ✅ Create FormData
@@ -969,7 +986,7 @@
 		// Convert Actual Price
 		function convertActualPrice() {
 			let price = parseFloat($("#BudgetMax").val()) || 0;
-			let unit = $("#AmountUnitMinPrice").val();
+			let unit = $("#AmountUnitMaxPrice").val();
 			let converted = convertValue(price, unit);
 			let formatted = formatIndianNumber(converted);
 
@@ -982,7 +999,7 @@
 		// Convert Negotiable Price
 		function convertNegotiablePrice() {
 			let price = parseFloat($("#BudgetMin").val()) || 0;
-			let unit = $("#AmountUnitMaxPrice").val();
+			let unit = $("#AmountUnitMinPrice").val();
 			let converted = convertValue(price, unit);
 			let formatted = formatIndianNumber(converted);
 
@@ -993,8 +1010,8 @@
 		}
 
 		// Trigger conversion when user types or changes dropdown
-		$(document).on("keyup change", "#BudgetMax, #AmountUnitMinPrice", convertActualPrice);
-		$(document).on("keyup change", "#BudgetMin, #AmountUnitMaxPrice", convertNegotiablePrice);
+		$(document).on("keyup change", "#BudgetMax, #AmountUnitMaxPrice", convertActualPrice);
+		$(document).on("keyup change", "#BudgetMin, #AmountUnitMinPrice", convertNegotiablePrice);
 
 		// Negotiable checkbox toggle
 		$(document).on("change", "#IsNegotiable", function () {
@@ -1068,9 +1085,9 @@
 					$("#BudgetMin").focus();
 					return false;
 				}
-				if (!$("#AmountUnitMaxPrice").val()) {
+				if (!$("#AmountUnitMinPrice").val()) {
 					notyf.error("Please select Negotiable Price Unit");
-					$("#AmountUnitMaxPrice").focus();
+					$("#AmountUnitMinPrice").focus();
 					return false;
 				}
 			}

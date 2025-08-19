@@ -780,7 +780,10 @@ namespace PhysioWeb.Repository
                     "Address", "City", "State", "PinCode", "MinPrice", "MaxPrice",
                     "FurnishingStatus", "PossessionDate", "IsActive", "TransactionType",
                     "Floor", "ContactPersonName", "ContactPersonNo", "AlternateNo", "Area",
-                    "SubArea", "Country", "Amenities","UserID" ,"AgencyID" };
+                    "SubArea", "Country", "Amenities","UserID" ,"AgencyID" ,"Vastu" , "YearOfConstruction" , "PropertyCategory",
+                    "PreferedBuyerType" , "AmountUnitMinPrice" , "AmountUnitMaxPrice" ,"ConvertedActualPrice" , "ConvertedNegotiablePrice",
+                    "TotalFloorBuilding" ,"IsNegotiable"
+                }; 
 
                 object[] parameterValues = { propertyMaster.UniquId, propertyMaster.Title,
                     propertyMaster.Description, propertyMaster.PropertyType,
@@ -792,7 +795,12 @@ namespace PhysioWeb.Repository
                     propertyMaster.IsActive, propertyMaster.TransactionType, propertyMaster.Floor,
                     propertyMaster.ContactPersonName, propertyMaster.ContactPersonPhone,
                     propertyMaster.ContactPersonAlternatePhone, propertyMaster.Area, propertyMaster.SubArea,
-                    propertyMaster.Country ,propertyMaster.Amenities, propertyMaster.UserID,  propertyMaster.AgencyId};
+                    propertyMaster.Country ,propertyMaster.Amenities, propertyMaster.UserID,  propertyMaster.AgencyId,
+                    propertyMaster.Vastu , propertyMaster.YearOfConstruction , propertyMaster.PropertyCategory, 
+                    propertyMaster.PreferedBuyerType ,propertyMaster.AmountUnitMinPrice ,propertyMaster.AmountUnitMaxPrice,
+                    propertyMaster.ConvertedActualPrice ,propertyMaster.ConvertedNegotiablePrice,
+                    propertyMaster.TotalFloorBuilding,propertyMaster.IsNegotiable
+                };
 
                 string Sp = "FMR_SavePropertyDetails";
                 var data = await _dbHelper.ExecuteScalarAsync(Sp, parameterNames, parameterValues);
@@ -834,7 +842,9 @@ namespace PhysioWeb.Repository
 
                 string Sp = "FMR_PropertyMasterDropDown";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+
                 PropertyMaster propertyMaster = new PropertyMaster();
+
                 while (data.Read())
                 {
                     propertyMaster.CountryList.Add(new DropDownSource(data, true));
