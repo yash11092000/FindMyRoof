@@ -912,6 +912,20 @@ namespace PhysioWeb.Repository
                         propertyMaster.AmenityList.Add(new DropDownSource(data, true));
                     }
                 }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        propertyMaster.AmountUnitList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        propertyMaster.PreferedBuyerTypeList.Add(new DropDownSource(data, true));
+                    }
+                }
                 return propertyMaster;
 
 

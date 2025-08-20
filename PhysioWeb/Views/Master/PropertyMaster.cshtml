@@ -277,11 +277,10 @@
 								<div class="col-md-4 mb-3">
 									<label class="form-label fw-bold">Preferred Buyer Type</label>
 									<select class="form-select" name="PreferedBuyerType" id="PreferedBuyerType">
-										<option value="">Select Buyer Type</option>
-										<option value="1">Family</option>
-										<option value="2">Only Veg</option>
-										<option value="3">Bachelor</option>
-										<option value="4">Pet Allowed</option>
+										@foreach (var item in Model.PreferedBuyerTypeList)
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
 									</select>
 								</div>
 							</div>
@@ -393,10 +392,10 @@
 										<span class="input-group-text">₹</span>
 										<input type="number" class="form-control" name="BudgetMax" id="BudgetMax" placeholder="Enter amount">
 										<select id="AmountUnitMaxPrice" class="form-select" style="max-width: 100px;  background-color: #a9a9a96b;">
-											<option value="1">Cr</option>
-											<option value="2">Lac</option>
-											<option value="3">K</option>
-											<option value="4">Rs</option>
+											@foreach (var item in Model.AmountUnitList)
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
 										</select>
 									</div>
 									<span id="displayMaxBudget" class="text-success fw-bold"></span>
@@ -415,10 +414,10 @@
 										<span class="input-group-text">₹</span>
 										<input type="number" class="form-control" name="PriceMin" id="BudgetMin" placeholder="Enter amount">
 										<select id="AmountUnitMinPrice" class="form-select" style="max-width: 100px; background-color: #a9a9a96b;">
-											<option value="1">Cr</option>
-											<option value="2">Lac</option>
-											<option value="3">K</option>
-											<option value="4">Rs</option>
+											@foreach (var item in Model.AmountUnitList)
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
 										</select>
 									</div>
 									<span id="displayMinBudget" class="text-success fw-bold"></span>
