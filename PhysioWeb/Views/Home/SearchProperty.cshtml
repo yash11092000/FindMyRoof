@@ -20,25 +20,25 @@
 	<div id="propertyContainer">
 		@await Html.PartialAsync("_PropertyListPartial", Model)
 
-		<div class="container">
-			<nav>
-				<ul class="pagination justify-content-center" id="pagination">
-					@{
-						int totalPageCount = (int)Math.Ceiling((decimal)Model.TotalCount / 6);
-						for (int i = 1; i <= totalPageCount; i++)
-						{
-							<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-								<a class="page-link-ajax bg-success" href="#" data-page="@i">@i</a>
-							</li>
-						}
-					}
-				</ul>
-			</nav>
-		</div>
+		
 	</div>
 
 	<!-- Pagination -->
 
+		<nav>
+			<ul class="pagination justify-content-center" id="pagination">
+				@{
+					int totalPageCount = (int)Math.Ceiling((decimal)Model.TotalCount / 6);
+					for (int i = 1; i <= totalPageCount; i++)
+					{
+						<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+							<a class="page-link-ajax bg-success" href="#" data-page="@i">@i</a>
+						</li>
+					}
+				}
+			</ul>
+		</nav>
+	
 </div>
 
 @section Scripts {
