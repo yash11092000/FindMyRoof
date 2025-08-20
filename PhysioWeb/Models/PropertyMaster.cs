@@ -79,8 +79,8 @@ namespace PhysioWeb.Models
         public string Vastu { get; set; }
         public int YearOfConstruction { get; set; }
         public int TotalFloorBuilding { get; set; }
-       // public List<DropDownSource> Preferedbuyertype { get; set; }
-        public List<DropDownSource> AmountUnit { get; set; }
+        public List<DropDownSource> AmountUnitList { get; set; }
+        public List<DropDownSource> PreferedBuyerTypeList { get; set; }
 
         public string DisplayMaxPrice { get; set; }
 
@@ -103,10 +103,10 @@ namespace PhysioWeb.Models
             BedRoomList = new List<DropDownSource>();
             AmenityList = new List<DropDownSource>();
             Amenitie = new List<DropDownSource>();
-           // Preferedbuyertype = new List<DropDownSource>();
+            AmountUnitList = new List<DropDownSource>();
             Videos = new List<DropDownSource>();
             Images = new List<DropDownSource>();
-            AmountUnit = new List<DropDownSource>();
+            PreferedBuyerTypeList = new List<DropDownSource>();
         }
 
         public PropertyMaster(IDataReader Idr, int flag)
@@ -122,10 +122,12 @@ namespace PhysioWeb.Models
             BedRoomList = new List<DropDownSource>();
             AmenityList = new List<DropDownSource>();
             Amenitie = new List<DropDownSource>();
-           // Preferedbuyertype = new List<DropDownSource>();
+            AmountUnitList = new List<DropDownSource>();
             Videos = new List<DropDownSource>();
             Images = new List<DropDownSource>();
-            AmountUnit = new List<DropDownSource>();
+            PreferedBuyerTypeList = new List<DropDownSource>();
+
+
             if (flag == 1)
             {
                 populateObject2(this, Idr);
