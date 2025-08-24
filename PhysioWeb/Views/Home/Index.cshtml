@@ -307,21 +307,58 @@
 			padding: 10px 20px;
 		}
 	}
+
+
+	.slide-btn {
+		position: relative;
+		overflow: hidden;
+		transition: color 0.3s;
+		z-index: 1;
+	}
+
+		.slide-btn::before {
+			content: "";
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			width: 0;
+			background: #198754; /* Bootstrap success */
+			z-index: -1;
+			transition: width 0.4s cubic-bezier(0.45,0,0.55,1);
+		}
+
+		.slide-btn:hover {
+			color: #fff !important;
+		}
+
+			.slide-btn:hover::before {
+				width: 100%;
+			}
+
 </style>
 
 
 
-<div class="container">
+<div class="container-fluid">
 	<!-- Hero Section -->
 	<section class="py-5 text-center">
 		<div class="container">
 			<h1 class="fw-bold mb-3">Find Your Dream Home</h1>
 			<p class="mb-4 text-muted">Find Your Perfect Space with Confidence.</p>
-			<a href="/PropertyDetails/Property" class="btn btn-green btn-lg px-4">Get Started</a>
+			<a href="/PropertyDetails/Property"
+			   class="btn btn-success btn-lg px-4 shadow rounded-pill d-inline-flex align-items-center slide-btn">
+				Get Started
+				<i class="bi bi-arrow-right-circle-fill ms-2 arrow-slide"></i>
+			</a>
+
+
+
 		</div>
+
 	</section>
 
-
+	@* 
 	<!-- ✅ Search Form Section -->
 	<section class="py-5 bg-light">
 		<div class="container">
@@ -422,6 +459,128 @@
 			</form>
 		</div>
 	</section>
+ *@
+
+	<section class="py-5 bg-light">
+		<div class="container-fluid">
+			<div class="shadow-lg border-0 rounded-4" style="border-radius: 12px !important;transition: all 0.3s ease;">
+				<div class="card-body p-4">
+					<h3 class="text-center mb-4 fw-bold text-success">
+						<i class="bi bi-building"></i> Find Your Dream Property
+					</h3>
+					<form class="row g-4">
+
+						<!-- Location -->
+						<div class="col-md-3">
+							<label for="location" class="form-label fw-semibold">
+								<i class="bi bi-geo-alt-fill text-success"></i> Location
+							</label>
+							<input type="text" id="location" class="form-control rounded-3" placeholder="Enter Location">
+						</div>
+
+						<!-- Property Type -->
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">
+								<i class="bi bi-house-door-fill text-success"></i> Property Type
+							</label>
+							<select multiple class="form-select select2 rounded-3" id="propertyType" name="PropertyType">
+								<option></option>
+								@foreach (var item in Model.PropertyTypeList)
+								{
+									<option value="@item.Value">@item.Text</option>
+								}
+							</select>
+						</div>
+
+						<!-- Bedrooms -->
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">
+								<i class="bi bi-door-open-fill text-success"></i> Bedrooms
+							</label>
+							<select multiple class="form-select select2 rounded-3" id="bedrooms" name="Bedrooms">
+								<option></option>
+								@foreach (var item in Model.BedroomList)
+								{
+									<option value="@item.Value">@item.Text</option>
+								}
+							</select>
+						</div>
+
+						<!-- Rental Type -->
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">
+								<i class="bi bi-key-fill text-success"></i> Rental Type
+							</label>
+							<select multiple class="form-select select2 rounded-3" id="RentalType" name="RentalType">
+								<option></option>
+								@foreach (var item in Model.RentalTypeList)
+								{
+									<option value="@item.Value">@item.Text</option>
+								}
+							</select>
+						</div>
+
+						<!-- Property Category -->
+						<div class="col-md-3">
+							<label class="form-label fw-semibold">
+								<i class="bi bi-grid-fill text-success"></i> Property Category
+							</label>
+							<select multiple class="form-select select2 rounded-3" id="PropertyCategory" name="PropertyCategory">
+								<option></option>
+								@foreach (var item in Model.PropertyCategoryList)
+								{
+									<option value="@item.Value">@item.Text</option>
+								}
+							</select>
+						</div>
+
+						<!-- Amenities -->
+						<div class="col-md-5">
+							<label class="form-label fw-semibold">
+								<i class="bi bi-lightning-charge-fill text-success"></i> Amenities
+							</label>
+							<select multiple class="form-select select2 rounded-3" name="Amenities" id="Amenities">
+								<option></option>
+								@foreach (var item in Model.AmenityList)
+								{
+									<option value="@item.Value">@item.Text</option>
+								}
+							</select>
+						</div>
+
+						<!-- Budget -->
+						<div class="col-md-4">
+							<label class="form-label fw-semibold">
+								<i class="bi bi-cash-coin text-success"></i> Budget
+							</label>
+							<div class="row g-2">
+								<div class="col-6">
+									<div class="input-group rounded-3">
+										<span class="input-group-text bg-success text-white">₹</span>
+										<input type="number" id="MinPrice" class="form-control" placeholder="Min" min="0">
+									</div>
+								</div>
+								<div class="col-6">
+									<div class="input-group rounded-3">
+										<span class="input-group-text bg-success text-white">₹</span>
+										<input type="number" id="MaxPrice" class="form-control" placeholder="Max" min="0">
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Submit Button -->
+						<div class="col-md-3 mx-auto text-center mt-4">
+							<button type="button" class="btn btn-success btn-lg w-100 shadow-sm rounded-pill" onclick="SearchProperty()">
+								<i class="bi bi-search"></i> Search Property
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+
 </div>
 
 
@@ -469,7 +628,7 @@
 								</div>
 
 								<p class="text-muted mb-3">
-									<i class="fas fa-map-marker-alt text-primary me-1"></i>
+									<i class="fas fa-map-marker-alt text-success me-1"></i>
 									@prop.Address
 								</p>
 
@@ -486,7 +645,7 @@
 								</div>
 
 								<div class="d-flex justify-content-between align-items-center">
-									<h4 class="text-primary mb-0">₹@prop.Price</h4>
+									<h4 class="text-success mb-0">₹@prop.Price</h4>
 									<div class="rating">
 										<i class="fas fa-star text-warning"></i>
 										<span class="ms-1">4.8</span>
@@ -497,7 +656,7 @@
 							<!-- Card Footer -->
 							<div class="card-footer bg-transparent border-0 pt-0">
 								<a href="/PropertyDetails/Property?PropertyId=@prop.PropertyId"
-								   class="btn btn-primary w-100 rounded-pill">
+								   class="btn btn-success w-100 rounded-pill">
 									View Details <i class="fas fa-arrow-right ms-2"></i>
 								</a>
 							</div>
@@ -628,10 +787,29 @@
 			var Amenities = $("#Amenities").val().toString();
 			var MinPrice = $("#MinPrice").val();
 			var MaxPrice = $("#MaxPrice").val();
-			window.location.href = `/Home/SearchProperty?location=${location}&PropertyType=${PropertyType}&RentalType=${RentalType}&PropertyCategory=${PropertyCategory}&Amenities=${Amenities}&MinPrice=${MinPrice}&MaxPrice=${MaxPrice}`;
+			//window.location.href = `/Home/SearchProperty?location=${location}&PropertyType=${PropertyType}&RentalType=${RentalType}&PropertyCategory=${PropertyCategory}&Amenities=${Amenities}&MinPrice=${MinPrice}&MaxPrice=${MaxPrice}`;
 
 
+					// Create and submit a form
+			const form = document.createElement('form');
+			form.method = 'POST';
+			form.action = '/Home/SearchProperty';
 
+			const params = {
+			  location, PropertyType, RentalType, PropertyCategory,
+			  Amenities, MinPrice, MaxPrice
+			};
+
+			Object.keys(params).forEach(key => {
+			  const input = document.createElement('input');
+			  input.type = 'hidden';
+			  input.name = key;
+			  input.value = params[key];
+			  form.appendChild(input);
+			});
+
+			document.body.appendChild(form);
+			form.submit();
 
 
 		}

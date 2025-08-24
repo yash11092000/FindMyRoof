@@ -83,6 +83,7 @@ namespace PhysioWeb.Controllers
                     new Claim(ClaimTypes.Role, User.UserRole),
                     new Claim(ClaimTypes.PrimarySid, Convert.ToString(User.UserId)),
                     new Claim(ClaimTypes.GroupSid, User.AgencyId),
+                    new Claim(ClaimTypes.UserData, User.AgencyLogo),
                 };
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties
@@ -153,9 +154,9 @@ namespace PhysioWeb.Controllers
 
 
         #region SearchProperty
-        public async Task<ActionResult> SearchProperty(string location = "", string PropertyType = "", string RentalType = "", string PropertyCategory = "", string Amenities = "", string MinPrice = "", string MaxPrice = "", int PageNo = 1, int PageSize = 6)
+        public async Task<ActionResult> SearchProperty(string location = "", string Bedrooms = "", string PropertyType = "", string RentalType = "", string PropertyCategory = "", string Amenities = "", string MinPrice = "", string MaxPrice = "", int PageNo = 1, int PageSize = 6)
         {
-            var result = await _masterRepository.SearchProperties(location, PropertyType, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice, PageNo, PageSize);
+            var result = await _masterRepository.SearchProperties(location, Bedrooms, PropertyType, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice, PageNo, PageSize);
             return View(result);
         }
 
@@ -163,12 +164,13 @@ namespace PhysioWeb.Controllers
         {
             string location = null;
             string PropertyType = null;
+            string Bedroom = null;
             string RentalType = null;
             string PropertyCategory = null;
             string Amenities = null;
             string MinPrice = null;
             string MaxPrice = null;
-            var result = await _masterRepository.SearchProperties(location, PropertyType, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice, PageNo, PageSize);
+            var result = await _masterRepository.SearchProperties(location, PropertyType, Bedroom, RentalType, PropertyCategory, Amenities, MinPrice, MaxPrice, PageNo, PageSize);
             return PartialView("_PropertyListPartial", result);
         }
         #endregion

@@ -1,4 +1,6 @@
-﻿namespace PhysioWeb.Models
+﻿using System.Data;
+
+namespace PhysioWeb.Models
 {
     public class FurnishingTypeMaster : CommanProp
     {
@@ -10,7 +12,7 @@
         {
 
         }
-        public FurnishingTypeMaster(System.Data.IDataReader reader, int flag = 0)
+        public FurnishingTypeMaster(IDataReader reader, int flag = 0)
         {
             if (flag == 0)
             {

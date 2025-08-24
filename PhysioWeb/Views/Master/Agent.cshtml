@@ -1,0 +1,377 @@
+﻿@model PhysioWeb.Models.Agent
+
+@{
+	ViewData["Title"] = "Agent";
+}
+<div class="container mt-4">
+	<div class="d-flex justify-content-between align-items-center mb-3">
+		<h4 class="mb-0">Agents</h4>
+		<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAgentModal">
+			<i class="bi bi-plus-circle"></i> Add Agent
+		</button>
+	</div>
+
+	<!-- ✅ Agents Table -->
+	<div class="card shadow-sm border-0">
+		<div class="card-header bg-success text-white">
+			<h5 class="mb-0"><i class="bi bi-people-fill"></i> All Agents</h5>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table id="TableList" class="table table-hover align-middle">
+					<thead class="table-light">
+						<tr>
+							<th class="Profile">Profile</th>
+							<th>Agent Name</th>
+							<th>Email</th>
+							<th>Phone</th>
+							<th>Created By</th>
+							<th>IsActive</th>
+							<th><i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i></th>
+							<th><i class="bi bi-trash text-danger fs-5" title="Delete"></i></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- Dynamic Rows -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ✅ Add/Edit Agent Modal -->
+<div class="modal fade" id="addAgentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header bg-success text-white">
+				<h5 class="modal-title">Add New Agent</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="OldPassword" name="OldPassword" value="" />
+				<form id="agentForm" enctype="multipart/form-data">
+					<input type="hidden" id="AgentId" name="AgentId" />
+					<div class="row">
+						<div class="col-md-4 mb-3">
+							<label class="form-label fw-bold">First Name<span class="impMark">*</span></label>
+							<input type="text" class="form-control" id="FirstName" name="FirstName" />
+						</div>
+						<div class="col-md-4 mb-3">
+							<label class="form-label fw-bold">Middle Name<span class="impMark">*</span></label>
+							<input type="text" class="form-control" id="MiddleName" name="MiddleName" />
+						</div>
+						<div class="col-md-4 mb-3">
+							<label class="form-label fw-bold">Last Name<span class="impMark">*</span></label>
+							<input type="text" class="form-control" id="LastName" name="LastName" />
+						</div>
+
+
+
+
+
+						<div class="col-md-6 mb-3">
+							<label class="form-label fw-bold">Phone<span class="impMark">*</span></label>
+							<input type="text" class="form-control" id="Phone" name="Phone" />
+						</div>
+						<div class="col-md-6 mb-3">
+							<label class="form-label fw-bold">Alternate Phone</label>
+							<input type="text" class="form-control" id="AlternatePhone" name="AlternatePhone" />
+						</div>
+
+						<div class="col-md-4 mb-3">
+							<label class="form-label fw-bold">Email <span class="impMark">*</span></label>
+							<input type="email" class="form-control" id="Email" name="Email" placeholder="Enter Email" />
+						</div>
+
+						<div class="col-md-4 mb-3">
+							<label class="form-label fw-bold">Username <span class="impMark">*</span></label>
+							<input type="text" class="form-control" id="UserName" name="UserName" placeholder="Enter Username" />
+						</div>
+
+						<div class="col-md-4 mb-3">
+							<label class="form-label fw-bold" for="Password">Password</label>
+							<div class="input-group">
+								<input type="password" class="form-control" id="Password" name="Password"
+									   placeholder="Enter password" autocomplete="new-password">
+								<button type="button" class="btn btn-outline-secondary" id="togglePassword" aria-label="Show password">
+									<i class="bi bi-eye" id="togglePasswordIcon"></i>
+								</button>
+							</div>
+							<!-- optional hint -->
+							<!-- <div class="form-text">Use 8+ characters with a mix of letters & numbers.</div> -->
+						</div>
+
+
+						<div class="col-md-12 mb-3">
+							<label class="form-label fw-bold">Profile Image</label>
+							<input type="file" class="form-control" id="ProfileImage" name="ProfileImage" />
+						</div>
+						<div class="col-md-12 mb-3">
+							<img id="ProfilePreview" src="#" alt="Profile Preview" style="max-width: 150px; display: none; border: 1px solid #ccc; padding: 5px; border-radius: 8px;" />
+						</div>
+
+						<div class="col-md-12" id="ShowOnEdit" style="display:none">
+							<p class="text-danger">Leave blank to keep your current password.</p>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+					<i class="bi bi-x-circle"></i> Cancel
+				</button>
+				<button type="button" class="btn btn-success" id="btnSaveAgent">
+					<i class="bi bi-save"></i> Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+
+			// Clone header row for search inputs
+			$('#TableList thead tr').clone(true).appendTo('#TableList thead');
+
+			$('#TableList thead tr:eq(1) th').each(function (i) {
+					 if (i === 0) {
+						$(this).html('');
+						return;
+					}
+
+				if ($(this).find('i').length === 0) {
+					var title = $('#TableList thead tr:eq(0) th').eq(i).text().trim();
+					$(this).html('<input class="form-control form-control-sm" type="text" placeholder="' + title + '" />');
+				} else {
+					$(this).html('');
+				}
+			});
+
+			// ✅ Initialize DataTable
+			var AgentTable = $("#TableList").DataTable({
+				orderCellsTop: true,
+				processing: true,
+				serverSide: true,
+				order: [[1, "asc"]],
+				ajax: {
+					url: '/Master/ListAgents', // ✅ Your controller endpoint
+					type: 'POST'
+				},
+				columns: [
+					{
+						data: 'profileImageFilePath',
+						render: function (data, type, row) {
+							return `<img src="/secure-images/${data || 'default.png'}" class="rounded-circle" width="80" height="80"/>`;
+						},
+						orderable: false,
+						searchable: false
+					},
+					{ data: 'firstName' }, // you can combine First + Last in backend
+					{ data: 'email' },
+					{ data: 'phone' },
+					//{ data: 'agencyName' },
+					{ data: 'createdBy' },
+					{ data: 'isActiveText' },
+					{
+						data: null,
+						render: function (data, type, row) {
+							let para = `'${row.uniquId}', 'Master', 'EditAgent'`;
+							return `<a href="javascript:void(0)" onclick="EditData(${para})">
+										<i class="bi bi-pencil-square text-primary fs-5" title="Edit"></i>
+									</a>`;
+						},
+						orderable: false,
+						searchable: false
+					},
+					{
+						data: null,
+						render: function (data, type, row) {
+							let para = `'${row.uniquId}', 'Master', 'DeleteAgent'`;
+							return `<a href="javascript:void(0)" onclick="DeleteData(${para})">
+										<i class="bi bi-trash text-danger fs-5" title="Delete"></i>
+									</a>`;
+						},
+						orderable: false,
+						searchable: false
+					}
+				],
+				initComplete: function () {
+					var table = this.api();
+					$('#TableList thead tr:eq(1) th').each(function (i) {
+						$('input', this).on('keyup change', function () {
+							if (table.column(i).search() !== this.value) {
+								table.column(i).search(this.value).draw();
+							}
+						});
+					});
+				}
+			});
+
+			// ✅ Save Agent
+			$("#btnSaveAgent").on("click", function () {
+				let userName = $("#UserName").val();
+				let email = $("#Email").val();
+				let FirstName = $("#FirstName").val();
+				let MiddleName = $("#MiddleName").val();
+				let LastName = $("#LastName").val();
+				let Phone = $("#Phone").val();
+				let Password = $("#Password").val();
+
+				if (userName === "") {
+					notyf.error("Please fill UserName.");
+					userName.focus();
+				}
+				else if(email === ""){
+					notyf.error("Please fill Email.");
+					email.focus();
+				}
+				else if(FirstName === ""){
+					notyf.error("Please fill FirstName.");
+					FirstName.focus();
+				}
+				else if(MiddleName === ""){
+					notyf.error("Please fill MiddleName.");
+					MiddleName.focus();
+				}
+				else if(LastName === ""){
+					notyf.error("Please fill LastName.");
+					LastName.focus();
+				}
+				else if(Phone === ""){
+					notyf.error("Please fill Phone No.");
+					Phone.focus();
+				}
+				// else if(Password === ""){
+				// 	notyf.error("Please fill Password.");
+				// 	Password.focus();
+				// }
+				else{
+					var OldPassword = $("#OldPassword").val();
+					var fileInput = document.getElementById("ProfileImage");
+					var file = fileInput.files[0];
+
+					var formData = new FormData();
+					formData.append("UniquId", $("#AgentId").val());
+					formData.append("UserName", $("#UserName").val());
+					formData.append("Email", $("#Email").val());
+					formData.append("FirstName", $("#FirstName").val());
+					formData.append("MiddleName", $("#MiddleName").val());
+					formData.append("LastName", $("#LastName").val());
+					formData.append("Phone", $("#Phone").val());
+					formData.append("AlternatePhone", $("#AlternatePhone").val());
+					formData.append("Password", $("#Password").val());
+					formData.append("AgentProfile", file);
+					formData.append("OldPassword", OldPassword);
+
+
+					$.ajax({
+						url: '/Master/SaveAgent',
+						method: 'POST',
+						data: formData,
+						processData: false,
+						contentType: false,
+						success: function (response) {
+							if (parseInt(response) > 0) {
+								notyf.success("Agent saved successfully");
+								$("#addAgentModal").modal('hide');
+								ClearAgentForm();
+								AgentTable.ajax.reload(null, false);
+							} else {
+								notyf.error(response.message || "Failed to save agent.");
+							}
+						},
+						error: function (xhr) {
+							console.error(xhr);
+							notyf.error("Server error: " + (xhr.responseText || "Unknown error"));
+						}
+					});
+				}
+			});
+
+			// ✅ Reset Form on cancel
+			$('.btn-cancel').on('click', function () {
+				ClearAgentForm();
+			});
+
+		});
+
+		// ✅ Fill form for Edit
+		function OnSuccessOfEdit(data) {
+			console.log(data);
+			$("#addAgentModal").modal('show');
+			$("#AgentId").val(data.uniquId);
+			$("#UserName").val(data.userName);
+			$("#Email").val(data.email);
+			$("#FirstName").val(data.firstName);
+			$("#MiddleName").val(data.middleName);
+			$("#LastName").val(data.lastName);
+			$("#Phone").val(data.phone);
+			$("#AlternatePhone").val(data.alternatePhone);
+			//$("#AgencyId").val(data.agencyId);
+			$("#UserName").val(data.userName);
+			//$("#ProfilePreview").attr('src',data.profileImageFilePath).trigger("change");
+			showProfileImageFromPath("/secure-images/"+data.profileImageFilePath)
+			$("#OldPassword").val(data.password);
+		}
+
+		function ClearAgentForm() {
+			$("#agentForm")[0].reset();
+			$("#AgentId").val("");
+			$("#UniquId").val("");
+			$("#ProfilePreview").attr("src",'')
+			$("#ProfilePreview").hide();
+		}
+
+		function OnSuccessOfDelete() {
+			notyf.success("Agent deleted successfully");
+		}
+
+		document.getElementById("ProfileImage").addEventListener("change", function (event) {
+			const file = event.target.files[0];
+			const preview = document.getElementById("ProfilePreview");
+
+			if (file) {
+				const reader = new FileReader();
+				reader.onload = function (e) {
+					preview.src = e.target.result;
+					preview.style.display = "block"; // Show preview
+				};
+				reader.readAsDataURL(file);
+			} else {
+				preview.src = "#";
+				preview.style.display = "none"; // Hide if no file
+			}
+		});
+
+		function showProfileImageFromPath(path) {
+			var preview = document.getElementById("ProfilePreview");
+			if (path) {
+				preview.src = path;
+				preview.style.display = "block";
+			} else {
+				preview.src = "";
+				preview.style.display = "none";
+			}
+		}
+
+		  const toggleBtn = document.getElementById('togglePassword');
+		const pwdInput = document.getElementById('Password');
+		const icon = document.getElementById('togglePasswordIcon');
+
+		toggleBtn.addEventListener('click', function () {
+		  const show = pwdInput.type === 'password';
+		  pwdInput.type = show ? 'text' : 'password';
+
+		  // keep "bi" class; only toggle the specific icon name
+		  icon.classList.toggle('bi-eye', !show);
+		  icon.classList.toggle('bi-eye-slash', show);
+
+		  // (optional) accessibility label
+		  toggleBtn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+		});
+
+	</script>
+}
