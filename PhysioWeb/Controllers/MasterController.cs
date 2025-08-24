@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Newtonsoft.Json;
 using PhysioWeb.Hubs;
 using PhysioWeb.Models;
 using PhysioWeb.Repository;
+using System.Collections.Generic;
 using System.Data;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Security.Claims;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PhysioWeb.Controllers
 {
@@ -265,8 +268,8 @@ namespace PhysioWeb.Controllers
         {
             try
             {
-                string UserID  = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
-                
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+
                 var data = await _masterRepository.EditRentalType(UniqueID, UserID);
 
                 return Json(data);
@@ -681,12 +684,12 @@ namespace PhysioWeb.Controllers
                 UniquId = UniqueID
             };
             AreaMaster.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
-            
+
             var result = await _masterRepository.DeleteAreaMaster(AreaMaster);
             return Json(new { success = result });
         }
 
-        
+
         [HttpPost]
         public async Task<ActionResult> ListAreaMaster()
         {
@@ -733,7 +736,7 @@ namespace PhysioWeb.Controllers
             try
             {
                 string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
-               
+
                 var data = await _masterRepository.EditAreaMaster(UniqueID, UserID);
 
                 return Json(data);
@@ -760,12 +763,131 @@ namespace PhysioWeb.Controllers
 
         #endregion
 
+        #region Agent
+        public async Task<ActionResult> Agent()
+        {
+            return View();
+        }
+
+        [HttpPost]
+
+        public async Task<ActionResult> ListAgents()
+        {
+            var form = Request.Form;
+
+            // ✅ Map DataTables default parameters
+            var dataTablePara = new DataTablePara
+            {
+                iDisplayStart = Convert.ToInt32(form["start"]),
+                iDisplayLength = Convert.ToInt32(form["length"]),
+                iSortCol_0 = Convert.ToInt32(form["order[0][column]"]),
+                sSortDir_0 = form["order[0][dir]"],
+                sSearch = form["search[value]"]
+            };
+
+            // ✅ Map column filters dynamically (for first 10 columns)
+            for (int i = 0; i < 30; i++)
+            {
+                string key = $"columns[{i}][search][value]";
+                if (Request.Form.ContainsKey(key))
+                {
+                    typeof(DataTablePara)
+                        .GetProperty($"sSearch_{i}")
+                        ?.SetValue(dataTablePara, Request.Form[key].ToString());
+                }
+            }
+            dataTablePara.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            dataTablePara.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+            var result = await _masterRepository.ListAgents(dataTablePara);
+            var requestForm = Request.Form;
+            return Json(new
+            {
+                draw = requestForm["draw"],                     // Echo back the draw count
+                recordsTotal = result.iTotalRecords,            // Total records in DB
+                recordsFiltered = result.iTotalDisplayRecords,  // Total records after filtering
+                data = result.aaData                            // Actual paged data
+            });
+
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> SaveAgent(Agent agent)
+        {
+            agent.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            agent.AgencyId = User.FindFirst(ClaimTypes.GroupSid)?.Value;
+
+            string basePath = Path.Combine(Directory.GetCurrentDirectory(), "secure-images", "Agencies", agent.AgencyId, "Agents");
+            if (!Directory.Exists(basePath))
+                Directory.CreateDirectory(basePath);
+
+
+            string ImagesDir = Path.Combine(basePath, agent.Phone);
+            if (!Directory.Exists(ImagesDir)) Directory.CreateDirectory(ImagesDir);
+
+
+            if (agent.AgentProfile != null)
+            {
+                string fileName = Guid.NewGuid() + Path.GetExtension(agent.AgentProfile.FileName);
+                string filePath = Path.Combine(ImagesDir, fileName);
+
+                var relativePath = Path.Combine("Agencies", agent.AgencyId, "Agents", agent.Phone, fileName).Replace("\\", "/");
+                agent.ProfileImageFilePath = relativePath;
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await agent.AgentProfile.CopyToAsync(stream);
+                }
+            }
+
+            if (agent.UniquId == 0 || agent.Password != "")
+            {
+                string hashed = BCrypt.Net.BCrypt.HashPassword(agent.Password);
+                agent.Password = hashed;
+            }
+            else
+            {
+                agent.Password = agent.OldPassword;
+            }
+
+            var result = await _masterRepository.SaveAgent(agent);
+            return Json(result);
+        }
+
+        public async Task<ActionResult> DeleteAgent(int UniqueID)
+        {
+            var Agent = new Agent
+            {
+                UniquId = UniqueID
+            };
+            Agent.UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+            var result = await _masterRepository.DeleteAgent(Agent);
+            return Json(new { success = result });
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditAgent(int UniqueID)
+        {
+            try
+            {
+                string UserID = User.FindFirst(ClaimTypes.PrimarySid)?.Value;
+                var data = await _masterRepository.EditAgent(UniqueID, Convert.ToInt32(UserID));
+
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
         #region Comman Things
         [HttpGet]
         public async Task<IActionResult> GetAreas(string searchTerm)
         {
             string AgencyID = User.FindFirst(ClaimTypes.GroupSid)?.Value;
-            var areas = await _masterRepository.GetAreaList(searchTerm , AgencyID);
+            var areas = await _masterRepository.GetAreaList(searchTerm, AgencyID);
             return Json(areas.Select(a => a.Text).ToList());
         }
 

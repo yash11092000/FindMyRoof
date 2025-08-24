@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Globalization;
 using System.Reflection;
 using PhysioWeb.Data;
 using PhysioWeb.Models;
@@ -192,8 +193,8 @@ namespace PhysioWeb.Repository
                 AgencyDetails.Pincode,
                 AgencyDetails.Country,
                 AgencyDetails.ReraRegNo,
-                string.IsNullOrEmpty(AgencyDetails.LicenseIssueDate) ? (object)DBNull.Value : Convert.ToDateTime(AgencyDetails.LicenseIssueDate),
-                string.IsNullOrEmpty(AgencyDetails.LicenseExpiryDate) ? (object)DBNull.Value : Convert.ToDateTime(AgencyDetails.LicenseExpiryDate),
+                string.IsNullOrEmpty(AgencyDetails.LicenseIssueDate)? (object)DBNull.Value: DateTime.ParseExact(AgencyDetails.LicenseIssueDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd"),         
+                string.IsNullOrEmpty(AgencyDetails.LicenseExpiryDate)? (object)DBNull.Value: DateTime.ParseExact(AgencyDetails.LicenseExpiryDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("yyyy-MM-dd"),
                 AgencyDetails.PAN,
                 AgencyDetails.GST,
                 AgencyDetails.IsActive,

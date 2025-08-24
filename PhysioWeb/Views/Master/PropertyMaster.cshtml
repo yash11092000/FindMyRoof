@@ -187,8 +187,12 @@
 										<input type="text" class="form-control" name="Title" id="Title" placeholder="Enter property title">
 									</div>
 								</div>
-								<div class="col-md-2 d-flex" style="align-items:center">
-									<input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
+								<div class="col-md-2 mb-3">
+									<label class="form-label fw-bold">Year Of Construction</label>
+									<input type="text" class="form-control" id="YearOfConstruction" name="YearOfConstruction" placeholder="Enter Year of construction">
+								</div>
+								<div class="col-md-2 d-flex " style="align-items:center">
+									<input class="form-check-input mx-2" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
 									<label class="form-check-label fw-bold" for="IsActive"> Is Active ?</label>
 								</div>
 
@@ -286,19 +290,6 @@
 							</div>
 
 							<div class="row">
-							
-								<div class="col-md-4 mb-3">
-									<label class="form-label fw-bold">Year Of Construction</label>
-									<input type="text" class="form-control" id="YearOfConstruction" name="YearOfConstruction" placeholder="Enter Year of construction">
-								</div>
-
-							</div>
-
-							<div class="mb-3">
-								<label class="form-label fw-bold">Description</label>
-								<textarea class="form-control" name="Description" id="Description" rows="3" placeholder="Enter property description"></textarea>
-							</div>
-							<div class="row">
 								<div class="col-md-4 mb-3">
 									<label class="form-label fw-bold">Contact Person Name<span style="color: red;">*</span></label>
 									<input type="text" class="form-control" id="ContactPersonName" name="ContactPersonName" placeholder="Enter Contact Person Name">
@@ -315,6 +306,14 @@
 								</div>
 
 							</div>
+
+							<div class="row">
+								<div class="mb-3">
+									<label class="form-label fw-bold">Description</label>
+									<textarea class="form-control" name="Description" id="Description" rows="3" placeholder="Enter property description"></textarea>
+								</div>
+							</div>
+
 							<button type="button" class="btn btn-success next-step">Next</button>
 						</div>
 
@@ -393,9 +392,9 @@
 										<input type="number" class="form-control" name="BudgetMax" id="BudgetMax" placeholder="Enter amount">
 										<select id="AmountUnitMaxPrice" class="form-select" style="max-width: 100px;  background-color: #a9a9a96b;">
 											@foreach (var item in Model.AmountUnitList)
-										{
-											<option value="@item.Value">@item.Text</option>
-										}
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
 										</select>
 									</div>
 									<span id="displayMaxBudget" class="text-success fw-bold"></span>

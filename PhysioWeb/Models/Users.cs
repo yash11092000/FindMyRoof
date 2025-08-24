@@ -19,7 +19,7 @@ namespace PhysioWeb.Models
 
         public Users()
         {
-            
+
         }
         public Users(IDataReader data)
         {
@@ -59,6 +59,10 @@ namespace PhysioWeb.Models
             if (!rdr.IsDBNull(rdr.GetOrdinal("AgencyId")))
             {
                 obj.AgencyId = rdr.GetString(rdr.GetOrdinal("AgencyId"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AgencyLogo")))
+            {
+                obj.AgencyLogo = rdr.GetString(rdr.GetOrdinal("AgencyLogo"));
             }
             //if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
             //{

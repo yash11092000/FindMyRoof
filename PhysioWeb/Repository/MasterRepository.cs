@@ -783,7 +783,7 @@ namespace PhysioWeb.Repository
                     "SubArea", "Country", "Amenities","UserID" ,"AgencyID" ,"Vastu" , "YearOfConstruction" , "PropertyCategory",
                     "PreferedBuyerType" , "AmountUnitMinPrice" , "AmountUnitMaxPrice" ,"ConvertedActualPrice" , "ConvertedNegotiablePrice",
                     "TotalFloorBuilding" ,"IsNegotiable"
-                }; 
+                };
 
                 object[] parameterValues = { propertyMaster.UniquId, propertyMaster.Title,
                     propertyMaster.Description, propertyMaster.PropertyType,
@@ -796,7 +796,7 @@ namespace PhysioWeb.Repository
                     propertyMaster.ContactPersonName, propertyMaster.ContactPersonPhone,
                     propertyMaster.ContactPersonAlternatePhone, propertyMaster.Area, propertyMaster.SubArea,
                     propertyMaster.Country ,propertyMaster.Amenities, propertyMaster.UserID,  propertyMaster.AgencyId,
-                    propertyMaster.Vastu , propertyMaster.YearOfConstruction , propertyMaster.PropertyCategory, 
+                    propertyMaster.Vastu , propertyMaster.YearOfConstruction , propertyMaster.PropertyCategory,
                     propertyMaster.PreferedBuyerType ,propertyMaster.AmountUnitMinPrice ,propertyMaster.AmountUnitMaxPrice,
                     propertyMaster.ConvertedActualPrice ,propertyMaster.ConvertedNegotiablePrice,
                     propertyMaster.TotalFloorBuilding,propertyMaster.IsNegotiable
@@ -1010,12 +1010,12 @@ namespace PhysioWeb.Repository
             }
         }
 
-        public async Task<HomeDashboard> SearchProperties(string location, string propertyType, string rentalType, string propertyCategory, string amenities, string minPrice, string maxPrice, int pageNo, int pageSize)
+        public async Task<HomeDashboard> SearchProperties(string location, string propertyType, string Bedroom, string rentalType, string propertyCategory, string amenities, string minPrice, string maxPrice, int pageNo, int pageSize)
         {
             try
             {
-                string[] parametersName = { "Location", "PropertyType", "RentalType", "PropertyCategory", "Amenities", "MinPrice", "MaxPrice", "PageNo", "PageSize" };
-                object[] Values = { location, propertyType, rentalType, propertyCategory, amenities, minPrice, maxPrice, pageNo, pageSize };
+                string[] parametersName = { "Location", "PropertyType", "Bedrooms", "RentalType", "PropertyCategory", "Amenities", "MinPrice", "MaxPrice", "PageNo", "PageSize" };
+                object[] Values = { location, propertyType, Bedroom, rentalType, propertyCategory, amenities, minPrice, maxPrice, pageNo, pageSize };
 
                 string Sp = "FMR_SearchProperties";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parametersName, Values);
@@ -1024,6 +1024,44 @@ namespace PhysioWeb.Repository
                 {
                     home.PropertyDetails.Add(new PropertyDetails(data, 1));
                 }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        home.PropertyTypeList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        home.BedroomList.Add(new DropDownSource(data, true));
+                    }
+                }
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        home.AmenityList.Add(new DropDownSource(data, true));
+                    }
+                }
+
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        home.RentalTypeList.Add(new DropDownSource(data, true));
+                    }
+                }
+
+                if (data.NextResult())
+                {
+                    while (data.Read())
+                    {
+                        home.PropertyCategoryList.Add(new DropDownSource(data, true));
+                    }
+                }
+
                 if (data.NextResult())
                 {
                     while (data.Read())
@@ -1072,6 +1110,132 @@ namespace PhysioWeb.Repository
                 {
                     PropertyMaster PropertyMaster = new PropertyMaster(data, 1);
                     return PropertyMaster;
+                }
+                return null;
+
+                //bind 
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<DataTableResult> ListAgents(DataTablePara dataTablePara)
+        {
+            try
+            {
+                string[] parameterName = new string[]
+                {
+                    "DisplayLength", "DisplayStart", "SortCol", "SortDir", "Search",
+                    "FullName", "Email","Phone","CreatedBy","IsActive","AgencyId"
+                };
+
+                object[] parameterValue = new object[]
+                {
+                    dataTablePara.iDisplayLength,dataTablePara.iDisplayStart,dataTablePara.iSortCol_0,
+                    dataTablePara.sSortDir_0,dataTablePara.sSearch,
+                    dataTablePara.sSearch_1,dataTablePara.sSearch_2,dataTablePara.sSearch_3,
+                    dataTablePara.sSearch_4,dataTablePara.sSearch_5,dataTablePara.AgencyId
+                };
+
+                var reader = await _dbHelper.GetDataReaderAsync("[FMR_DataListAgent]", parameterName, parameterValue);
+
+                var result = new DataTableResult();
+                var list = new List<Agent>();
+
+                while (reader.Read())
+                {
+                    list.Add(new Agent(reader, 0));
+                }
+
+                if (reader.NextResult())
+                {
+                    while (reader.Read())
+                    {
+                        result.iTotalRecords = Convert.ToInt32(reader[0]);
+                    }
+                }
+
+                result.iTotalDisplayRecords = result.iTotalRecords;
+                result.aaData = list;
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<int> SaveAgent(Agent agent)
+        {
+            try
+            {
+                string[] parametersName = {
+                "UniquId", "UserName", "FirstName", "MiddleName", "LastName", "Email",
+                "Phone", "AlternatePhone","IsActive","ProfileImage","AgencyID","Password"
+            };
+
+                object[] Values = {
+                        agent.UniquId,
+                        agent.UserName,
+                        agent.FirstName,
+                        agent.MiddleName,
+                        agent.LastName,
+                        agent.Email,
+                        agent.Phone,
+                        agent.AlternatePhone,
+                        agent.IsActive,
+                        agent.ProfileImageFilePath,
+                        agent.AgencyId,
+                        agent.Password
+                    };
+
+
+                string Sp = "FMR_SaveAgent";
+                var data = await _dbHelper.ExecuteScalarAsync(Sp, parametersName, Values);
+                return Convert.ToInt32(data);
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteAgent(Agent agent)
+        {
+            try
+            {
+                string[] parametersName = { "UniquId", "UserID" };
+                object[] Values = { agent.UniquId, agent.UserID };
+
+                string Sp = "FMR_DeleteAgent";
+                int RecordAffected = await _dbHelper.ExecuteNonQueryAsync(Sp, parametersName, Values);
+                return RecordAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                // Optional: log error here
+                throw;
+            }
+        }
+
+        public async Task<Agent> EditAgent(int uniqueID, int UserID)
+        {
+            try
+            {
+                string[] parameterNames = { "UniqueID", "UserID" };
+                object[] parameterValues = { uniqueID, UserID };
+
+                string Sp = "FMR_EditAgent";
+                var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                while (data.Read())
+                {
+                    Agent Agent = new Agent(data, 1);
+                    return Agent;
                 }
                 return null;
 

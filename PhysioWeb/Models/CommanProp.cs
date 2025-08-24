@@ -14,5 +14,6 @@
         public string UpdatedBy { get; set; }
         public int TotalCount { get; set; }
         public int RowNo { get; set; }
+        public string AgencyLogo { get; set; }
     }
 }

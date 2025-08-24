@@ -13,6 +13,31 @@
 			transform: translateY(-8px);
 			box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 		}
+
+	.pagination {
+		margin: 20px 0;
+	}
+
+	.page-item.active .page-link {
+		background-color: #198754;
+		border-color: #198754;
+	}
+
+	.page-link {
+		color: #198754;
+	}
+
+		.page-link:hover {
+			color: #146c43;
+		}
+
+	.calculation-box {
+		background-color: #f8f9fa;
+		border-left: 4px solid #198754;
+		padding: 15px;
+		margin: 20px 0;
+		border-radius: 5px;
+	}
 </style>
 
 <div class="container my-2">
@@ -20,51 +45,107 @@
 	<div id="propertyContainer">
 		@await Html.PartialAsync("_PropertyListPartial", Model)
 
-		
+
 	</div>
 
 	<!-- Pagination -->
 
-		<nav>
-			<ul class="pagination justify-content-center" id="pagination">
-				@{
-					int totalPageCount = (int)Math.Ceiling((decimal)Model.TotalCount / 6);
-					for (int i = 1; i <= totalPageCount; i++)
+	<nav class="my-3">
+		<ul class="pagination justify-content-center" id="pagination">
+			@{
+				int totalPageCount = (int)Math.Ceiling((decimal)Model.TotalCount / 6);
+				int range = 2;
+
+				<li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+					<a class="page-link" href="#" data-page="@(Model.CurrentPage - 1)">Previous</a>
+				</li>
+
+
+				@if (Model.CurrentPage > range + 1)
+				{
+					<li class="page-item"><a class="page-link" href="#" data-page="1">1</a></li>
+					@if (Model.CurrentPage > range + 2)
 					{
-						<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-							<a class="page-link-ajax bg-success" href="#" data-page="@i">@i</a>
-						</li>
+						<li class="page-item disabled"><span class="page-link">...</span></li>
 					}
 				}
-			</ul>
-		</nav>
-	
+
+				@for (int i = Math.Max(1, Model.CurrentPage - range); i <= Math.Min(totalPageCount, Model.CurrentPage + range); i++)
+				{
+					<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+						<a class="page-link" href="#" data-page="@i">@i</a>
+					</li>
+				}
+
+				@if (Model.CurrentPage < totalPageCount - range)
+				{
+					@if (Model.CurrentPage < totalPageCount - range - 1)
+					{
+						<li class="page-item disabled"><span class="page-link">...</span></li>
+					}
+					<li class="page-item"><a class="page-link" href="#" data-page="@totalPageCount">@totalPageCount</a></li>
+				}
+
+
+				<li class="page-item @(Model.CurrentPage == totalPageCount ? "disabled" : "")">
+					<a class="page-link" href="#" data-page="@(Model.CurrentPage + 1)">Next</a>
+				</li>
+			}
+		</ul>
+	</nav>
+
 </div>
 
 @section Scripts {
 	<script>
-			$(document).on("click", ".page-link-ajax", function (e) {
-			e.preventDefault();
+				// Handle pagination clicks
+			$(document).on('click', '.page-link-ajax', function(e) {
+				e.preventDefault();
 
-			var page = $(this).data("page");
-			var pageSize = 6;
+				// Get the page number from data attribute
+				var page = $(this).data('page');
+				console.log(page);
 
+				// Make AJAX call
+				$.ajax({
+					url: '/Home/LoadProperties', // Update with your URL
+					type: 'GET',
+					data: { PageNo: page, PageSize: 6 }, // Include other filter parameters if needed
+					success: function(result) {
+						// Update your content with the returned data
+						$('#propertyContainer').html(result); // Update with your container ID
+
+						// Update URL without reloading page (optional)
+						history.pushState(null, null, '?page=' + page);
+					},
+					error: function(xhr, status, error) {
+						console.error('Error loading page:', error);
+						alert('Error loading page content. Please try again.');
+					}
+				});
+			});
+
+			// Handle browser back/forward buttons
+			window.addEventListener('popstate', function() {
+				// Parse page from URL and load content
+				var urlParams = new URLSearchParams(window.location.search);
+				var page = urlParams.get('page') || 1;
+				loadPageContent(page);
+			});
+
+		function loadPageContent(page) {
+			// Same AJAX call as above
 			$.ajax({
-				url: '/Master/LoadProperties',
+				url: '/Home/LoadProperties',
 				type: 'GET',
-				data: { PageNo: page,pageSize : pageSize},
-				success: function (result) {
-					// Replace properties
-					$("#propertyContainer").html(result);
-
-					// Update pagination active class
-					$("#pagination li").removeClass("active");
-					$("#pagination li").eq(page - 1).addClass("active");
+				data: { PageNo: page, PageSize: 6 },
+				success: function(result) {
+					$('#propertyContainer').html(result);
 				},
-				error: function () {
-					alert("Error loading properties.");
+				error: function(xhr, status, error) {
+					console.error('Error loading page:', error);
 				}
 			});
-		});
+		}
 	</script>
-}
+	}
