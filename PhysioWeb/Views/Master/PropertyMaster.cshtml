@@ -217,7 +217,7 @@
 								</div>
 								<div class="col-md-4 mb-3">
 									<label class="form-label fw-bold">Transaction Type<span style="color: red;">*</span></label>
-									<select class="form-select" name="Availability" id="Availability">
+									<select class="form-select" name="TransactionType" id="TransactionType">
 										<option value="">Select Transaction Type</option>
 										@foreach (var item in Model.RentalTypeList)
 										{
@@ -780,7 +780,7 @@
 				UniquId : $("#UniquId").val(),
 				Title: $("#Title").val(),
 				PropertyType: $("#PropertyType").val(),
-				TransactionType: $("#Availability").val(),
+				TransactionType: $("#TransactionType").val(),
 				Bedrooms: $("#Bedrooms").val(),
 				Bathrooms: $("#Bathrooms").val(),
 				CarpetArea: $("#CarpetArea").val(),
@@ -947,11 +947,44 @@
 				$("#IsActive").prop("checked", true);
 				$("#Amenities").val("");
 			}
-			 function OnSuccessOfEdit(data) {
-				$("#UniquId").val(data.uniquId);
-			   $("#IsActive").prop("checked", data.isActive);
+					function OnSuccessOfEdit(data) {
+						
+			// ✅ Switch tab first
+			var triggerTab = new bootstrap.Tab(document.querySelector('#form-tab'));
+			triggerTab.show();
+			console.log(data);
+			// ✅ Now bind form values
+			$("#UniquId").val(data.uniquId);
+			$("#Title").val(data.title);
+			$("#PropertyType").val(data.propertyType);
+			$("#Bedrooms").val(data.bedrooms);
+			$("#TransactionType").val(data.transactionType);
+			$("#PropertyCategory").val(data.propertyCategory);
+			$("#Bathrooms").val(data.bathrooms);
+			$("#CarpetArea").val(data.carpetArea);
+			$("#Floor").val(data.Floor);
+			$("#TotalFloorBuilding").val(data.totalFloorBuilding);
+			$("#FurnishingStatus").val(data.furnishingStatus);
+			$("#Vastu").val(data.vastu);
+			$("#PreferedBuyerType").val(data.preferedBuyerType);
+			$("#YearOfConstruction").val(data.yearOfConstruction);
+			$("#Description").val(data.description);
+			$("#ContactPersonName").val(data.contactPersonName);
+			$("#ContactPersonPhone").val(data.contactPersonPhone);
+			$("#ContactPersonAlternatePhone").val(data.contactPersonAlternatePhone);
+			$("#Area").val(data.area);
+			$("#SubArea").val(data.subArea);
+			$("#City").val(data.city);
+			$("#State").val(data.state);
+			$("#Country").val(data.country);
+			$("#Address").val(data.address);
+			$("#Landmark").val(data.landmark);
 
-			}
+			// If checkbox
+			 $("#IsNegotiable").prop("checked", data.isNegotiable);
+			 $("#IsActive").prop("checked", data.isActive);
+		}
+
 		$(document).on("change", "#IsNegotiable", function () {
 			if ($(this).is(":checked")) {
 				$(".negotiableprice").show();
@@ -1048,7 +1081,7 @@
 			const requiredFields = [
 				{ id: "#Title", msg: "Please enter Title" },
 				{ id: "#PropertyType", msg: "Please select Property Type" },
-				{ id: "#Availability", msg: "Please select Transaction Type" },
+				{ id: "#TransactionType", msg: "Please select Transaction Type" },
 				{ id: "#Bedrooms", msg: "Please enter number of Bedrooms" },
 				// { id: "#Bathrooms", msg: "Please enter number of Bathrooms" },
 				{ id: "#CarpetArea", msg: "Please enter Property Size (sq. ft.)" },

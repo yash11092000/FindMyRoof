@@ -1070,7 +1070,7 @@ namespace PhysioWeb.Repository
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
                 while (data.Read())
                 {
-                    PropertyMaster PropertyMaster = new PropertyMaster(data, 3);
+                    PropertyMaster PropertyMaster = new PropertyMaster(data, 1);
                     return PropertyMaster;
                 }
                 return null;

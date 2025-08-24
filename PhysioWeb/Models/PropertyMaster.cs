@@ -345,98 +345,78 @@ namespace PhysioWeb.Models
             {
                 obj.UniquId = rdr.GetInt32(rdr.GetOrdinal("UniquId"));
             }
+
             if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyName")))
             {
                 obj.Title = rdr.GetString(rdr.GetOrdinal("PropertyName"));
             }
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Description")))
-            {
-                obj.Description = rdr.GetString(rdr.GetOrdinal("Description"));
-            }
-
             if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyType")))
             {
                 obj.PropertyType = rdr.GetString(rdr.GetOrdinal("PropertyType"));
             }
-
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Bedroom")))
+            {
+                obj.Bedrooms = rdr.GetInt32(rdr.GetOrdinal("Bedroom"));
+            }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyCategory")))
+            {
+                obj.PropertyCategory = rdr.GetString(rdr.GetOrdinal("PropertyCategory"));
+            }
             if (!rdr.IsDBNull(rdr.GetOrdinal("TransactionType")))
             {
                 obj.TransactionType = rdr.GetString(rdr.GetOrdinal("TransactionType"));
             }
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Bedrooms")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Bathroom")))
             {
-                obj.Bedrooms = rdr.GetInt32(rdr.GetOrdinal("Bedrooms"));
+                obj.Bathrooms = rdr.GetInt32(rdr.GetOrdinal("Bathroom"));
             }
 
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Bathrooms")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertySize")))
             {
-                obj.Bathrooms = rdr.GetInt32(rdr.GetOrdinal("Bathrooms"));
+                obj.CarpetArea = rdr.GetDecimal(rdr.GetOrdinal("PropertySize"));
             }
 
-            if (!rdr.IsDBNull(rdr.GetOrdinal("CarpetArea")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Floor")))
             {
-                obj.CarpetArea = rdr.GetDecimal(rdr.GetOrdinal("CarpetArea"));
+                obj.Floor = rdr.GetString(rdr.GetOrdinal("Floor"));
             }
 
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Address")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("TotalFloorBuilding")))
             {
-                obj.Address = rdr.GetString(rdr.GetOrdinal("Address"));
-            }
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("City")))
-            {
-                obj.City = rdr.GetString(rdr.GetOrdinal("City"));
-            }
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("State")))
-            {
-                obj.State = rdr.GetString(rdr.GetOrdinal("State"));
-            }
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Country")))
-            {
-                obj.Country = rdr.GetString(rdr.GetOrdinal("Country"));
-            }
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("PinCode")))
-            {
-                obj.PinCode = rdr.GetString(rdr.GetOrdinal("PinCode"));
-            }
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Landmark")))
-            {
-                obj.Landmark = rdr.GetString(rdr.GetOrdinal("Landmark"));
-            }
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("BudgetMin")))
-            {
-                obj.BudgetMin = rdr.GetDecimal(rdr.GetOrdinal("BudgetMin"));
-            }
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("BudgetMax")))
-            {
-                obj.BudgetMax = rdr.GetDecimal(rdr.GetOrdinal("BudgetMax"));
+                obj.TotalFloorBuilding = rdr.GetInt32(rdr.GetOrdinal("TotalFloorBuilding"));
             }
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("FurnishingStatus")))
             {
                 obj.FurnishingStatus = rdr.GetString(rdr.GetOrdinal("FurnishingStatus"));
             }
-
-            if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Vastu")))
             {
-                obj.IsActive = rdr.GetBoolean(rdr.GetOrdinal("IsActive"));
+                obj.Vastu = rdr.GetString(rdr.GetOrdinal("Vastu"));
             }
 
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PreferedBuyerType")))
+            {
+                obj.PreferedBuyerType = rdr.GetString(rdr.GetOrdinal("PreferedBuyerType"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("YearOfConstruction")))
+            {
+                obj.YearOfConstruction = rdr.GetInt32(rdr.GetOrdinal("YearOfConstruction"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PropertyDescription")))
+            {
+                obj.Description = rdr.GetString(rdr.GetOrdinal("PropertyDescription"));
+            }
             if (!rdr.IsDBNull(rdr.GetOrdinal("ContactPersonName")))
             {
                 obj.ContactPersonName = rdr.GetString(rdr.GetOrdinal("ContactPersonName"));
             }
 
-            if (!rdr.IsDBNull(rdr.GetOrdinal("ContactPersonPhone")))
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ContactPersonNo")))
             {
-                obj.ContactPersonPhone = rdr.GetString(rdr.GetOrdinal("ContactPersonPhone"));
+                obj.ContactPersonPhone = rdr.GetString(rdr.GetOrdinal("ContactPersonNo"));
             }
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("ContactPersonAlternatePhone")))
@@ -453,16 +433,65 @@ namespace PhysioWeb.Models
             {
                 obj.SubArea = rdr.GetString(rdr.GetOrdinal("SubArea"));
             }
+            if (!rdr.IsDBNull(rdr.GetOrdinal("PinCode")))
+            {
+                obj.PinCode = rdr.GetString(rdr.GetOrdinal("PinCode"));
+            }
 
+            if (!rdr.IsDBNull(rdr.GetOrdinal("City")))
+            {
+                obj.City = rdr.GetString(rdr.GetOrdinal("City"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("State")))
+            {
+                obj.State = rdr.GetString(rdr.GetOrdinal("State"));
+            }
             if (!rdr.IsDBNull(rdr.GetOrdinal("Country")))
             {
                 obj.Country = rdr.GetString(rdr.GetOrdinal("Country"));
             }
 
-            if (!rdr.IsDBNull(rdr.GetOrdinal("Floor")))
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Address")))
             {
-                obj.Floor = rdr.GetString(rdr.GetOrdinal("Floor"));
+                obj.Address = rdr.GetString(rdr.GetOrdinal("Address"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("Landmark")))
+            {
+                obj.Landmark = rdr.GetString(rdr.GetOrdinal("Landmark"));
+            }
+
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("MinPrice")))
+            //    obj.BudgetMin = rdr.GetDecimal(rdr.GetOrdinal("MinPrice"));
+
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("MaxPrice")))
+            //    obj.BudgetMax = rdr.GetDecimal(rdr.GetOrdinal("MaxPrice"));
+
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("AmountUnitMinPrice")))
+            //    obj.AmountUnitMinPrice = rdr.GetString(rdr.GetOrdinal("AmountUnitMinPrice"));
+
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("AmountUnitMaxPrice")))
+            //    obj.AmountUnitMaxPrice = rdr.GetString(rdr.GetOrdinal("AmountUnitMaxPrice"));
+
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("ConvertedActualPrice")))
+            //    obj.ConvertedActualPrice = rdr.GetDecimal(rdr.GetOrdinal("ConvertedActualPrice"));
+
+            //if (!rdr.IsDBNull(rdr.GetOrdinal("ConvertedNegotiablePrice")))
+            //    obj.ConvertedNegotiablePrice = rdr.GetDecimal(rdr.GetOrdinal("ConvertedNegotiablePrice"));
+
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("IsNegotiable")))
+            {
+                obj.IsNegotiable = rdr.GetBoolean(rdr.GetOrdinal("IsNegotiable"));
+            }
+
+            if (!rdr.IsDBNull(rdr.GetOrdinal("IsActive")))
+            {
+                obj.IsActive = rdr.GetBoolean(rdr.GetOrdinal("IsActive"));
             }
         }
+
     }
 }
