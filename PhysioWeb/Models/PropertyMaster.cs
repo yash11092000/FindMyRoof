@@ -462,25 +462,36 @@ namespace PhysioWeb.Models
             {
                 obj.Landmark = rdr.GetString(rdr.GetOrdinal("Landmark"));
             }
+            
+            if (!rdr.IsDBNull(rdr.GetOrdinal("MinPrice")))
+            {
+                obj.BudgetMin = rdr.GetDecimal(rdr.GetOrdinal("MinPrice"));
+            }
 
-            //if (!rdr.IsDBNull(rdr.GetOrdinal("MinPrice")))
-            //    obj.BudgetMin = rdr.GetDecimal(rdr.GetOrdinal("MinPrice"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("MaxPrice")))
+            {
+                obj.BudgetMax = rdr.GetDecimal(rdr.GetOrdinal("MaxPrice"));
+            }
 
-            //if (!rdr.IsDBNull(rdr.GetOrdinal("MaxPrice")))
-            //    obj.BudgetMax = rdr.GetDecimal(rdr.GetOrdinal("MaxPrice"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AmountUnitMinPrice")))
+            {
+                obj.AmountUnitMinPrice = rdr.GetString(rdr.GetOrdinal("AmountUnitMinPrice"));
+            }
 
-            //if (!rdr.IsDBNull(rdr.GetOrdinal("AmountUnitMinPrice")))
-            //    obj.AmountUnitMinPrice = rdr.GetString(rdr.GetOrdinal("AmountUnitMinPrice"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("AmountUnitMaxPrice")))
+            {
+                obj.AmountUnitMaxPrice = rdr.GetString(rdr.GetOrdinal("AmountUnitMaxPrice"));
+            }
 
-            //if (!rdr.IsDBNull(rdr.GetOrdinal("AmountUnitMaxPrice")))
-            //    obj.AmountUnitMaxPrice = rdr.GetString(rdr.GetOrdinal("AmountUnitMaxPrice"));
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ConvertedActualPrice")))
+            {
+                obj.ConvertedActualPrice = rdr.GetDecimal(rdr.GetOrdinal("ConvertedActualPrice"));
+            }
 
-            //if (!rdr.IsDBNull(rdr.GetOrdinal("ConvertedActualPrice")))
-            //    obj.ConvertedActualPrice = rdr.GetDecimal(rdr.GetOrdinal("ConvertedActualPrice"));
-
-            //if (!rdr.IsDBNull(rdr.GetOrdinal("ConvertedNegotiablePrice")))
-            //    obj.ConvertedNegotiablePrice = rdr.GetDecimal(rdr.GetOrdinal("ConvertedNegotiablePrice"));
-
+            if (!rdr.IsDBNull(rdr.GetOrdinal("ConvertedNegotiablePrice")))
+            {
+                obj.ConvertedNegotiablePrice = rdr.GetDecimal(rdr.GetOrdinal("ConvertedNegotiablePrice"));
+            }
 
             if (!rdr.IsDBNull(rdr.GetOrdinal("IsNegotiable")))
             {

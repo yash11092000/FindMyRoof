@@ -978,6 +978,13 @@
 			$("#Country").val(data.country);
 			$("#Address").val(data.address);
 			$("#Landmark").val(data.landmark);
+			$("#BudgetMax").val(data.convertedActualPrice);
+			$("#BudgetMin").val(data.convertedNegotiablePrice);
+			$("#displayMaxBudget").val(data.budgetMax);
+			$("#ConvertedNegotiablePrice").val(data.convertedNegotiablePrice);
+			$("#displayMinBudget").val(data.budgetMin);
+			$("#ConvertedActualPrice").val(data.convertedActualPrice);
+			$("#Amenities").val(data.amenities);
 
 			// If checkbox
 			 $("#IsNegotiable").prop("checked", data.isNegotiable);

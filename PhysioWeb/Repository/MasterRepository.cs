@@ -1106,13 +1106,39 @@ namespace PhysioWeb.Repository
 
                 string Sp = "FMR_EditPropertyMaster";
                 var data = await _dbHelper.GetDataReaderAsync(Sp, parameterNames, parameterValues);
+                var PropertyMaster = new PropertyMaster();
+
                 while (data.Read())
                 {
-                    PropertyMaster PropertyMaster = new PropertyMaster(data, 3);
+                    PropertyMaster = new PropertyMaster(data, 3);
+                    if (data.NextResult())
+                    {
+                        while (data.Read())
+                        {
+                            PropertyMaster.Amenities = Convert.ToString(data.GetValue(0));
+                        }
+                    }
+                    if (data.NextResult())
+                    {
+                        while (data.Read())
+                        {
+                            PropertyMaster.Images.Add(new DropDownSource(data));
+                        }
+                    }
+
+                    if (data.NextResult())
+                    {
+                        while (data.Read())
+                        {
+                            PropertyMaster.Videos.Add(new DropDownSource(data));
+
+                        }
+                    }
+
                     return PropertyMaster;
                 }
-                return null;
 
+                return PropertyMaster;
                 //bind 
             }
             catch (Exception e)
