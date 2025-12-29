@@ -1,5 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace PhysioWeb.Repository
 {
@@ -15,24 +17,27 @@ namespace PhysioWeb.Repository
             _accessToken = configuration["WhatsAppConfig:AccessToken"];
             _recipientNumber = configuration["WhatsAppConfig:RecipientNumber"];
         }
-        public async Task<string> SendImageAsync(string toPhoneNumber, string mediaId)
+        public async Task<string> SendImageAsync(string toPhoneNumber, string uploadResponse)
         {
+            string mediaId = JObject.Parse(uploadResponse)["id"]?.ToString();
+            if (string.IsNullOrEmpty(mediaId))
+                throw new Exception("Invalid media ID received from upload response.");
+
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var payload = $@"
-            {{
-                ""messaging_product"": ""whatsapp"",
-                ""to"": ""{toPhoneNumber}"",
-                ""type"": ""image"",
-                ""image"": {{
-                    ""id"": ""{mediaId}""
-                }}
-            }}";
+                var payload = new
+                {
+                    messaging_product = "whatsapp",
+                    to = toPhoneNumber,
+                    type = "image",
+                    image = new { id = mediaId }
+                };
+                var jsonPayload = JsonConvert.SerializeObject(payload);
 
-                var content = new StringContent(payload, Encoding.UTF8, "application/json");
+                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync($"https://graph.facebook.com/v22.0/{_phoneNumberId}/messages", content);
 
                 var json = await response.Content.ReadAsStringAsync();

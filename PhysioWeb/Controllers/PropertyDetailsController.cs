@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PhysioWeb.Models;
@@ -11,11 +12,13 @@ namespace PhysioWeb.Controllers
     {
         private readonly IPropertyRepository _propertyRepository;
         private readonly IWhatsAppService _whatsAppService;
+        private readonly ITelegramServices _telegramservice;
 
-        public PropertyDetailsController(IPropertyRepository propertyRepository, IWhatsAppService whatsAppService)
+        public PropertyDetailsController(IPropertyRepository propertyRepository, IWhatsAppService whatsAppService, ITelegramServices telegramservice)
         {
             _propertyRepository = propertyRepository;
             _whatsAppService = whatsAppService;
+            _telegramservice = telegramservice;
         }
         public async Task<ActionResult> Property(int PropertyId)
         {
@@ -80,16 +83,29 @@ namespace PhysioWeb.Controllers
 
         #region whatsapp integration
         [HttpPost]
-        public async Task<IActionResult> SendImage(string MediaUrl)
+        public async Task<IActionResult> SendImage(List<string> MediaUrl)
         {
-            string uploadResponse = await _whatsAppService.UploadImageAsync(MediaUrl);
+            if (MediaUrl == null || !MediaUrl.Any())
+                return BadRequest("No media provided.");
+
+            // Take first image (you can loop through all if needed)
+            string relativePath = MediaUrl[0];
+
+            // Convert to physical path on the server
+            string physicalPath = Path.Combine(Directory.GetCurrentDirectory(), relativePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+            if (!System.IO.File.Exists(physicalPath))
+                return NotFound($"File not found: {physicalPath}");
+            string uploadResponse = await _whatsAppService.UploadImageAsync(physicalPath);
 
             //string imageUrl = "https://example.com/myimage.jpg";
             //string caption = "Hello! Here's your image.";
 
-            string result = await _whatsAppService.SendImageAsync("8779791536", uploadResponse);
+            string result = await _whatsAppService.SendImageAsync("+918779791536", uploadResponse);
             return Content(result);
         }
         #endregion
+
+        
     }
 }

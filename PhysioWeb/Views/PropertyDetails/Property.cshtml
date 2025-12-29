@@ -588,24 +588,24 @@
 				<img src="/secure-images/@Model.Images[0].Value" class="w-100 h-100" style="object-fit:contain;" id="mainImage" alt="Property image">
 
 				<!-- Floating Share Button -->
-				<button class="btn btn-danger" style="position:absolute;top:1rem;right:1rem;"
+				<button class="btn btn-success" style="position:absolute;top:1rem;right:1rem;"
 						data-bs-toggle="modal"
 						data-bs-target="#shareModal2">
-					<i class="bi bi-share-fill"></i>
+					<i class="bi bi-whatsapp"></i>
 				</button>
 			</div>
 
 			<!-- Thumbnails -->
 			<div class="thumbnail-scroll mb-4">
-				@for (int i = 0; i < Model.Images.Count; i++)
-				{
-					string activeClass = i == 0 ? "active-thumb" : "";
+					@for (int i = 0; i < Model.Images.Count; i++)
+					{
+						string activeClass = i == 0 ? "active-thumb" : "";
 					<div class="thumb-container @activeClass" onclick="changeMainImage('/secure-images/@Model.Images[i].Value', this)">
 						<img src="/secure-images/@Model.Images[i].Value" class="gallery-thumb" alt="Thumbnail @(i+1)">
 					</div>
-				}
-				@for (int i = 0; i < Model.Videos.Count; i++)
-				{
+					}
+					@for (int i = 0; i < Model.Videos.Count; i++)
+					{
 					<div class="thumb-container video-thumb"
 						 onclick="openVideoModal('@Url.Content("~/secure-images/" + Model.Videos[i].Value)')">
 						<video class="thumbnail-preview" muted loop>
@@ -613,7 +613,7 @@
 						</video>
 						<i class="bi bi-play-circle-fill"></i>
 					</div>
-				}
+					}
 			</div>
 
 			<!-- Property Highlights -->
@@ -771,7 +771,7 @@
 				<div class="detail-card tab-pane fade" id="DescriptionsTab" role="tabpanel" aria-labelledby="Descriptions-tab">
 					<h3 class="section-title">Description</h3>
 					<div class="description-content" style="line-height: 1.8;">
-						@Html.Raw(Model.Description.Replace("\n", "<br>"))
+					@Html.Raw(Model.Description.Replace("\n", "<br>"))
 					</div>
 				</div>
 
@@ -779,17 +779,17 @@
 				<div class="detail-card tab-pane fade" id="Aminities" role="tabpanel" aria-labelledby="Aminities-tab">
 					<h3 class="section-title">Amenities</h3>
 					<div class="d-flex flex-wrap gap-2">
-						@for (int j = 0; j < Model.AmenityList.Count; j++)
-						{
+					@for (int j = 0; j < Model.AmenityList.Count; j++)
+					{
 							<span class="amenity-badge">
 								<i class="bi bi-check-circle me-1"></i> @Model.AmenityList[j].Text
 							</span>
-						}
+					}
 					</div>
 				</div>
 			</div>
 			<!-- Floor Plans -->
-			@* <div class="detail-card p-3 p-md-4">
+					@* <div class="detail-card p-3 p-md-4">
 				<h3 class="section-title">Floor Plans</h3>
 				<div class="text-center">
 					<img src="https://via.placeholder.com/800x600?text=Floor+Plan" alt="Floor Plan" class="img-fluid rounded mb-3">
@@ -864,13 +864,13 @@
 
 				<div class="splide__track">
 					<div class="splide__list">
-						@foreach (var prop in Model.PropertyDetails)
-						{
+					@foreach (var prop in Model.PropertyDetails)
+					{
 							<div class="splide__slide px-2">
 								<div class="card h-100 border-0 shadow-hover">
 									<!-- Badge for status -->
 									<div class="position-absolute top-0 start-0 mt-3 ms-3">
-										@* <span class="badge @(prop.Status == "Sale" ? "bg-success" : "bg-primary")">
+									@* <span class="badge @(prop.Status == "Sale" ? "bg-success" : "bg-primary")">
 									@(prop.Status == "Sale" ? "For Sale" : "For Rent")
 								</span> *@
 									</div>
@@ -894,7 +894,7 @@
 
 										<p class="text-muted mb-3">
 											<i class="fas fa-map-marker-alt text-success me-1"></i>
-											@prop.Address
+										@prop.Address
 										</p>
 
 										<div class="property-features d-flex justify-content-between text-muted mb-3">
@@ -923,7 +923,7 @@
 									</div>
 								</div>
 							</div>
-						}
+					}
 					</div>
 				</div>
 			</div>
@@ -998,6 +998,48 @@
 		</div>
 	</div>
 </div>
+
+<!-- Share Modal -->
+<div class="modal fade" id="shareModal2" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title fw-bold text-success">
+					<i class="bi bi-send"></i> Select Images to Share
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="shareForm">
+					<div class="row">
+						@for (int i = 0; i < Model.Images.Count; i++)
+						{
+							<div class="col-md-4 mb-3 text-center">
+								<div class="border rounded-3 p-2 shadow-sm">
+									<img src="/secure-images/@Model.Images[i].Value"
+										 class="img-fluid rounded-3 mb-2"
+										 style="height: 150px; object-fit: cover;">
+									<div class="form-check">
+										<input class="form-check-input image-checkbox"
+											   type="checkbox"
+											   value="/secure-images/@Model.Images[i].Value"
+											   id="check_@i" />
+										<label class="form-check-label" for="check_@i">Select</label>
+									</div>
+								</div>
+							</div>
+						}
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-success" id="sendSelectedImages">Send</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 @section Scripts {
 	<script src="https://cdn.jsdelivr.net/npm/@@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
@@ -1132,5 +1174,34 @@
 			});
 			}
 		})
+
+
+		$("#sendSelectedImages").click(function () {
+				let selectedImages = [];
+
+				$(".image-checkbox:checked").each(function () {
+					selectedImages.push($(this).val());
+				});
+
+				if (selectedImages.length === 0) {
+					alert("Please select at least one image!");
+					return;
+				}
+
+					$.ajax({
+						url: '/PropertyDetails/SendImage',
+						type: 'POST',
+						data: { MediaUrl: selectedImages }, // <-- this line is key
+						traditional: true,                  // <-- sends array properly
+						success: function (response) {
+							alert("Images sent successfully!");
+							console.log(response);
+						},
+						error: function (xhr, status, error) {
+							console.error(error);
+							alert("Something went wrong.");
+						}
+					});
+			});
 	</script>
 }
