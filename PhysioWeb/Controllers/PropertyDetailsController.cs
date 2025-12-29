@@ -82,7 +82,7 @@ namespace PhysioWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> SendImage(string MediaUrl)
         {
-            string uploadResponse = await _whatsAppService.UploadImageAsync("C:\\Images\\test.jpg");
+            string uploadResponse = await _whatsAppService.UploadImageAsync(MediaUrl);
 
             //string imageUrl = "https://example.com/myimage.jpg";
             //string caption = "Hello! Here's your image.";
