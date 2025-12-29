@@ -161,3 +161,7 @@ function validatePassword(password) {
         $(password).val("");
     }
 }
+
+$('.alphabetic-only').on('input', function () {
+    this.value = this.value.replace(/[^a-zA-Z]/g, '');
+});

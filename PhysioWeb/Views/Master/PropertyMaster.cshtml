@@ -199,7 +199,7 @@
 								</div>
 								<div class="col-md-2 mb-3">
 									<label class="form-label fw-bold">Year Of Construction</label>
-									<input type="text" class="form-control" id="YearOfConstruction" name="YearOfConstruction" placeholder="Enter Year of construction">
+									<input type="number" class="form-control" id="YearOfConstruction" name="YearOfConstruction" placeholder="Enter Year of construction">
 								</div>
 								<div class="col-md-2 d-flex " style="align-items:center">
 									<input class="form-check-input mx-2" type="checkbox" id="IsActive" name="IsActive" value="true" checked />
@@ -267,11 +267,11 @@
 								</div>
 								<div class="col-md-2 mb-3">
 									<label class="form-label fw-bold">Floor</label>
-									<input type="text" class="form-control" id="Floor" name="Floor" placeholder="Enter Floor">
+									<input type="number" class="form-control" id="Floor" name="Floor" placeholder="Enter Floor">
 								</div>
 								<div class="col-md-2 mb-3">
 									<label class="form-label fw-bold">Total Floor</label>
-									<input type="text" class="form-control" id="TotalFloorBuilding" name="TotalFloorBuilding" placeholder="Enter Total Floor">
+									<input type="number" class="form-control" id="TotalFloorBuilding" name="TotalFloorBuilding" placeholder="Enter Total Floor">
 								</div>
 
 								<div class="col-md-4 mb-3">
@@ -286,7 +286,7 @@
 								</div>
 								<div class="col-md-4 mb-3">
 									<label class="form-label fw-bold">Vastu</label>
-									<input type="text" class="form-control" id="Vastu" name="Vastu" placeholder="Enter Vastu Direction">
+									<input type="text" class="form-control alphabetic-only" id="Vastu" name="Vastu" placeholder="Enter Vastu Direction">
 								</div>
 								<div class="col-md-4 mb-3">
 									<label class="form-label fw-bold">Preferred Buyer Type</label>
@@ -1417,7 +1417,10 @@
 					}
 		});
 			   }
-
+				$("#ContactPersonNo ,#ContactPersonAlternatePhone,#SoldOutContactNo").on("change", function () {
+			 validateMobileNo(this);
+		});
+				
 	</script>
 
 }
